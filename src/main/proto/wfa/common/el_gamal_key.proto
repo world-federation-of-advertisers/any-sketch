@@ -12,24 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_ANY_SKETCH_VALUE_FUNCTION_H_
-#define SRC_MAIN_CC_ANY_SKETCH_VALUE_FUNCTION_H_
+syntax = "proto3";
 
-#include <memory>
-#include <string>
+package wfa.common;
 
-#include "absl/strings/string_view.h"
-#include "src/main/cc/any_sketch/aggregators.h"
-#include "src/main/cc/any_sketch/distributions.h"
+option java_package = "org.wfanet.common";
+option java_multiple_files = true;
 
-namespace wfa::any_sketch {
+// Public keys of the ElGamal cipher.
+message ElGamalPublicKey {
+  // Public key generator `g`.
+  bytes generator = 1;
+  // Public key element `y = g^x`, where `g` is the generator and `x` is the
+  // secret key.
+  bytes element = 2;
+}
 
-struct ValueFunction {
-  std::string name;
-  AggregatorType aggregator_type;
-  std::unique_ptr<Distribution> distribution;
-};
-
-}  // namespace wfa::any_sketch
-
-#endif  // SRC_MAIN_CC_ANY_SKETCH_VALUE_FUNCTION_H_
+// Keys of the ElGamal cipher.
+message ElGamalKeyPair {
+  // Secret key of the ElGamal cipher.
+  bytes secret_key = 1;
+  // Public key of the ElGamal cipher.
+  ElGamalPublicKey public_key = 2;
+}
