@@ -12,24 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_ANY_SKETCH_VALUE_FUNCTION_H_
-#define SRC_MAIN_CC_ANY_SKETCH_VALUE_FUNCTION_H_
+syntax = "proto3";
 
-#include <memory>
-#include <string>
+package wfa.common;
 
-#include "absl/strings/string_view.h"
-#include "src/main/cc/any_sketch/aggregators.h"
-#include "src/main/cc/any_sketch/distributions.h"
+option java_package = "org.wfanet.common";
+option java_multiple_files = true;
 
-namespace wfa::any_sketch {
-
-struct ValueFunction {
-  std::string name;
-  AggregatorType aggregator_type;
-  std::unique_ptr<Distribution> distribution;
-};
-
-}  // namespace wfa::any_sketch
-
-#endif  // SRC_MAIN_CC_ANY_SKETCH_VALUE_FUNCTION_H_
+// Parameters used for liquidLegions creation and estimation.
+message LiquidLegionsParameters {
+  // decay rate.
+  double decay_rate = 1;
+  // The size of the register space, i.e., the maximum possible number of
+  // registers in a sketch.
+  int64 size = 2;
+}
