@@ -1,23 +1,35 @@
 # Any Sketch
 
-**Table of Contents** * [Overview](#overview) * [Details](#details) *
-[Examples](#examples) * [Developer Guide](#developer-guide) *
-[Dependencies](#dependencies) * [Contributing](#contributing)
+**Table of Contents**
+
+*   [Overview](#overview)
+*   [Details](#details)
+    *   [Developer Guide](#developer-guide)
+    *   [Developer Environment](#developer-environment)
+*   [How to Build](#how-to-build)
+*   [How to Deploy](#how-to-deploy)
+*   [Documentation](#documentation)
+    *   [Dependencies](#dependencies)
+*   [Contributing](#contributing)
 
 ## Overview
 
 This repo contains the implementation of the AnySketch data structure in C++.
-AnySketch is a generic data structure that can be configured to act as *
-[HyperLogLog](https://datasketches.apache.org/docs/HLL/HLL.html) *
-[LiquidLegions](https://research.google/pubs/pub49177/) *
-[CascadingLegions](https://research.google/pubs/pub49177/) * Other sketches that
-can be defined with an index function and an aggregator.
+AnySketch is a generic data structure that can be configured to act as
+
+*   [HyperLogLog](https://datasketches.apache.org/docs/HLL/HLL.html)
+*   [LiquidLegions](https://research.google/pubs/pub49177/)
+*   [CascadingLegions](https://research.google/pubs/pub49177/)
+*   Other sketches that can be defined with an index function and an aggregator.
 
 ## Details
 
 AnySketch stores key-value pairs in a sparse format. AnySketch config is defined
-by: 1. A List of indexes, each with a Distribution, 1. A List of value columns,
-each with a distribution, 1. Aggregation functions for each value.
+by:
+
+1.  A List of indexes, each with a Distribution,
+1.  A List of value columns, each with a distribution,
+1.  Aggregation functions for each value.
 
 When a key is added to a sketch it is mapped to a vector of indexes and vector
 of values. For each vector of indexes the vectors of values are aggregated with
