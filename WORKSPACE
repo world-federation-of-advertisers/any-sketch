@@ -1,12 +1,14 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 
 # Abseil C++ libraries
-git_repository(
+http_archive(
     name = "com_google_absl",
-    commit = "0f3bb466b868b523cf1dc9b2aaaed65c77b28862",
-    remote = "https://github.com/abseil/abseil-cpp.git",
-    shallow_since = "1603283562 -0400",
+    sha256 = "dd7db6815204c2a62a2160e32c55e97113b0a0178b2f090d6bab5ce36111db4b",
+    strip_prefix = "abseil-cpp-20210324.0",
+    urls = [
+        "https://github.com/abseil/abseil-cpp/archive/refs/tags/20210324.0.tar.gz",
+    ],
 )
 
 http_archive(
@@ -14,20 +16,6 @@ http_archive(
     sha256 = "94c634d499558a76fa649edb13721dce6e98fb1e7018dfaeba3cd7a083945e91",
     strip_prefix = "googletest-release-1.10.0",
     urls = ["https://github.com/google/googletest/archive/release-1.10.0.zip"],
-)
-
-new_git_repository(
-    name = "farmhash",
-    build_file_content = """
-package(default_visibility = ["//visibility:public"])
-cc_library(
-    name = "farmhash",
-    hdrs = ["src/farmhash.h"],
-    srcs = ["src/farmhash.cc"],
-    deps = [],
-)""",
-    commit = "2f0e005b81e296fa6963e395626137cf729b710c",
-    remote = "https://github.com/google/farmhash.git",
 )
 
 http_archive(
@@ -44,8 +32,17 @@ http_archive(
     sha256 = "34af2f15cf7367513b352bdcd2493ab14ce43692d2dcd9dfc499492966c64dcf",
     strip_prefix = "gflags-2.2.2",
     urls = [
-        "https://mirror.bazel.build/github.com/gflags/gflags/archive/v2.2.2.tar.gz",
         "https://github.com/gflags/gflags/archive/v2.2.2.tar.gz",
+    ],
+)
+
+# Protocol buffers
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = "65e020a42bdab44a66664d34421995829e9e79c60e5adaa08282fd14ca552f57",
+    strip_prefix = "protobuf-3.15.6",
+    urls = [
+        "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.15.6.tar.gz",
     ],
 )
 
@@ -69,30 +66,36 @@ load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
 # Loads transitive dependencies of GRPC.
 grpc_extra_deps()
 
-git_repository(
-    name = "com_google_private_join_and_compute",
-    commit = "842f43b08cecba36f8e6c2d94d7467c3b7338397",
-    remote = "https://github.com/google/private-join-and-compute.git",
-    shallow_since = "1610640414 +0000",
-)
-
 http_archive(
-    name = "com_google_protobuf",
-    strip_prefix = "protobuf-fe1790ca0df67173702f70d5646b82f48f412b99",  # this is 3.11.2
-    urls = ["https://github.com/protocolbuffers/protobuf/archive/fe1790ca0df67173702f70d5646b82f48f412b99.zip"],
+    name = "com_google_private_join_and_compute",
+    sha256 = "13e0414220a2709b0dbeefafe5a4d1b3f3261a541d0405c844857521d5f25f32",
+    strip_prefix = "private-join-and-compute-89c8d0aae070b9c282043af419e47d7ef897f460",
+    urls = [
+        "https://github.com/google/private-join-and-compute/archive/89c8d0aae070b9c282043af419e47d7ef897f460.zip",
+    ],
 )
 
-load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
-
-protobuf_deps()
+new_git_repository(
+    name = "farmhash",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+cc_library(
+    name = "farmhash",
+    hdrs = ["src/farmhash.h"],
+    srcs = ["src/farmhash.cc"],
+    deps = [],
+)""",
+    commit = "2f0e005b81e296fa6963e395626137cf729b710c",
+    remote = "https://github.com/google/farmhash.git",
+    shallow_since = "1509400690 -0700",
+)
 
 # Measurement APIs.
-load("//build/halo:repositories.bzl", "halo_dependencies")
-
-halo_dependencies(
-    commit = "687d784769bdd7df8b4b9b725d1f3fc98e8205b9",
-    sha256 = "8048e1073e293e764781865272d1bb6ccda901c16e78e7ccaab1d754ba6c3798",
-    target_map = {
-        "cross-media-measurement-api": "wfa_measurement_proto",
-    },
+http_archive(
+    name = "wfa_measurement_proto",
+    sha256 = "5552203aa815659eace1cb96c84c45ef1290ab87bba7e424311ae629b159b212",
+    strip_prefix = "cross-media-measurement-api-1303ecbf4e81901f30f5a400b80921871b701b37",
+    urls = [
+        "https://github.com/world-federation-of-advertisers/cross-media-measurement-api/archive/1303ecbf4e81901f30f5a400b80921871b701b37.tar.gz",
+    ],
 )
