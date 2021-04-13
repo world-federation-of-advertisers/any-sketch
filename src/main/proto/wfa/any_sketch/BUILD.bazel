@@ -1,0 +1,17 @@
+load("@rules_cc//cc:defs.bzl", "cc_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+package(default_visibility = ["//visibility:public"])
+
+IMPORT_PREFIX = "/src/main/proto"
+
+proto_library(
+    name = "sketch_proto",
+    srcs = ["sketch.proto"],
+    strip_import_prefix = IMPORT_PREFIX,
+)
+
+cc_proto_library(
+    name = "sketch_cc_proto",
+    deps = [":sketch_proto"],
+)
