@@ -16,8 +16,8 @@ syntax = "proto3";
 
 package wfa.any_sketch.crypto;
 
-import "wfa/common/el_gamal_key.proto";
 import "wfa/any_sketch/sketch.proto";
+import "wfa/common/el_gamal_key.proto";
 
 option java_package = "org.wfanet.anysketch.crypto";
 option java_multiple_files = true;
