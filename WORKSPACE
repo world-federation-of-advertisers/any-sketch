@@ -89,13 +89,3 @@ cc_library(
     remote = "https://github.com/google/farmhash.git",
     shallow_since = "1509400690 -0700",
 )
-
-# Measurement APIs.
-http_archive(
-    name = "wfa_measurement_proto",
-    sha256 = "5552203aa815659eace1cb96c84c45ef1290ab87bba7e424311ae629b159b212",
-    strip_prefix = "cross-media-measurement-api-1303ecbf4e81901f30f5a400b80921871b701b37",
-    urls = [
-        "https://github.com/world-federation-of-advertisers/cross-media-measurement-api/archive/1303ecbf4e81901f30f5a400b80921871b701b37.tar.gz",
-    ],
-)

@@ -21,8 +21,8 @@
 
 #include "absl/status/statusor.h"
 #include "wfa/any_sketch/crypto/sketch_encryption_methods.pb.h"
+#include "wfa/any_sketch/sketch.pb.h"
 #include "wfa/common/el_gamal_key.pb.h"
-#include "wfa/measurement/api/v1alpha/sketch.pb.h"
 
 namespace wfa::any_sketch::crypto {
 
@@ -46,7 +46,7 @@ class SketchEncrypter {
   // Return the word by word ElGamal encryption of the sketch. The result is
   // the concatenation of all ciphertext strings.
   virtual absl::StatusOr<std::string> Encrypt(
-      const wfa::measurement::api::v1alpha::Sketch& sketch,
+      const wfa::any_sketch::Sketch& sketch,
       EncryptSketchRequest::DestroyedRegisterStrategy
           destroyed_register_strategy) = 0;
 

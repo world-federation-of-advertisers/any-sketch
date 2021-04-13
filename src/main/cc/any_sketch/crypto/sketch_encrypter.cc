@@ -38,11 +38,11 @@ using ::private_join_and_compute::CommutativeElGamal;
 using ::private_join_and_compute::Context;
 using ::private_join_and_compute::ECGroup;
 using ::private_join_and_compute::ECPoint;
+using ::wfa::any_sketch::Sketch;
+using ::wfa::any_sketch::SketchConfig;
 using ::wfa::common::DifferentialPrivacyParams;
 using ::wfa::math::GetPublisherNoiseOptions;
 using ::wfa::math::GetTruncatedDiscreteLaplaceDistributedRandomNumber;
-using ::wfa::measurement::api::v1alpha::Sketch;
-using ::wfa::measurement::api::v1alpha::SketchConfig;
 using DestroyedRegisterStrategy =
     ::wfa::any_sketch::crypto::EncryptSketchRequest::DestroyedRegisterStrategy;
 using BlindersCiphertext = std::pair<std::string, std::string>;
