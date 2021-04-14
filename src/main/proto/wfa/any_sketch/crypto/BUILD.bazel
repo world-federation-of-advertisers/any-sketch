@@ -8,8 +8,8 @@ proto_library(
     srcs = ["sketch_encryption_methods.proto"],
     strip_import_prefix = "/src/main/proto",
     deps = [
+        "//src/main/proto/wfa/any_sketch:sketch_proto",
         "//src/main/proto/wfa/common:el_gamal_key_proto",
-        "@wfa_measurement_proto//src/main/proto/wfa/measurement/api/v1alpha:sketch_proto",
     ],
 )
 

@@ -32,8 +32,8 @@ using ::private_join_and_compute::ECGroup;
 using ::private_join_and_compute::ECPoint;
 using ::private_join_and_compute::InternalError;
 using ::testing::SizeIs;
-using ::wfa::measurement::api::v1alpha::Sketch;
-using ::wfa::measurement::api::v1alpha::SketchConfig;
+using ::wfa::any_sketch::Sketch;
+using ::wfa::any_sketch::SketchConfig;
 
 constexpr int kTestCurveId = NID_X9_62_prime256v1;
 constexpr int kMaxCounterValue = 100;
