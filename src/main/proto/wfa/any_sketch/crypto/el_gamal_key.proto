@@ -14,16 +14,24 @@
 
 syntax = "proto3";
 
-package wfa.common;
+package wfa.any_sketch.crypto;
 
-option java_package = "org.wfanet.common";
+option java_package = "org.wfanet.anysketch.crypto";
 option java_multiple_files = true;
 
-// Parameters used for liquidLegions creation and estimation.
-message LiquidLegionsParameters {
-  // decay rate.
-  double decay_rate = 1;
-  // The size of the register space, i.e., the maximum possible number of
-  // registers in a sketch.
-  int64 size = 2;
+// Public keys of the ElGamal cipher.
+message ElGamalPublicKey {
+  // Public key generator `g`.
+  bytes generator = 1;
+  // Public key element `y = g^x`, where `g` is the generator and `x` is the
+  // secret key.
+  bytes element = 2;
+}
+
+// Keys of the ElGamal cipher.
+message ElGamalKeyPair {
+  // Secret key of the ElGamal cipher.
+  bytes secret_key = 1;
+  // Public key of the ElGamal cipher.
+  ElGamalPublicKey public_key = 2;
 }

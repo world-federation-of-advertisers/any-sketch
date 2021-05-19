@@ -16,29 +16,13 @@
 #define SRC_MAIN_CC_MATH_NOISE_PARAMETERS_COMPUTATION_H_
 
 #include "math/distributions.h"
-#include "wfa/common/noise_parameters.pb.h"
+#include "wfa/any_sketch/differential_privacy.pb.h"
 
 namespace wfa::math {
 
-math::DistributedGeometricRandomComponentOptions GetBlindHistogramNoiseOptions(
-    const wfa::common::DifferentialPrivacyParams& params, int publisher_count,
-    int uncorrupted_party_count);
-
-math::DistributedGeometricRandomComponentOptions
-GetNoiseForPublisherNoiseOptions(
-    const wfa::common::DifferentialPrivacyParams& params, int publisher_count,
-    int uncorrupted_party_count);
-
-math::DistributedGeometricRandomComponentOptions GetGlobalReachDpNoiseOptions(
-    const wfa::common::DifferentialPrivacyParams& params,
-    int uncorrupted_party_count);
-
-math::DistributedGeometricRandomComponentOptions GetFrequencyNoiseOptions(
-    const wfa::common::DifferentialPrivacyParams& params, int max_frequency,
-    int uncorrupted_party_count);
-
 math::TruncatedDiscreteLaplaceDistributedOptions GetPublisherNoiseOptions(
-    const wfa::common::DifferentialPrivacyParams& params, int publisher_count);
+    const wfa::any_sketch::DifferentialPrivacyParams& params,
+    int publisher_count);
 
 }  // namespace wfa::math
 

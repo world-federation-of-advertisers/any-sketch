@@ -14,23 +14,10 @@
 
 syntax = "proto3";
 
-package wfa.common;
+package wfa.any_sketch;
 
-option java_package = "org.wfanet.common";
+option java_package = "org.wfanet.anysketch";
 option java_multiple_files = true;
-
-// Parameters used to generate the distributed components of a shifted two-sided
-// geometric distributed random variable.
-message DistributedGeometricDistributionParams {
-  // The number of contributors to the global random variable. At least 2.
-  int64 num = 1;
-  // The p (success ratio) parameter of the polya distribution. 0<p<1.
-  double p = 2;
-  // Offset to shift the generated PolyaDiff, It is also the threshold where we
-  // truncate the individual Polya random numbers.
-  // The result will be in the range of [0, shift_offset*2].
-  int64 shift_offset = 3;
-}
 
 // For detail of the parameters, refer to "Dwork, C. and Roth, A., 2014. The
 // algorithmic foundations of differential privacy. Foundations and Trends in

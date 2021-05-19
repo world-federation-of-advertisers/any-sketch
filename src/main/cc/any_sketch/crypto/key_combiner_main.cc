@@ -26,7 +26,7 @@ ABSL_FLAG(int, curve_id, 0, "The Elliptic curve id.");
 ABSL_FLAG(std::vector<std::string>, element_list, {},
           "The list of ElGamal public key elements to combine.");
 
-using ::wfa::common::ElGamalPublicKey;
+using ::wfa::any_sketch::crypto::ElGamalPublicKey;
 
 int main(int argc, char** argv) {
   absl::ParseCommandLine(argc, argv);

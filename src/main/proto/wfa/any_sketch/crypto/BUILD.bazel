@@ -8,12 +8,23 @@ proto_library(
     srcs = ["sketch_encryption_methods.proto"],
     strip_import_prefix = "/src/main/proto",
     deps = [
+        ":el_gamal_key_proto",
         "//src/main/proto/wfa/any_sketch:sketch_proto",
-        "//src/main/proto/wfa/common:el_gamal_key_proto",
     ],
 )
 
 cc_proto_library(
     name = "sketch_encryption_methods_cc_proto",
     deps = [":sketch_encryption_methods_proto"],
+)
+
+proto_library(
+    name = "el_gamal_key_proto",
+    srcs = ["el_gamal_key.proto"],
+    strip_import_prefix = "/src/main/proto",
+)
+
+cc_proto_library(
+    name = "el_gamal_key_cc_proto",
+    deps = [":el_gamal_key_proto"],
 )

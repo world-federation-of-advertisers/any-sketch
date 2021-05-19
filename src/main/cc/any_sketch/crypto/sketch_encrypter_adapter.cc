@@ -60,9 +60,8 @@ absl::StatusOr<std::string> CombineElGamalPublicKeys(
         "failed to parse the CombineElGamalPublicKeysRequest proto.");
   }
   CombineElGamalPublicKeysResponse response;
-  std::vector<common::ElGamalPublicKey> keys(
-      request_proto.el_gamal_keys().begin(),
-      request_proto.el_gamal_keys().end());
+  std::vector<ElGamalPublicKey> keys(request_proto.el_gamal_keys().begin(),
+                                     request_proto.el_gamal_keys().end());
   ASSIGN_OR_RETURN(*response.mutable_el_gamal_keys(),
                    CombineElGamalPublicKeys(request_proto.curve_id(), keys));
   return response.SerializeAsString();

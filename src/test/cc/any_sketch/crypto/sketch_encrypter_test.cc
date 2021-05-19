@@ -39,7 +39,7 @@ using ::testing::Not;
 using ::testing::SizeIs;
 using ::wfa::any_sketch::Sketch;
 using ::wfa::any_sketch::SketchConfig;
-using ::wfa::common::ElGamalPublicKey;
+using ::wfa::any_sketch::crypto::ElGamalPublicKey;
 
 constexpr int kTestCurveId = NID_X9_62_prime256v1;
 constexpr int kMaxCounterValue = 100;
