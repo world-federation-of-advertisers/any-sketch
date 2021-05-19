@@ -19,71 +19,8 @@
 namespace wfa::math {
 namespace {
 
-TEST(GetBlindHistogramNoiseOptions, ExampleResultShouldBeCorrect) {
-  common::DifferentialPrivacyParams test_params;
-  test_params.set_epsilon(std::log(3) / 30);
-  test_params.set_delta(0.2 / 100000);
-  int publisher_count = 3;
-  int uncorrupted_party_count = 2;
-
-  auto options = GetBlindHistogramNoiseOptions(test_params, publisher_count,
-                                               uncorrupted_party_count);
-
-  EXPECT_EQ(options.num, uncorrupted_party_count);
-  EXPECT_NEAR(options.p, 0.982, 0.001);
-  EXPECT_EQ(options.shift_offset, 1072);
-  EXPECT_EQ(options.truncate_threshold, 1072);
-}
-
-TEST(GetNoiseForPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
-  common::DifferentialPrivacyParams test_params;
-  test_params.set_epsilon(std::log(3) / 30);
-  test_params.set_delta(0.2 / 100000);
-  int publisher_count = 3;
-  int uncorrupted_party_count = 2;
-
-  auto options = GetNoiseForPublisherNoiseOptions(test_params, publisher_count,
-                                                  uncorrupted_party_count);
-
-  EXPECT_EQ(options.num, uncorrupted_party_count);
-  EXPECT_NEAR(options.p, 0.988, 0.001);
-  EXPECT_EQ(options.shift_offset, 1550);
-  EXPECT_EQ(options.truncate_threshold, 1550);
-}
-
-TEST(GetGlobalReachDpNoiseOptions, ExampleResultShouldBeCorrect) {
-  common::DifferentialPrivacyParams test_params;
-  test_params.set_epsilon(0.45 * std::log(3));
-  test_params.set_delta(0.2 / 100000);
-  int uncorrupted_party_count = 2;
-
-  auto options =
-      GetGlobalReachDpNoiseOptions(test_params, uncorrupted_party_count);
-
-  EXPECT_EQ(options.num, uncorrupted_party_count);
-  EXPECT_NEAR(options.p, 0.61, 0.001);
-  EXPECT_EQ(options.shift_offset, 32);
-  EXPECT_EQ(options.truncate_threshold, 32);
-}
-
-TEST(GetFrequencyNoiseOptions, ExampleResultShouldBeCorrect) {
-  common::DifferentialPrivacyParams test_params;
-  test_params.set_epsilon(0.45 * std::log(3));
-  test_params.set_delta(0.2 / 100000);
-  int max_frequency = 5;
-  int uncorrupted_party_count = 2;
-
-  auto options = GetFrequencyNoiseOptions(test_params, max_frequency,
-                                          uncorrupted_party_count);
-
-  EXPECT_EQ(options.num, uncorrupted_party_count);
-  EXPECT_NEAR(options.p, 0.781, 0.001);
-  EXPECT_EQ(options.shift_offset, 75);
-  EXPECT_EQ(options.truncate_threshold, 75);
-}
-
 TEST(GetPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
-  common::DifferentialPrivacyParams test_params;
+  wfa::any_sketch::DifferentialPrivacyParams test_params;
   test_params.set_epsilon(std::log(3) / 30);
   test_params.set_delta(0.2 / 100000);
   int publisher_count = 3;

@@ -28,7 +28,7 @@
 #include "src/main/cc/any_sketch/util/macros.h"
 #include "util/status_macros.h"
 #include "wfa/any_sketch/crypto/sketch_encryption_methods.pb.h"
-#include "wfa/common/noise_parameters.pb.h"
+#include "wfa/any_sketch/differential_privacy.pb.h"
 
 namespace wfa::any_sketch::crypto {
 
@@ -38,9 +38,9 @@ using ::private_join_and_compute::CommutativeElGamal;
 using ::private_join_and_compute::Context;
 using ::private_join_and_compute::ECGroup;
 using ::private_join_and_compute::ECPoint;
+using ::wfa::any_sketch::DifferentialPrivacyParams;
 using ::wfa::any_sketch::Sketch;
 using ::wfa::any_sketch::SketchConfig;
-using ::wfa::common::DifferentialPrivacyParams;
 using ::wfa::math::GetPublisherNoiseOptions;
 using ::wfa::math::GetTruncatedDiscreteLaplaceDistributedRandomNumber;
 using DestroyedRegisterStrategy =
@@ -427,8 +427,8 @@ absl::StatusOr<std::unique_ptr<SketchEncrypter>> CreateWithPublicKey(
   return {std::move(result)};
 }
 
-absl::StatusOr<common::ElGamalPublicKey> CombineElGamalPublicKeys(
-    int curve_id, const std::vector<common::ElGamalPublicKey>& keys) {
+absl::StatusOr<ElGamalPublicKey> CombineElGamalPublicKeys(
+    int curve_id, const std::vector<ElGamalPublicKey>& keys) {
   if (keys.empty()) {
     return absl::InvalidArgumentError("Keys cannot be empty");
   }
@@ -436,7 +436,7 @@ absl::StatusOr<common::ElGamalPublicKey> CombineElGamalPublicKeys(
     return keys[0];
   }
 
-  common::ElGamalPublicKey result;
+  ElGamalPublicKey result;
   result.set_generator(keys[0].generator());
 
   Context ctx;

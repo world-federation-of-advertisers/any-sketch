@@ -15,3 +15,14 @@ cc_proto_library(
     name = "sketch_cc_proto",
     deps = [":sketch_proto"],
 )
+
+proto_library(
+    name = "differential_privacy_proto",
+    srcs = ["differential_privacy.proto"],
+    strip_import_prefix = "/src/main/proto",
+)
+
+cc_proto_library(
+    name = "differential_privacy_cc_proto",
+    deps = [":differential_privacy_proto"],
+)

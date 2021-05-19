@@ -33,6 +33,6 @@ cc_library(
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         "//src/main/cc/math:distributions",
-        "//src/main/proto/wfa/common:noise_parameters_cc_proto",
+        "//src/main/proto/wfa/any_sketch:differential_privacy_cc_proto",
     ],
 )
