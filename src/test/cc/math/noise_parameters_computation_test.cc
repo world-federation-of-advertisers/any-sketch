@@ -21,14 +21,16 @@ namespace {
 
 TEST(GetPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
   wfa::any_sketch::DifferentialPrivacyParams test_params;
-  test_params.set_epsilon(std::log(3) / 30);
+  test_params.set_epsilon(std::log(3) / 10);
   test_params.set_delta(0.2 / 100000);
   int publisher_count = 3;
 
   auto options = GetPublisherNoiseOptions(test_params, publisher_count);
 
-  EXPECT_EQ(options.mu, 1222);
-  EXPECT_NEAR(options.s, 0.0122, 0.0001);
+  EXPECT_EQ(options.num, 1);
+  EXPECT_NEAR(options.p, 0.964, 0.001);
+  EXPECT_EQ(options.shift_offset, 428);
+  EXPECT_EQ(options.truncate_threshold, 428);
 }
 
 }  // namespace
