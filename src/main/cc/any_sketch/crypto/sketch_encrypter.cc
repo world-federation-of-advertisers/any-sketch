@@ -41,8 +41,8 @@ using ::private_join_and_compute::ECPoint;
 using ::wfa::any_sketch::DifferentialPrivacyParams;
 using ::wfa::any_sketch::Sketch;
 using ::wfa::any_sketch::SketchConfig;
+using ::wfa::math::GetDistributedGeometricRandomComponent;
 using ::wfa::math::GetPublisherNoiseOptions;
-using ::wfa::math::GetTruncatedDiscreteLaplaceDistributedRandomNumber;
 using DestroyedRegisterStrategy =
     ::wfa::any_sketch::crypto::EncryptSketchRequest::DestroyedRegisterStrategy;
 using BlindersCiphertext = std::pair<std::string, std::string>;
@@ -221,9 +221,8 @@ absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
   params.set_delta(publisher_noise_parameter.delta());
   ASSIGN_OR_RETURN(
       int64_t noise_count,
-      GetTruncatedDiscreteLaplaceDistributedRandomNumber(
-          GetPublisherNoiseOptions(
-              params, publisher_noise_parameter.publisher_count())));
+      GetDistributedGeometricRandomComponent(GetPublisherNoiseOptions(
+          params, publisher_noise_parameter.publisher_count())));
 
   if (noise_count < 1) {
     // noise_count would be at least 0.
