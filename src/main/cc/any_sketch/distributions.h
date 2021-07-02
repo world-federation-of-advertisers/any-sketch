@@ -22,7 +22,7 @@
 #include "absl/container/flat_hash_map.h"
 #include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
-#include "src/main/cc/any_sketch/fingerprinters.h"
+#include "src/main/cc/any_sketch/fingerprinters/fingerprinters.h"
 
 namespace wfa::any_sketch {
 
