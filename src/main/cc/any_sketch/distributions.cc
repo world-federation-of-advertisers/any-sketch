@@ -14,6 +14,7 @@
 
 #include "src/main/cc/any_sketch/distributions.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <limits>
