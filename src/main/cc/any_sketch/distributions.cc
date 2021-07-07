@@ -14,6 +14,7 @@
 
 #include "src/main/cc/any_sketch/distributions.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <limits>
@@ -26,7 +27,7 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/str_cat.h"
 #include "absl/strings/string_view.h"
-#include "src/main/cc/any_sketch/fingerprinters.h"
+#include "src/main/cc/any_sketch/fingerprinters/fingerprinters.h"
 #include "src/main/cc/any_sketch/util/macros.h"
 #include "util/status_macros.h"
 

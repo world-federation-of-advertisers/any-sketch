@@ -34,7 +34,7 @@ cc_library(
     srcs = ["distributions.cc"],
     hdrs = ["distributions.h"],
     deps = [
-        ":fingerprinters",
+        "//src/main/cc/any_sketch/fingerprinters",
         "//src/main/cc/any_sketch/util:macros",
         "@com_google_absl//absl/base:core_headers",
         "@com_google_absl//absl/container:flat_hash_map",
@@ -43,19 +43,6 @@ cc_library(
         "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/strings",
         "@com_google_private_join_and_compute//util:status_includes",
-    ],
-)
-
-cc_library(
-    name = "fingerprinters",
-    srcs = ["fingerprinters.cc"],
-    hdrs = ["fingerprinters.h"],
-    deps = [
-        "@boringssl//:crypto",
-        "@com_google_absl//absl/base:endian",
-        "@com_google_absl//absl/strings",
-        "@com_google_absl//absl/types:span",
-        "@farmhash",
     ],
 )
 

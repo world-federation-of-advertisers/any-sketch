@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/any_sketch/fingerprinters.h"
+#include "src/main/cc/any_sketch/fingerprinters/fingerprinters.h"
 
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "src/test/cc/testutil/matchers.h"
 
 namespace wfa::any_sketch {
 namespace {

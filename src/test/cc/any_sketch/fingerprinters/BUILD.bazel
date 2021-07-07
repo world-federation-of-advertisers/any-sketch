@@ -1,0 +1,10 @@
+cc_test(
+    name = "fingerprinters_test",
+    size = "small",
+    srcs = ["fingerprinters_test.cc"],
+    deps = [
+        "//src/main/cc/any_sketch/fingerprinters",
+        "//src/test/cc/testutil:matchers",
+        "@googletest//:gtest_main",
+    ],
+)

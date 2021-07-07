@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/any_sketch/fingerprinters.h"
+#include "src/main/cc/any_sketch/fingerprinters/fingerprinters.h"
 
 #include "absl/base/internal/endian.h"
 #include "external/farmhash/src/farmhash.h"

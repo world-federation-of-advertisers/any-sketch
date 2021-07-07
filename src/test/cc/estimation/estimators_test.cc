@@ -25,7 +25,7 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "src/main/cc/any_sketch/distributions.h"
-#include "src/main/cc/any_sketch/fingerprinters.h"
+#include "src/main/cc/any_sketch/fingerprinters/fingerprinters.h"
 
 namespace wfa::estimation {
 namespace {
