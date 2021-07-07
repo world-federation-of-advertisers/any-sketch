@@ -15,8 +15,8 @@
 #include "src/main/cc/any_sketch/fingerprinters/fingerprinters.h"
 
 #include "absl/base/internal/endian.h"
-#include "external/farmhash/src/farmhash.h"
 #include "openssl/sha.h"
+#include "src/farmhash.h"
 
 namespace wfa::any_sketch {
 namespace {
