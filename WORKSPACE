@@ -91,3 +91,10 @@ cc_library(
     remote = "https://github.com/google/farmhash.git",
     shallow_since = "1509400690 -0700",
 )
+
+http_archive(
+    name = "wfa_common_cpp",
+    sha256 = "901bbfd3f3579737c8e6950f4e84e9356cac109bf17a7abe2083299bf239683f",
+    strip_prefix = "common-cpp-e77dbc377126d90a15565f084d196b4eb4742ae1",
+    url = "https://github.com/world-federation-of-advertisers/common-cpp/archive/e77dbc377126d90a15565f084d196b4eb4742ae1.tar.gz",
+)

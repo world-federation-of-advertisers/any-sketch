@@ -25,12 +25,11 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "src/main/cc/any_sketch/distributions.h"
-#include "src/main/cc/any_sketch/fingerprinters/fingerprinters.h"
+#include "src/main/cc/common_cpp/fingerprinters/fingerprinters.h"
 
 namespace wfa::estimation {
 namespace {
 using ::wfa::any_sketch::Distribution;
-using ::wfa::any_sketch::Fingerprinter;
 
 MATCHER_P2(EqWithError, value, error, "") {
   return ExplainMatchResult(testing::Le(error), std::llabs(arg - value),
@@ -57,11 +56,10 @@ uint64_t GenerateRandomSketchAndGetSize(double decay_rate,
                                         uint64_t num_of_fingerprints) {
   absl::flat_hash_set<int64_t> indexes;
 
-  const Fingerprinter& fingerprinter =
-      wfa::any_sketch::GetSha256Fingerprinter();
+  const Fingerprinter& fingerprinter = GetSha256Fingerprinter();
   std::unique_ptr<Distribution> exponential_distribution =
-      GetExponentialDistribution(&fingerprinter, decay_rate,
-                                 num_of_total_registers);
+      wfa::any_sketch::GetExponentialDistribution(&fingerprinter, decay_rate,
+                                                  num_of_total_registers);
 
   for (uint64_t i = 0; i < num_of_fingerprints; ++i) {
     absl::StatusOr<int64_t> value =
