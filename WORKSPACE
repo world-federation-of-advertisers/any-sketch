@@ -1,7 +1,6 @@
 workspace(name = "any_sketch")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 
 # Abseil C++ libraries
 http_archive(
@@ -77,17 +76,13 @@ http_archive(
     ],
 )
 
-new_git_repository(
-    name = "farmhash",
-    build_file_content = """
-package(default_visibility = ["//visibility:public"])
-cc_library(
-    name = "farmhash",
-    hdrs = ["src/farmhash.h"],
-    srcs = ["src/farmhash.cc"],
-    deps = [],
-)""",
-    commit = "2f0e005b81e296fa6963e395626137cf729b710c",
-    remote = "https://github.com/google/farmhash.git",
-    shallow_since = "1509400690 -0700",
+http_archive(
+    name = "wfa_common_cpp",
+    sha256 = "6f7b89901fbadc9aa664739ea2a3a9a43783a428882549f2a84fda2c7784f1fb",
+    strip_prefix = "common-cpp-2c7242ca721a4c10c4a7680d6ff0bc63929deeb0",
+    url = "https://github.com/world-federation-of-advertisers/common-cpp/archive/2c7242ca721a4c10c4a7680d6ff0bc63929deeb0.tar.gz",
 )
+
+load("@wfa_common_cpp//build:deps.bzl", "common_cpp_deps")
+
+common_cpp_deps()
