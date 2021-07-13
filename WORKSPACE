@@ -78,9 +78,9 @@ http_archive(
 
 http_archive(
     name = "wfa_common_cpp",
-    sha256 = "6f7b89901fbadc9aa664739ea2a3a9a43783a428882549f2a84fda2c7784f1fb",
-    strip_prefix = "common-cpp-2c7242ca721a4c10c4a7680d6ff0bc63929deeb0",
-    url = "https://github.com/world-federation-of-advertisers/common-cpp/archive/2c7242ca721a4c10c4a7680d6ff0bc63929deeb0.tar.gz",
+    sha256 = "3f6955634b0bd62b8f42a6f1e9b067a72883b0ff7fb866731d1e2f9be53a134f",
+    strip_prefix = "common-cpp-5067ddeab427ccb0b7f4e6831e0a7c66d20ac08b",
+    url = "https://github.com/world-federation-of-advertisers/common-cpp/archive/5067ddeab427ccb0b7f4e6831e0a7c66d20ac08b.tar.gz",
 )
 
 load("@wfa_common_cpp//build:deps.bzl", "common_cpp_deps")
