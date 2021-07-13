@@ -27,8 +27,8 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/str_cat.h"
 #include "absl/strings/string_view.h"
+#include "common_cpp/fingerprinters/fingerprinters.h"
 #include "src/main/cc/any_sketch/util/macros.h"
-#include "src/main/cc/common_cpp/fingerprinters/fingerprinters.h"
 #include "util/status_macros.h"
 
 namespace wfa::any_sketch {

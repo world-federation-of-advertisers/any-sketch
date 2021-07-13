@@ -22,18 +22,20 @@
 #include "absl/container/flat_hash_set.h"
 #include "absl/strings/str_cat.h"
 #include "absl/types/span.h"
+#include "common_cpp/fingerprinters/fingerprinters.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "src/main/cc/any_sketch/distributions.h"
-#include "src/main/cc/common_cpp/fingerprinters/fingerprinters.h"
 
 namespace wfa::estimation {
 namespace {
 using ::wfa::any_sketch::Distribution;
 
 MATCHER_P2(EqWithError, value, error, "") {
-  return ExplainMatchResult(testing::Le(error), std::llabs(arg - value),
-                            result_listener);
+  // Since value and arg might be of different, possibly unsigned types,
+  // std::abs cannot be used safely.
+  auto diff = value > arg ? value - arg : arg - value;
+  return ExplainMatchResult(testing::Le(error), diff, result_listener);
 }
 
 uint64_t GetExpectedActiveRegisterCount(double decay_rate,
