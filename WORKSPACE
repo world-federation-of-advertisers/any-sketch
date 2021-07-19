@@ -2,40 +2,16 @@ workspace(name = "any_sketch")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-# Abseil C++ libraries
 http_archive(
-    name = "com_google_absl",
-    sha256 = "dd7db6815204c2a62a2160e32c55e97113b0a0178b2f090d6bab5ce36111db4b",
-    strip_prefix = "abseil-cpp-20210324.0",
-    urls = [
-        "https://github.com/abseil/abseil-cpp/archive/refs/tags/20210324.0.tar.gz",
-    ],
+    name = "wfa_common_cpp",
+    sha256 = "e0e1f5eed832ef396109354a64c6c1306bf0fb5ea0b449ce6ee1e8edc6fe279d",
+    strip_prefix = "common-cpp-43c75acc3394e19bcfd2cfe8e8e2454365d26d60",
+    url = "https://github.com/world-federation-of-advertisers/common-cpp/archive/43c75acc3394e19bcfd2cfe8e8e2454365d26d60.tar.gz",
 )
 
-http_archive(
-    name = "googletest",
-    sha256 = "94c634d499558a76fa649edb13721dce6e98fb1e7018dfaeba3cd7a083945e91",
-    strip_prefix = "googletest-release-1.10.0",
-    urls = ["https://github.com/google/googletest/archive/release-1.10.0.zip"],
-)
+load("@wfa_common_cpp//build:deps.bzl", "common_cpp_deps")
 
-http_archive(
-    name = "com_github_glog_glog",
-    sha256 = "f28359aeba12f30d73d9e4711ef356dc842886968112162bc73002645139c39c",
-    strip_prefix = "glog-0.4.0",
-    urls = ["https://github.com/google/glog/archive/v0.4.0.tar.gz"],
-)
-
-# gflags
-# Needed for glog
-http_archive(
-    name = "com_github_gflags_gflags",
-    sha256 = "34af2f15cf7367513b352bdcd2493ab14ce43692d2dcd9dfc499492966c64dcf",
-    strip_prefix = "gflags-2.2.2",
-    urls = [
-        "https://github.com/gflags/gflags/archive/v2.2.2.tar.gz",
-    ],
-)
+common_cpp_deps()
 
 # Protocol buffers
 http_archive(
@@ -75,14 +51,3 @@ http_archive(
         "https://github.com/google/private-join-and-compute/archive/89c8d0aae070b9c282043af419e47d7ef897f460.zip",
     ],
 )
-
-http_archive(
-    name = "wfa_common_cpp",
-    sha256 = "3f6955634b0bd62b8f42a6f1e9b067a72883b0ff7fb866731d1e2f9be53a134f",
-    strip_prefix = "common-cpp-5067ddeab427ccb0b7f4e6831e0a7c66d20ac08b",
-    url = "https://github.com/world-federation-of-advertisers/common-cpp/archive/5067ddeab427ccb0b7f4e6831e0a7c66d20ac08b.tar.gz",
-)
-
-load("@wfa_common_cpp//build:deps.bzl", "common_cpp_deps")
-
-common_cpp_deps()
