@@ -51,3 +51,18 @@ http_archive(
         "https://github.com/google/private-join-and-compute/archive/89c8d0aae070b9c282043af419e47d7ef897f460.zip",
     ],
 )
+
+new_git_repository(
+    name = "farmhash",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+cc_library(
+    name = "farmhash",
+    hdrs = ["src/farmhash.h"],
+    srcs = ["src/farmhash.cc"],
+    deps = [],
+)""",
+    commit = "2f0e005b81e296fa6963e395626137cf729b710c",
+    remote = "https://github.com/google/farmhash.git",
+    shallow_since = "1509400690 -0700",
+)

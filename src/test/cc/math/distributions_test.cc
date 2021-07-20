@@ -19,7 +19,7 @@
 #include "absl/status/statusor.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "src/test/cc/testutil/status_macros.h"
+#include "src/main/cc/common_cpp/testing/status_macros.h"
 #include "util/status_macros.h"
 
 namespace wfa::math {
