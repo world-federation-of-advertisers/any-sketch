@@ -25,9 +25,9 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/str_join.h"
 #include "absl/types/span.h"
+#include "common_cpp/testing/status_matchers.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "src/main/cc/common_cpp/testing/status_matchers.h"
 
 namespace wfa::any_sketch {
 namespace {
