@@ -20,12 +20,12 @@
 
 // TODO(wangyaopw): use "external/*" path for external dependencies
 #include "absl/container/flat_hash_map.h"
+#include "common_cpp/macros/macros.h"
 #include "crypto/commutative_elgamal.h"
 #include "crypto/context.h"
 #include "crypto/ec_group.h"
 #include "math/distributions.h"
 #include "math/noise_parameters_computation.h"
-#include "src/main/cc/any_sketch/util/macros.h"
 #include "util/status_macros.h"
 #include "wfa/any_sketch/crypto/sketch_encryption_methods.pb.h"
 #include "wfa/any_sketch/differential_privacy.pb.h"
