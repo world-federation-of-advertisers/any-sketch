@@ -8,7 +8,6 @@ cc_library(
         ":aggregators",
         ":distributions",
         ":value_function",
-        "//src/main/cc/any_sketch/util:macros",
         "@com_google_absl//absl/base:core_headers",
         "@com_google_absl//absl/container:fixed_array",
         "@com_google_absl//absl/container:flat_hash_map",
@@ -17,6 +16,7 @@ cc_library(
         "@com_google_absl//absl/strings",
         "@com_google_absl//absl/types:span",
         "@com_google_private_join_and_compute//util:status_includes",
+        "@wfa_common_cpp//src/main/cc/common_cpp/macros",
     ],
 )
 
@@ -34,7 +34,6 @@ cc_library(
     srcs = ["distributions.cc"],
     hdrs = ["distributions.h"],
     deps = [
-        "//src/main/cc/any_sketch/util:macros",
         "@com_google_absl//absl/base:core_headers",
         "@com_google_absl//absl/container:flat_hash_map",
         "@com_google_absl//absl/memory",
@@ -43,6 +42,7 @@ cc_library(
         "@com_google_absl//absl/strings",
         "@com_google_private_join_and_compute//util:status_includes",
         "@wfa_common_cpp//src/main/cc/common_cpp/fingerprinters",
+        "@wfa_common_cpp//src/main/cc/common_cpp/macros",
     ],
 )
 

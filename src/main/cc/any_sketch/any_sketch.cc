@@ -18,6 +18,7 @@
 #include <cstdint>
 #include <iostream>
 #include <type_traits>
+#include <utility>
 
 #include "absl/base/macros.h"
 #include "absl/container/fixed_array.h"
@@ -26,9 +27,9 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
 #include "absl/types/span.h"
+#include "common_cpp/macros/macros.h"
 #include "src/main/cc/any_sketch/aggregators.h"
 #include "src/main/cc/any_sketch/distributions.h"
-#include "src/main/cc/any_sketch/util/macros.h"
 #include "src/main/cc/any_sketch/value_function.h"
 #include "util/status_macros.h"
 

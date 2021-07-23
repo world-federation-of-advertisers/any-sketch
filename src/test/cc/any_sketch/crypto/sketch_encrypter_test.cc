@@ -20,13 +20,13 @@
 // TODO(wangyaopw): use "external/*" path for blinders headers
 #include "absl/strings/escaping.h"
 #include "absl/strings/string_view.h"
+#include "common_cpp/testing/random.h"
+#include "common_cpp/testing/status_macros.h"
+#include "common_cpp/testing/status_matchers.h"
 #include "crypto/commutative_elgamal.h"
 #include "gmock/gmock.h"
 #include "google/protobuf/util/message_differencer.h"
 #include "gtest/gtest.h"
-#include "src/test/cc/testutil/matchers.h"
-#include "src/test/cc/testutil/random.h"
-#include "src/test/cc/testutil/status_macros.h"
 
 namespace wfa::any_sketch::crypto {
 namespace {

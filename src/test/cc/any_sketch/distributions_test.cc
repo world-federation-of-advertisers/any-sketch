@@ -15,9 +15,9 @@
 #include "src/main/cc/any_sketch/distributions.h"
 
 #include "absl/types/span.h"
+#include "common_cpp/testing/status_matchers.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "src/test/cc/testutil/matchers.h"
 
 namespace wfa::any_sketch {
 namespace {
