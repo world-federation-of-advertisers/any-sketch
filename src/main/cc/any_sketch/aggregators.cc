@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/any_sketch/aggregators.h"
-
-#include <glog/logging.h>
+#include "any_sketch/aggregators.h"
 
 #include <cstdint>
+
+#include "glog/logging.h"
 
 namespace wfa::any_sketch {
 namespace {

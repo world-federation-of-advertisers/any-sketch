@@ -1,9 +1,12 @@
 package(default_visibility = ["//visibility:public"])
 
+_INCLUDE_PREFIX = "/src/main/cc/"
+
 cc_library(
     name = "any_sketch",
     srcs = ["any_sketch.cc"],
     hdrs = ["any_sketch.h"],
+    strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         ":aggregators",
         ":distributions",
@@ -15,7 +18,6 @@ cc_library(
         "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/strings",
         "@com_google_absl//absl/types:span",
-        "@com_google_private_join_and_compute//util:status_includes",
         "@wfa_common_cpp//src/main/cc/common_cpp/macros",
     ],
 )
@@ -24,6 +26,7 @@ cc_library(
     name = "aggregators",
     srcs = ["aggregators.cc"],
     hdrs = ["aggregators.h"],
+    strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         "@com_github_glog_glog//:glog",
     ],
@@ -33,6 +36,7 @@ cc_library(
     name = "distributions",
     srcs = ["distributions.cc"],
     hdrs = ["distributions.h"],
+    strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         "@com_google_absl//absl/base:core_headers",
         "@com_google_absl//absl/container:flat_hash_map",
@@ -40,7 +44,6 @@ cc_library(
         "@com_google_absl//absl/status",
         "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/strings",
-        "@com_google_private_join_and_compute//util:status_includes",
         "@wfa_common_cpp//src/main/cc/common_cpp/fingerprinters",
         "@wfa_common_cpp//src/main/cc/common_cpp/macros",
     ],
@@ -49,6 +52,7 @@ cc_library(
 cc_library(
     name = "value_function",
     hdrs = ["value_function.h"],
+    strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         ":aggregators",
         ":distributions",

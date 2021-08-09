@@ -1,11 +1,12 @@
 package(default_visibility = ["//visibility:public"])
 
+_INCLUDE_PREFIX = "/src/main/cc/"
+
 cc_library(
     name = "sketch_encrypter",
     srcs = ["sketch_encrypter.cc"],
-    hdrs = [
-        "sketch_encrypter.h",
-    ],
+    hdrs = ["sketch_encrypter.h"],
+    strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         "//src/main/cc/math:distributions",
         "//src/main/cc/math:noise_parameters_computation",
@@ -14,20 +15,16 @@ cc_library(
         "//src/main/proto/wfa/any_sketch/crypto:sketch_encryption_methods_cc_proto",
         "@com_google_absl//absl/container:flat_hash_map",
         "@com_google_absl//absl/types:span",
-        "@com_google_private_join_and_compute//crypto:commutative_elgamal",
-        "@com_google_private_join_and_compute//util:status_includes",
+        "@com_google_private_join_and_compute//private_join_and_compute/crypto:commutative_elgamal",
         "@wfa_common_cpp//src/main/cc/common_cpp/macros",
     ],
 )
 
 cc_library(
     name = "sketch_encrypter_adapter",
-    srcs = [
-        ":sketch_encrypter_adapter.cc",
-    ],
-    hdrs = [
-        ":sketch_encrypter_adapter.h",
-    ],
+    srcs = [":sketch_encrypter_adapter.cc"],
+    hdrs = [":sketch_encrypter_adapter.h"],
+    strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         ":sketch_encrypter",
         "//src/main/proto/wfa/any_sketch/crypto:sketch_encryption_methods_cc_proto",
@@ -36,9 +33,7 @@ cc_library(
 
 cc_binary(
     name = "combine_public_keys",
-    srcs = [
-        "key_combiner_main.cc",
-    ],
+    srcs = ["key_combiner_main.cc"],
     deps = [
         ":sketch_encrypter",
         "@com_google_absl//absl/flags:flag",

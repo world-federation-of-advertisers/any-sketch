@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/estimation/estimators.h"
+#include "estimation/estimators.h"
 
 #include <cstdint>
 #include <iostream>
@@ -22,10 +22,10 @@
 #include "absl/container/flat_hash_set.h"
 #include "absl/strings/str_cat.h"
 #include "absl/types/span.h"
+#include "any_sketch/distributions.h"
 #include "common_cpp/fingerprinters/fingerprinters.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "src/main/cc/any_sketch/distributions.h"
 
 namespace wfa::estimation {
 namespace {

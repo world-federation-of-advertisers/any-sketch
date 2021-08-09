@@ -21,7 +21,6 @@ cc_test(
     ],
     deps = [
         "//src/main/cc/math:distributions",
-        "@com_google_private_join_and_compute//util:status_includes",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
         "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",

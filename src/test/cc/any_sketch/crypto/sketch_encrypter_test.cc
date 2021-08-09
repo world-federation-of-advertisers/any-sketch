@@ -12,21 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/any_sketch/crypto/sketch_encrypter.h"
+#include "any_sketch/crypto/sketch_encrypter.h"
 
-#include <openssl/obj_mac.h>
-
-#include "absl/types/span.h"
-// TODO(wangyaopw): use "external/*" path for blinders headers
 #include "absl/strings/escaping.h"
 #include "absl/strings/string_view.h"
+#include "absl/types/span.h"
 #include "common_cpp/testing/random.h"
 #include "common_cpp/testing/status_macros.h"
 #include "common_cpp/testing/status_matchers.h"
-#include "crypto/commutative_elgamal.h"
 #include "gmock/gmock.h"
 #include "google/protobuf/util/message_differencer.h"
 #include "gtest/gtest.h"
+#include "openssl/obj_mac.h"
+#include "private_join_and_compute/crypto/commutative_elgamal.h"
 
 namespace wfa::any_sketch::crypto {
 namespace {

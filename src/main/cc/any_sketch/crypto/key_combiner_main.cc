@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <glog/logging.h>
-
 #include <iostream>
 
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
 #include "absl/strings/escaping.h"
-#include "src/main/cc/any_sketch/crypto/sketch_encrypter.h"
+#include "any_sketch/crypto/sketch_encrypter.h"
+#include "glog/logging.h"
 
 ABSL_FLAG(int, curve_id, 0, "The Elliptic curve id.");
 
