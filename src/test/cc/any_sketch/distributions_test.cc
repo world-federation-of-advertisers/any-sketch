@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/any_sketch/distributions.h"
+#include "any_sketch/distributions.h"
 
 #include "absl/types/span.h"
 #include "common_cpp/testing/status_matchers.h"

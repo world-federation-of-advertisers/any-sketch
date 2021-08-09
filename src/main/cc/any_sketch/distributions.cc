@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/any_sketch/distributions.h"
+#include "any_sketch/distributions.h"
 
 #include <algorithm>
 #include <cmath>
@@ -29,7 +29,6 @@
 #include "absl/strings/string_view.h"
 #include "common_cpp/fingerprinters/fingerprinters.h"
 #include "common_cpp/macros/macros.h"
-#include "util/status_macros.h"
 
 namespace wfa::any_sketch {
 namespace {

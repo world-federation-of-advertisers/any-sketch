@@ -19,8 +19,8 @@
 #include <string>
 
 #include "absl/strings/string_view.h"
-#include "src/main/cc/any_sketch/aggregators.h"
-#include "src/main/cc/any_sketch/distributions.h"
+#include "any_sketch/aggregators.h"
+#include "any_sketch/distributions.h"
 
 namespace wfa::any_sketch {
 

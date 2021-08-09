@@ -12,21 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/any_sketch/crypto/sketch_encrypter.h"
+#include "any_sketch/crypto/sketch_encrypter.h"
 
 #include <memory>
 #include <string>
 #include <utility>
 
-// TODO(wangyaopw): use "external/*" path for external dependencies
 #include "absl/container/flat_hash_map.h"
 #include "common_cpp/macros/macros.h"
-#include "crypto/commutative_elgamal.h"
-#include "crypto/context.h"
-#include "crypto/ec_group.h"
 #include "math/distributions.h"
 #include "math/noise_parameters_computation.h"
-#include "util/status_macros.h"
+#include "private_join_and_compute/crypto/commutative_elgamal.h"
+#include "private_join_and_compute/crypto/context.h"
+#include "private_join_and_compute/crypto/ec_group.h"
 #include "wfa/any_sketch/crypto/sketch_encryption_methods.pb.h"
 #include "wfa/any_sketch/differential_privacy.pb.h"
 

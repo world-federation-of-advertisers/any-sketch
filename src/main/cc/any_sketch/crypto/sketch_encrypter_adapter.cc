@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/any_sketch/crypto/sketch_encrypter_adapter.h"
+#include "any_sketch/crypto/sketch_encrypter_adapter.h"
 
 #include <string>
 #include <vector>
 
 #include "absl/memory/memory.h"
-#include "src/main/cc/any_sketch/crypto/sketch_encrypter.h"
-#include "util/status_macros.h"
+#include "absl/status/status.h"
+#include "absl/status/statusor.h"
+#include "any_sketch/crypto/sketch_encrypter.h"
+#include "common_cpp/macros/macros.h"
 #include "wfa/any_sketch/crypto/sketch_encryption_methods.pb.h"
 
 namespace wfa::any_sketch::crypto {
