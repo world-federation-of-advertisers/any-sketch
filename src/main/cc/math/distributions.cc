@@ -19,7 +19,7 @@
 #include "absl/random/bit_gen_ref.h"
 #include "absl/random/poisson_distribution.h"
 #include "absl/random/random.h"
-#include "util/status_macros.h"
+#include "common_cpp/macros/macros.h"
 
 namespace wfa::math {
 

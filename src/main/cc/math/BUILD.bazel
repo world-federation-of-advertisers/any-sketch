@@ -18,7 +18,7 @@ cc_library(
         "@com_google_absl//absl/random:bit_gen_ref",
         "@com_google_absl//absl/random:distributions",
         "@com_google_absl//absl/status:statusor",
-        "@com_google_private_join_and_compute//util:status_includes",
+        "@wfa_common_cpp//src/main/cc/common_cpp/macros",
     ],
 )
 

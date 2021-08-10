@@ -17,10 +17,10 @@
 #include <unordered_map>
 
 #include "absl/status/statusor.h"
+#include "common_cpp/macros/macros.h"
 #include "common_cpp/testing/status_macros.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "util/status_macros.h"
 
 namespace wfa::math {
 namespace {

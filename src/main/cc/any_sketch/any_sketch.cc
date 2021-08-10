@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/any_sketch/any_sketch.h"
+#include "any_sketch/any_sketch.h"
 
 #include <algorithm>
 #include <cstdint>
@@ -27,11 +27,10 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
 #include "absl/types/span.h"
+#include "any_sketch/aggregators.h"
+#include "any_sketch/distributions.h"
+#include "any_sketch/value_function.h"
 #include "common_cpp/macros/macros.h"
-#include "src/main/cc/any_sketch/aggregators.h"
-#include "src/main/cc/any_sketch/distributions.h"
-#include "src/main/cc/any_sketch/value_function.h"
-#include "util/status_macros.h"
 
 namespace wfa::any_sketch {
 

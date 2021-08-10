@@ -26,9 +26,9 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
 #include "absl/types/span.h"
+#include "any_sketch/distributions.h"
+#include "any_sketch/value_function.h"
 #include "common_cpp/fingerprinters/fingerprinters.h"
-#include "src/main/cc/any_sketch/distributions.h"
-#include "src/main/cc/any_sketch/value_function.h"
 
 namespace wfa::any_sketch {
 // A generalized sketch class.
