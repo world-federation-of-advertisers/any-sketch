@@ -22,7 +22,8 @@ namespace wfa::estimation {
 // Estimates cardinality of a liquid legions sketch given the decay rate,
 // size and number of non-empty registers for that sketch.
 int64_t EstimateCardinalityLiquidLegions(double decay_rate, uint64_t size,
-                                         uint64_t active_register_count);
+                                         uint64_t active_register_count,
+                                         double sampling_rate = 1.0);
 
 }  // namespace wfa::estimation
 

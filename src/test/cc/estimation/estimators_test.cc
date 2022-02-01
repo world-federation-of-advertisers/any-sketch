@@ -93,6 +93,26 @@ TEST(UtilsTest, TestEstimationCorrectWithExpectation) {
   }
 }
 
+TEST(UtilsTest, TestEstimationCorrectWithSamplingRate) {
+  double rate = 10;
+  uint64_t sketch_size = 100000;
+  uint64_t max_cardinality = 1000000;
+  double sampling_rate = 0.05;
+
+  for (uint64_t actual_cardinality = 1000;
+       actual_cardinality <= max_cardinality; actual_cardinality += 1000) {
+    auto sampled_cardinality =
+        static_cast<uint64_t>(actual_cardinality * sampling_rate);
+    uint64_t num_expected_active_registers =
+        GetExpectedActiveRegisterCount(rate, sketch_size, sampled_cardinality);
+    EXPECT_THAT(
+        EstimateCardinalityLiquidLegions(
+            rate, sketch_size, num_expected_active_registers, sampling_rate),
+        EqWithError(actual_cardinality, actual_cardinality * 0.05))
+        << "actual_cardinality=" << actual_cardinality;
+  }
+}
+
 TEST(UtilsTest, TestEstimationCorrectWithExpectationDifferentRates) {
   uint64_t sketch_size = 100000;
   uint64_t actual_cardinality = 1000000;
