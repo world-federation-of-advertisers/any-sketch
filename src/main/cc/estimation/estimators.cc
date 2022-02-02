@@ -86,8 +86,7 @@ int64_t EstimateCardinalityLiquidLegions(double decay_rate,
   ABSL_ASSERT(active_register_count < num_of_total_registers);
   int64_t sampled_cardinality =
       GetCardinality(get_expected_active_register_count, active_register_count);
-  return
-      static_cast<int64_t>(sampled_cardinality / sampling_rate);
+  return static_cast<int64_t>(sampled_cardinality / sampling_rate);
 }
 
 }  // namespace wfa::estimation
