@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_WFA_ESTIMATION_ESTIMATON_UTILS_H_
-#define SRC_MAIN_CC_WFA_ESTIMATION_ESTIMATON_UTILS_H_
+#ifndef SRC_MAIN_CC_ESTIMATION_ESTIMATORS_H_
+#define SRC_MAIN_CC_ESTIMATION_ESTIMATORS_H_
 
 #include <cstdint>
 
@@ -22,8 +22,9 @@ namespace wfa::estimation {
 // Estimates cardinality of a liquid legions sketch given the decay rate,
 // size and number of non-empty registers for that sketch.
 int64_t EstimateCardinalityLiquidLegions(double decay_rate, uint64_t size,
-                                         uint64_t active_register_count);
+                                         uint64_t active_register_count,
+                                         double sampling_rate = 1.0);
 
 }  // namespace wfa::estimation
 
-#endif  // SRC_MAIN_CC_WFA_ESTIMATION_ESTIMATON_UTILS_H_
+#endif  // SRC_MAIN_CC_ESTIMATION_ESTIMATORS_H_
