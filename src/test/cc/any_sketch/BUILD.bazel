@@ -13,7 +13,7 @@ cc_test(
         "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/strings",
         "@com_google_absl//absl/types:span",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
         "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",
     ],
 )
@@ -24,7 +24,7 @@ cc_test(
     srcs = ["aggregators_test.cc"],
     deps = [
         "//src/main/cc/any_sketch:aggregators",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -37,7 +37,7 @@ cc_test(
         "@com_google_absl//absl/container:flat_hash_map",
         "@com_google_absl//absl/strings",
         "@com_google_absl//absl/types:span",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
         "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",
     ],
 )

@@ -28,7 +28,7 @@ cc_library(
     hdrs = ["aggregators.h"],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
-        "@com_github_google_glog//:glog",
+        "@com_github_glog_glog//:glog",
     ],
 )
 

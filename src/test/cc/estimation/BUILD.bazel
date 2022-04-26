@@ -9,7 +9,7 @@ cc_test(
         "//src/main/cc/estimation:estimators",
         "@com_google_absl//absl/container:flat_hash_set",
         "@com_google_absl//absl/strings",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
         "@wfa_common_cpp//src/main/cc/common_cpp/fingerprinters",
     ],
 )
