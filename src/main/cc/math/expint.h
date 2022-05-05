@@ -59,12 +59,10 @@ inline Real euler_gamma() {
 /// \return continued fraction representation of \f$ \mathrm{Ei} (x) \f$
 /// for \f$ x < -1 \f$
 template <class Real>
-inline Real
-expint_continued_fraction(Real x) {
+inline Real expint_continued_fraction(Real x) {
   const int max_iter = 1000;
   const Real mxp1 = -x + Real(1);
-  if (std::isinf(mxp1 + Real(2 * max_iter)))
-    return Real(0);
+  if (std::isinf(mxp1 + Real(2 * max_iter))) return Real(0);
 
   // See algorithm expint.h on p. 268 of
   // Press, William H., et al. Numerical recipes 3rd edition: The art of
@@ -84,8 +82,7 @@ expint_continued_fraction(Real x) {
     const Real t1 = mxp1 + Real(2 * i);
     s0 = t1 - t0 / s0;
     s1 = t1 - t0 / s1;
-    if (s0 == s1)
-      return -h * exp(x);
+    if (s0 == s1) return -h * exp(x);
 
     h *= s0 / s1;
   }
@@ -117,8 +114,7 @@ expint_continued_fraction(Real x) {
 /// \return Evaluation of a series representation of \f$ \mathrm{Ei} (x) \f$
 /// for \f$ -1 < x < 1 \f$.
 template <class Real>
-inline
-Real expint_power_series(Real x) {
+inline Real expint_power_series(Real x) {
   Real sum = Real(0);
   Real k = Real(1);
   Real factor = Real(1);
@@ -126,9 +122,7 @@ Real expint_power_series(Real x) {
     factor *= x / k;
     const Real prev = sum;
     sum += factor / k;
-    if (prev == sum)
-      return sum + euler_gamma<Real>() +
-             std::log(std::abs(x));
+    if (prev == sum) return sum + euler_gamma<Real>() + std::log(std::abs(x));
 
     k += Real(1);
   }
@@ -164,8 +158,7 @@ Real expint_power_series(Real x) {
 /// \return Evaluation of an asymptotic series representation of
 /// \f$ \mathrm{Ei} (x) \f$ for \f$ x \gg 1 \f$.
 template <class Real>
-inline
-Real expint_asymptotic(Real x) {
+inline Real expint_asymptotic(Real x) {
   Real sum = Real(0);
   Real t = Real(1);
   Real k = Real(1);
@@ -175,9 +168,8 @@ Real expint_asymptotic(Real x) {
     k += Real(1);
   } while (k < x && t > std::numeric_limits<Real>::epsilon());
 
-  const Real overflow_limit =
-      (Real(1) - std::numeric_limits<Real>::epsilon()) *
-      std::log(std::numeric_limits<Real>::max());
+  const Real overflow_limit = (Real(1) - std::numeric_limits<Real>::epsilon()) *
+                              std::log(std::numeric_limits<Real>::max());
 
   if (x >= overflow_limit) {
     if (std::isinf(x)) {
@@ -200,31 +192,20 @@ Real expint_asymptotic(Real x) {
 /// \param x Argument \f$ x \gg 1 \f$ of \f$\mathrm{Ei} (x) \f$.
 /// \return std::expint(x).
 template <class Real>
-inline
-Real expint_impl(Real x) {
-  if (x < Real(-1))
-    return expint_continued_fraction(x);
+inline Real expint_impl(Real x) {
+  if (x < Real(-1)) return expint_continued_fraction(x);
 
-  const Real asymptotic =
-      -std::log(std::numeric_limits<Real>::epsilon());
-  if (x < asymptotic)
-    return expint_power_series(x);
+  const Real asymptotic = -std::log(std::numeric_limits<Real>::epsilon());
+  if (x < asymptotic) return expint_power_series(x);
 
   return expint_asymptotic(x);
 }
 
-inline
-double expint(double x) {
-  return expint_impl<double>(x);
-}
+inline double expint(double x) { return expint_impl<double>(x); }
 
-inline
-float expintf(float x) {
-  return expint_impl<float>(x);
-}
+inline float expintf(float x) { return expint_impl<float>(x); }
 
-inline
-long double expintl(long double x) {
+inline long double expintl(long double x) {
   return expint_impl<long double>(x);
 }
 
