@@ -26,6 +26,7 @@
 #include "common_cpp/fingerprinters/fingerprinters.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "math/expint.h"
 
 namespace wfa::estimation {
 namespace {
@@ -46,9 +47,9 @@ uint64_t GetExpectedActiveRegisterCount(double decay_rate,
   if (cardinality == 0) return 0;
   double exp_rate = std::exp(decay_rate);
   double t = cardinality / static_cast<double>(num_of_total_registers);
-  double negative_term = -std::expint((-decay_rate * t) / (exp_rate - 1));
+  double negative_term = -wfa::math::expint((-decay_rate * t) / (exp_rate - 1));
   double positive_term =
-      std::expint((-decay_rate * exp_rate * t) / (exp_rate - 1));
+      wfa::math::expint((-decay_rate * exp_rate * t) / (exp_rate - 1));
   return (1 - (negative_term + positive_term) / decay_rate) *
          num_of_total_registers;
 }
