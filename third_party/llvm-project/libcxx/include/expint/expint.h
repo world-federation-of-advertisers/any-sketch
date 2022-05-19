@@ -112,7 +112,7 @@ inline Real expint_continued_fraction(Real x) {
   // x == -1 the worst case.
 
   // never reach here
-  return 0;
+  __builtin_unreachable();
 }
 
 // Evaluates expint(x) for x != 0.
