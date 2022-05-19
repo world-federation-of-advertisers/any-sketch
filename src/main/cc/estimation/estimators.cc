@@ -20,7 +20,7 @@
 
 #include "absl/base/macros.h"
 #include "absl/functional/bind_front.h"
-#include "math/expint.h"
+#include "expint.h"
 
 namespace wfa::estimation {
 
@@ -35,9 +35,9 @@ uint64_t GetExpectedActiveRegisterCount(double decay_rate,
   double exponential_of_decay = std::exp(decay_rate);
   double t = cardinality / static_cast<double>(num_of_total_registers);
   double negative_term =
-      -wfa::math::expint((-decay_rate * t) / (exponential_of_decay - 1));
-  double positive_term = wfa::math::expint(
-      (-decay_rate * exponential_of_decay * t) / (exponential_of_decay - 1));
+      -llvm::expint((-decay_rate * t) / (exponential_of_decay - 1));
+  double positive_term = llvm::expint((-decay_rate * exponential_of_decay * t) /
+                                      (exponential_of_decay - 1));
   return (1 - (negative_term + positive_term) / decay_rate) *
          num_of_total_registers;
 }

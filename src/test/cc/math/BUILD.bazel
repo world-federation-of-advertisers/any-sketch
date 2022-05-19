@@ -26,17 +26,3 @@ cc_test(
         "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",
     ],
 )
-
-cc_test(
-    name = "expint_test",
-    size = "small",
-    srcs = [
-        "expint_test.cc",
-    ],
-    deps = [
-        "//src/main/cc/math:expint",
-        "@googletest//:gtest",
-        "@googletest//:gtest_main",
-        "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",
-    ],
-)

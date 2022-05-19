@@ -1,0 +1,14 @@
+load("@rules_cc//cc:defs.bzl", "cc_test")
+
+cc_test(
+    name = "expint_test",
+    size = "small",
+    srcs = [
+        "expint_test.cc",
+    ],
+    deps = [
+        "//third_party/llvm-project/libcxx/include/expint",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
+)
