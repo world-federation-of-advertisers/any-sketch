@@ -24,9 +24,9 @@
 #include "absl/types/span.h"
 #include "any_sketch/distributions.h"
 #include "common_cpp/fingerprinters/fingerprinters.h"
+#include "expint/expint.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
-#include "expint.h"
 
 namespace wfa::estimation {
 namespace {

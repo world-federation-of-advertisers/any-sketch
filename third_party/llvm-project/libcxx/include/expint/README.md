@@ -23,6 +23,3 @@ This implementation is from a PR of LLVM.
 ## Test
 
 Values in test cases are from GNU's std::expint
-
-
-<img src="https://latex.codecogs.com/svg.latex?\Large&space;\mathrm{Ei} (x) " title="\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}" />

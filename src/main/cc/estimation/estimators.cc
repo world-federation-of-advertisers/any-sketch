@@ -20,7 +20,7 @@
 
 #include "absl/base/macros.h"
 #include "absl/functional/bind_front.h"
-#include "expint.h"
+#include "expint/expint.h"
 
 namespace wfa::estimation {
 
