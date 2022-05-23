@@ -6,7 +6,7 @@ cc_library(
     hdrs = ["estimators.h"],
     strip_include_prefix = "/src/main/cc/",
     deps = [
-        "//third_party/llvm-project/libcxx/include/expint",
+        "//src/main/cc/math:expint",
         "@com_google_absl//absl/base:core_headers",
         "@com_google_absl//absl/functional:bind_front",
     ],

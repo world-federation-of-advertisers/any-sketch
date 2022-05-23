@@ -2,7 +2,7 @@
 
 ## Background
 The series function of expint is to calculate Exponential Integral. It is in 
-the std library of GNU but not introduced into LLVM's std library.
+GNU stdlibc++, but not introduced into LLVM libc++ 13 or older version.
 
 To support project building for LLVM, expint is added in the 
 third_party library with minor modification. std::expint from GNU in not used 
