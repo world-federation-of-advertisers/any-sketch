@@ -33,4 +33,4 @@ double expint(double x) { return llvm::expint(x); }
 
 }  // namespace wfa::math
 
-#endif
+#endif  // SRC_MAIN_CC_MATH_EXPINT_H_
