@@ -17,20 +17,24 @@
 
 #include <cmath>
 
-namespace wfa::math {
-
 #ifdef __STDCPP_MATH_SPEC_FUNCS__
 
+namespace wfa::math {
+
 double expint(double x) { return std::expint(x); }
+
+}  // namespace wfa::math
 
 #else
 
 #include "expint/expint.h"
 
+namespace wfa::math {
+
 double expint(double x) { return llvm::expint(x); }
 
-#endif
-
 }  // namespace wfa::math
+
+#endif
 
 #endif  // SRC_MAIN_CC_MATH_EXPINT_H_
