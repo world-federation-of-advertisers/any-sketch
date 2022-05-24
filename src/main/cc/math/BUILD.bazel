@@ -36,3 +36,14 @@ cc_library(
         "//src/main/proto/wfa/any_sketch:differential_privacy_cc_proto",
     ],
 )
+
+cc_library(
+    name = "expint",
+    hdrs = [
+        "expint.h",
+    ],
+    strip_include_prefix = _INCLUDE_PREFIX,
+    deps = [
+        "//third_party/llvm-project/libcxx/include/expint",
+    ],
+)
