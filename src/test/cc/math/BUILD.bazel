@@ -26,3 +26,31 @@ cc_test(
         "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",
     ],
 )
+
+cc_test(
+    name = "distributed_geometric_random_noise_test",
+    size = "small",
+    srcs = [
+        "distributed_geometric_random_noise_test.cc",
+    ],
+    deps = [
+        "//src/main/cc/math:distributed_geometric_random_noise",
+        "@com_google_googletest//:gtest",
+        "@com_google_googletest//:gtest_main",
+        "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",
+    ],
+)
+
+cc_test(
+    name = "distributed_gaussian_random_noise_test",
+    size = "small",
+    srcs = [
+        "distributed_gaussian_random_noise_test.cc",
+    ],
+    deps = [
+        "//src/main/cc/math:distributed_gaussian_random_noise",
+        "@com_google_googletest//:gtest",
+        "@com_google_googletest//:gtest_main",
+        "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",
+    ],
+)

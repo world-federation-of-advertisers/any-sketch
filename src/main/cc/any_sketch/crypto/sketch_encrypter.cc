@@ -20,6 +20,8 @@
 
 #include "absl/container/flat_hash_map.h"
 #include "common_cpp/macros/macros.h"
+#include "math/distributed_geometric_random_noise.h"
+#include "math/distributed_random_noise.h"
 #include "math/distributions.h"
 #include "math/noise_parameters_computation.h"
 #include "private_join_and_compute/crypto/commutative_elgamal.h"
@@ -214,13 +216,24 @@ absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
   if (value_count < 1) {
     return absl::InvalidArgumentError("value_count should be positive.");
   }
+
   DifferentialPrivacyParams params;
+  math::DistributedRandomNoise* pDistributedRandomNoise;
+
+  if (true) {
+    pDistributedRandomNoise = new math::DistributedGeometricRandomNoise();
+  }
+
   params.set_epsilon(publisher_noise_parameter.epsilon());
   params.set_delta(publisher_noise_parameter.delta());
+
   ASSIGN_OR_RETURN(
       int64_t noise_count,
-      GetDistributedGeometricRandomComponent(GetPublisherNoiseOptions(
-          params, publisher_noise_parameter.publisher_count())));
+      pDistributedRandomNoise->GenerateNoiseComponent(
+          math::GetPublisherNoiseOptions(
+              params, publisher_noise_parameter.publisher_count())));
+
+  delete pDistributedRandomNoise;
 
   if (noise_count < 1) {
     // noise_count would be at least 0.

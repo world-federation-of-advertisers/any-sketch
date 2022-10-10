@@ -14,6 +14,8 @@
 
 #include "math/noise_parameters_computation.h"
 
+#include "math/distributed_random_noise.h"
+
 namespace wfa::math {
 
 namespace {
@@ -30,7 +32,7 @@ int ComputateMuPolya(double epsilon, double delta, int sensitivity, int n) {
 
 }  // namespace
 
-math::DistributedGeometricRandomComponentOptions GetPublisherNoiseOptions(
+math::DistributedRandomComponentOptions GetPublisherNoiseOptions(
     const wfa::any_sketch::DifferentialPrivacyParams& params,
     int publisher_count) {
   ABSL_ASSERT(publisher_count > 0);

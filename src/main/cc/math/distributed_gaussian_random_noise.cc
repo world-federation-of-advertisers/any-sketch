@@ -1,4 +1,4 @@
-// Copyright 2020 The Cross-Media Measurement Authors
+// Copyright 2022 The Cross-Media Measurement Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_MATH_NOISE_PARAMETERS_COMPUTATION_H_
-#define SRC_MAIN_CC_MATH_NOISE_PARAMETERS_COMPUTATION_H_
+#include "math/distributed_gaussian_random_noise.h"
 
-#include "math/distributed_random_noise.h"
-#include "math/distributions.h"
-#include "wfa/any_sketch/differential_privacy.pb.h"
+#include <random>
+
+#include "absl/random/bit_gen_ref.h"
+#include "absl/random/poisson_distribution.h"
+#include "absl/random/random.h"
+#include "common_cpp/macros/macros.h"
 
 namespace wfa::math {
 
-math::DistributedRandomComponentOptions GetPublisherNoiseOptions(
-    const wfa::any_sketch::DifferentialPrivacyParams& params,
-    int publisher_count);
-
+absl::StatusOr<int64_t>
+wfa::math::DistributedGaussianRandomNoise::GenerateNoiseComponent(
+    wfa::math::DistributedRandomComponentOptions options) {
+  return 100;
+}
 }  // namespace wfa::math
-
-#endif  // SRC_MAIN_CC_MATH_NOISE_PARAMETERS_COMPUTATION_H_
