@@ -39,6 +39,7 @@ using ::private_join_and_compute::ECPoint;
 using ::wfa::any_sketch::DifferentialPrivacyParams;
 using ::wfa::any_sketch::Sketch;
 using ::wfa::any_sketch::SketchConfig;
+using ::wfa::math::DistributedRandomComponentOptions;
 using ::wfa::math::GetDistributedGeometricRandomComponent;
 using ::wfa::math::GetPublisherNoiseOptions;
 using DestroyedRegisterStrategy =
@@ -56,10 +57,10 @@ constexpr absl::string_view kPublisherNoiseRegisterId =
 // Check if the sketch is valid or not.
 // A Sketch is valid if and only if all its registers contain the same number
 // of indexes and same number of values as the SketchConfig specifies.
-bool ValidateSketch(const Sketch& sketch) {
+bool ValidateSketch(const Sketch &sketch) {
   const int values_size = sketch.config().values_size();
   for (int i = 0; i < sketch.registers_size(); i++) {
-    const Sketch::Register& reg = sketch.registers(i);
+    const Sketch::Register &reg = sketch.registers(i);
     if (values_size != reg.values_size()) {
       return false;
     }
@@ -72,8 +73,8 @@ bool ValidateSketch(const Sketch& sketch) {
 // value by 1 when encoding the anysketch object to proto message. In other
 // words, destroyed registers in the proto message would have key value 0.
 // Here We check <= 0 for flexibility.
-bool IsRegisterDestroyed(const Sketch::Register& reg,
-                         const SketchConfig& sketch_config) {
+bool IsRegisterDestroyed(const Sketch::Register &reg,
+                         const SketchConfig &sketch_config) {
   for (int i = 0; i < reg.values_size(); i++) {
     if (sketch_config.values(i).aggregator() ==
             SketchConfig::ValueSpec::UNIQUE &&
@@ -92,19 +93,19 @@ class SketchEncrypterImpl : public SketchEncrypter {
                       std::unique_ptr<ECGroup> ec_group,
                       size_t max_counter_value);
   ~SketchEncrypterImpl() override = default;
-  SketchEncrypterImpl(SketchEncrypterImpl&& other) = delete;
-  SketchEncrypterImpl& operator=(SketchEncrypterImpl&& other) = delete;
-  SketchEncrypterImpl(const SketchEncrypterImpl&) = delete;
-  SketchEncrypterImpl& operator=(const SketchEncrypterImpl&) = delete;
+  SketchEncrypterImpl(SketchEncrypterImpl &&other) = delete;
+  SketchEncrypterImpl &operator=(SketchEncrypterImpl &&other) = delete;
+  SketchEncrypterImpl(const SketchEncrypterImpl &) = delete;
+  SketchEncrypterImpl &operator=(const SketchEncrypterImpl &) = delete;
 
   absl::StatusOr<std::string> Encrypt(
-      const Sketch& sketch,
+      const Sketch &sketch,
       DestroyedRegisterStrategy destroyed_register_strategy) override;
 
   absl::Status AppendNoiseRegisters(
-      const EncryptSketchRequest::PublisherNoiseParameter&
-          publisher_noise_parameter,
-      int value_count, std::string& encrypted_sketch) override;
+      const EncryptSketchRequest::PublisherNoiseParameter
+          &publisher_noise_parameter,
+      int value_count, std::string &encrypted_sketch) override;
 
  private:
   // ElGamal cipher used to do the encryption
@@ -132,30 +133,30 @@ class SketchEncrypterImpl : public SketchEncrypter {
   // to the sketch.
   absl::Status AppendEncryptedRegisterWithSameValue(
       absl::string_view index_ec, size_t num_of_values, int n,
-      std::string& encrypted_sketch);
+      std::string &encrypted_sketch);
   // Append an encrypted destroyed register with all values equal to the
   // encryption of the KDestroyedRegisterKey constant.
   absl::Status AppendFlaggedDestroyedRegister(absl::string_view index_ec,
                                               size_t num_of_values,
-                                              std::string& encrypted_sketch);
+                                              std::string &encrypted_sketch);
   // Encrypt a destroyed register by inserting a pair of registers with the
   // same actual index but different values.
   absl::Status EncryptDestroyedRegister(
-      const Sketch::Register& reg,
+      const Sketch::Register &reg,
       DestroyedRegisterStrategy destroyed_register_strategy,
-      std::string& encrypted_sketch);
+      std::string &encrypted_sketch);
   // Encrypt a non-destroyed register according to the exact values.
-  absl::Status EncryptNonDestroyedRegister(const Sketch::Register& reg,
-                                           const SketchConfig& sketch_config,
-                                           std::string& encrypted_sketch);
+  absl::Status EncryptNonDestroyedRegister(const Sketch::Register &reg,
+                                           const SketchConfig &sketch_config,
+                                           std::string &encrypted_sketch);
   // Encrypt a Register and append the result to the encrypted_sketch.
   absl::Status EncryptAdditionalRegister(
-      const Sketch::Register& reg, const SketchConfig& sketch_config,
+      const Sketch::Register &reg, const SketchConfig &sketch_config,
       DestroyedRegisterStrategy destroyed_register_strategy,
-      std::string& encrypted_sketch);
+      std::string &encrypted_sketch);
   // Encrypt an ECPoint and append the result to the encrypted_sketch.
   absl::Status EncryptAdditionalECPoint(absl::string_view ec_point,
-                                        std::string& encrypted_sketch) const;
+                                        std::string &encrypted_sketch) const;
   // Lookup the corresponding ECPoint of the input integer in the map.
   // If the ECPoint doesn't exist in the map, calculate it and insert the result
   // to the map. n can not be 0 since there is no string representation of the
@@ -179,7 +180,7 @@ SketchEncrypterImpl::SketchEncrypterImpl(
       max_counter_value_(max_counter_value) {}
 
 absl::StatusOr<std::string> SketchEncrypterImpl::Encrypt(
-    const Sketch& sketch,
+    const Sketch &sketch,
     DestroyedRegisterStrategy destroyed_register_strategy) {
   // Lock the mutex since most of the crypto computations here are NOT
   // thread-safe.
@@ -196,7 +197,7 @@ absl::StatusOr<std::string> SketchEncrypterImpl::Encrypt(
       num_registers * register_size * kBytesPerCipherText;
   std::string encrypted_sketch;
   encrypted_sketch.reserve(total_cipher_sketch_bytes);
-  for (auto& reg : sketch.registers()) {
+  for (auto &reg : sketch.registers()) {
     RETURN_IF_ERROR(EncryptAdditionalRegister(
         reg, sketch.config(), destroyed_register_strategy, encrypted_sketch));
   }
@@ -204,9 +205,9 @@ absl::StatusOr<std::string> SketchEncrypterImpl::Encrypt(
 }
 
 absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
-    const EncryptSketchRequest::PublisherNoiseParameter&
-        publisher_noise_parameter,
-    int value_count, std::string& encrypted_sketch) {
+    const EncryptSketchRequest::PublisherNoiseParameter
+        &publisher_noise_parameter,
+    int value_count, std::string &encrypted_sketch) {
   // Lock the mutex since most of the crypto computations here are NOT
   // thread-safe.
   absl::WriterMutexLock l(&mutex_);
@@ -214,13 +215,21 @@ absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
   if (value_count < 1) {
     return absl::InvalidArgumentError("value_count should be positive.");
   }
+
   DifferentialPrivacyParams params;
   params.set_epsilon(publisher_noise_parameter.epsilon());
   params.set_delta(publisher_noise_parameter.delta());
-  ASSIGN_OR_RETURN(
-      int64_t noise_count,
-      GetDistributedGeometricRandomComponent(GetPublisherNoiseOptions(
-          params, publisher_noise_parameter.publisher_count())));
+
+  // TODO(alberthsuu): Pass in a flag to toggle between different noise
+  // distributions
+  absl::StatusOr<int64_t> (*GetDistributedRandomComponent)(
+      DistributedRandomComponentOptions);
+  if (true) {
+    GetDistributedRandomComponent = &GetDistributedGeometricRandomComponent;
+  }
+  ASSIGN_OR_RETURN(int64_t noise_count,
+                   GetDistributedRandomComponent(GetPublisherNoiseOptions(
+                       params, publisher_noise_parameter.publisher_count())));
 
   if (noise_count < 1) {
     // noise_count would be at least 0.
@@ -254,7 +263,7 @@ absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
 
 absl::Status SketchEncrypterImpl::AppendEncryptedRegisterWithSameValue(
     absl::string_view index_ec, size_t num_of_values, int n,
-    std::string& encrypted_sketch) {
+    std::string &encrypted_sketch) {
   RETURN_IF_ERROR(EncryptAdditionalECPoint(index_ec, encrypted_sketch));
   ASSIGN_OR_RETURN(std::string value_ec, GetECPointForInteger(n));
   for (size_t i = 0; i < num_of_values; ++i) {
@@ -265,7 +274,7 @@ absl::Status SketchEncrypterImpl::AppendEncryptedRegisterWithSameValue(
 
 absl::Status SketchEncrypterImpl::AppendFlaggedDestroyedRegister(
     absl::string_view index_ec, size_t num_of_values,
-    std::string& encrypted_sketch) {
+    std::string &encrypted_sketch) {
   RETURN_IF_ERROR(EncryptAdditionalECPoint(index_ec, encrypted_sketch));
   if (destroyed_register_key_ec_.empty()) {
     // Do the mapping if there is no cached value.
@@ -280,9 +289,9 @@ absl::Status SketchEncrypterImpl::AppendFlaggedDestroyedRegister(
 }
 
 absl::Status SketchEncrypterImpl::EncryptDestroyedRegister(
-    const Sketch::Register& reg,
+    const Sketch::Register &reg,
     DestroyedRegisterStrategy destroyed_register_strategy,
-    std::string& encrypted_sketch) {
+    std::string &encrypted_sketch) {
   ASSIGN_OR_RETURN(std::string index_ec, MapToCurve(reg.index()));
   switch (destroyed_register_strategy) {
     case EncryptSketchRequest::CONFLICTING_KEYS: {
@@ -308,8 +317,8 @@ absl::Status SketchEncrypterImpl::EncryptDestroyedRegister(
 }
 
 absl::Status SketchEncrypterImpl::EncryptNonDestroyedRegister(
-    const Sketch::Register& reg, const SketchConfig& sketch_config,
-    std::string& encrypted_sketch) {
+    const Sketch::Register &reg, const SketchConfig &sketch_config,
+    std::string &encrypted_sketch) {
   // We encrypt the index as a string, since we don't need to do
   // addition on it.
   ASSIGN_OR_RETURN(std::string index_ec, MapToCurve(reg.index()));
@@ -348,9 +357,9 @@ absl::Status SketchEncrypterImpl::EncryptNonDestroyedRegister(
 }
 
 absl::Status SketchEncrypterImpl::EncryptAdditionalRegister(
-    const Sketch::Register& reg, const SketchConfig& sketch_config,
+    const Sketch::Register &reg, const SketchConfig &sketch_config,
     DestroyedRegisterStrategy destroyed_register_strategy,
-    std::string& encrypted_sketch) {
+    std::string &encrypted_sketch) {
   if (IsRegisterDestroyed(reg, sketch_config)) {
     return EncryptDestroyedRegister(reg, destroyed_register_strategy,
                                     encrypted_sketch);
@@ -360,7 +369,7 @@ absl::Status SketchEncrypterImpl::EncryptAdditionalRegister(
 }
 
 absl::Status SketchEncrypterImpl::EncryptAdditionalECPoint(
-    absl::string_view ec_point, std::string& encrypted_sketch) const {
+    absl::string_view ec_point, std::string &encrypted_sketch) const {
   ASSIGN_OR_RETURN(BlindersCiphertext ciphertext,
                    el_gamal_cipher_->Encrypt(ec_point));
   encrypted_sketch.append(ciphertext.first);
@@ -409,7 +418,7 @@ absl::StatusOr<std::string> SketchEncrypterImpl::MapToCurve(int64_t plaintext) {
 
 absl::StatusOr<std::unique_ptr<SketchEncrypter>> CreateWithPublicKey(
     int curve_id, size_t max_counter_value,
-    const CiphertextString& public_key_bytes) {
+    const CiphertextString &public_key_bytes) {
   auto ctx = absl::make_unique<Context>();
   ASSIGN_OR_RETURN(ECGroup temp_ec_group, ECGroup::Create(curve_id, ctx.get()));
   auto ec_group = absl::make_unique<ECGroup>(std::move(temp_ec_group));
@@ -425,7 +434,7 @@ absl::StatusOr<std::unique_ptr<SketchEncrypter>> CreateWithPublicKey(
 }
 
 absl::StatusOr<ElGamalPublicKey> CombineElGamalPublicKeys(
-    int curve_id, const std::vector<ElGamalPublicKey>& keys) {
+    int curve_id, const std::vector<ElGamalPublicKey> &keys) {
   if (keys.empty()) {
     return absl::InvalidArgumentError("Keys cannot be empty");
   }

@@ -31,6 +31,7 @@ TEST(GetPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
   EXPECT_NEAR(options.p, 0.964, 0.001);
   EXPECT_EQ(options.shift_offset, 428);
   EXPECT_EQ(options.truncate_threshold, 428);
+  EXPECT_NEAR(options.sigma, 71.2131, 0.001);
 }
 
 }  // namespace

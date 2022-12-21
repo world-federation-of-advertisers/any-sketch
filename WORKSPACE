@@ -18,12 +18,19 @@ load("@wfa_common_cpp//build:common_cpp_deps.bzl", "common_cpp_deps")
 
 common_cpp_deps()
 
-load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
+load("@wfa_common_cpp//build:common_cpp_extra_deps.bzl", "common_cpp_extra_deps")
 
-# Includes boringssl, com_google_absl, and other dependencies.
-grpc_deps()
+common_cpp_extra_deps()
 
-load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
+# differential-privacy
+load("//build:any_sketch_repositories.bzl", "any_sketch_repositories")
 
-# Loads transitive dependencies of GRPC.
-grpc_extra_deps()
+any_sketch_repositories()
+
+load("//build:any_sketch_deps.bzl", "any_sketch_deps")
+
+any_sketch_deps()
+
+load("//build:any_sketch_extra_deps.bzl", "any_sketch_extra_deps")
+
+any_sketch_extra_deps()

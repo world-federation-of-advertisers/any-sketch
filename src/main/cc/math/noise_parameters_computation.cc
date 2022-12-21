@@ -11,10 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 #include "math/noise_parameters_computation.h"
 
+#include <memory>
+
+#include "accounting/accountant.h"
+
 namespace wfa::math {
+using differential_privacy::accounting::AdditiveNoisePrivacyLoss;
+using differential_privacy::accounting::EpsilonDelta;
+using differential_privacy::accounting::GaussianPrivacyLoss;
 
 namespace {
 
@@ -28,21 +34,31 @@ int ComputateMuPolya(double epsilon, double delta, int sensitivity, int n) {
       (epsilon / sensitivity));
 }
 
+std::unique_ptr<AdditiveNoisePrivacyLoss> GaussianNoiseFunction(
+    double standard_deviation, double sensitivity) {
+  return GaussianPrivacyLoss::Create(standard_deviation, sensitivity).value();
+}
+
 }  // namespace
 
-math::DistributedGeometricRandomComponentOptions GetPublisherNoiseOptions(
+math::DistributedRandomComponentOptions GetPublisherNoiseOptions(
     const wfa::any_sketch::DifferentialPrivacyParams& params,
     int publisher_count) {
   ABSL_ASSERT(publisher_count > 0);
   double success_ratio = std::exp(-params.epsilon() / publisher_count);
   int offset =
       ComputateMuPolya(params.epsilon(), params.delta(), publisher_count, 1);
-  return {
-      .num = 1,
-      .p = success_ratio,
-      .truncate_threshold = offset,
-      .shift_offset = offset,
-  };
+
+  EpsilonDelta epsilon_delta = {.epsilon = params.epsilon(),
+                                .delta = params.delta()};
+  auto sigma = GetSmallestParameter(epsilon_delta, 5, 1, GaussianNoiseFunction,
+                                    absl::optional<double>());
+
+  return {.num = 1,
+          .p = success_ratio,
+          .truncate_threshold = offset,
+          .shift_offset = offset,
+          .sigma = sigma.value()};
 }
 
 }  // namespace wfa::math
