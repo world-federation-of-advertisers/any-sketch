@@ -61,7 +61,7 @@ absl::StatusOr<int64_t> GetTruncatedPolyaRandomVariable(
 }  // namespace
 
 absl::StatusOr<int64_t> GetDistributedGeometricRandomComponent(
-    DistributedGeometricRandomComponentOptions options) {
+    DistributedRandomComponentOptions options) {
   if (options.num < 1) {
     return absl::InvalidArgumentError("The num should be positive.");
   }
@@ -75,6 +75,36 @@ absl::StatusOr<int64_t> GetDistributedGeometricRandomComponent(
                                         options.truncate_threshold,
                                         1.0 / options.num, options.p, rnd));
   return options.shift_offset + polya_a - polya_b;
+}
+
+absl::StatusOr<int64_t> GetDistributedDiscreteGaussianRandomComponent(
+    DistributedRandomComponentOptions options) {
+  std::cout << "Generating discrete Gaussian noise..." << std::endl;
+
+  absl::BitGen rnd;
+
+  double sigma = options.sigma;
+  double sigma_sq = sigma * sigma;
+  double t = std::floor(sigma) + 1;
+  double p_geometric = 1 - exp(-1 / t);
+  if (p_geometric <= 0 || p_geometric >= 1) {
+    return absl::InvalidArgumentError(
+        "Probability p_geometric should "
+        "be in (0,1).");
+  }
+
+  std::geometric_distribution<int> geometric_distribution(p_geometric);
+  std::uniform_real_distribution<double> uniform_real_distribution;
+
+  int64_t y;
+  double p_bernoulli;
+
+  do {
+    y = geometric_distribution(rnd) - geometric_distribution(rnd);
+    p_bernoulli = exp(-pow((std::abs(y) - sigma_sq / t), 2.0) * 0.5 / sigma_sq);
+  } while (uniform_real_distribution(rnd) > p_bernoulli);
+
+  return y;
 }
 
 }  // namespace wfa::math

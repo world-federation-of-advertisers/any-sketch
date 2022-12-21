@@ -8,6 +8,7 @@ cc_test(
     ],
     deps = [
         "//src/main/cc/math:noise_parameters_computation",
+        "@com_google_cc_differential_privacy//accounting:pld",
         "@com_google_googletest//:gtest",
         "@com_google_googletest//:gtest_main",
     ],

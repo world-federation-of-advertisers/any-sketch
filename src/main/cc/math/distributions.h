@@ -20,7 +20,7 @@
 
 namespace wfa::math {
 
-struct DistributedGeometricRandomComponentOptions {
+struct DistributedRandomComponentOptions {
   // The number of contributors to the global random variable.
   int64_t num;
   // The p (success ratio) parameter of the polya distribution. 0<p<1.
@@ -31,13 +31,18 @@ struct DistributedGeometricRandomComponentOptions {
   // The offset added to the PolyaDiff. Usually greater than the
   // truncate_threshold such that the final result is positive.
   int64_t shift_offset = 0;
+
+  double sigma;
 };
 
 // Gets one component of a truncatedShiftedTwoSidedGeometricDistributed random
 // variable using the decentralized mechanism, i.e., a truncated shifted
 // PolyaDiff.
 absl::StatusOr<int64_t> GetDistributedGeometricRandomComponent(
-    DistributedGeometricRandomComponentOptions options);
+    DistributedRandomComponentOptions options);
+
+absl::StatusOr<int64_t> GetDistributedDiscreteGaussianRandomComponent(
+    DistributedRandomComponentOptions options);
 
 }  // namespace wfa::math
 

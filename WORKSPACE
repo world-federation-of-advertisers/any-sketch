@@ -18,12 +18,29 @@ load("@wfa_common_cpp//build:common_cpp_deps.bzl", "common_cpp_deps")
 
 common_cpp_deps()
 
-load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
+load("@wfa_common_cpp//build:common_cpp_extra_deps.bzl", "common_cpp_extra_deps")
 
-# Includes boringssl, com_google_absl, and other dependencies.
-grpc_deps()
+common_cpp_extra_deps()
 
-load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
+# differential-privacy
+http_archive(
+    name = "com_google_differential_privacy",
+    sha256 = "db54f30a4176a07543c54932690afa5932097203cb4be357e9310f99f624886c",
+    strip_prefix = "differential-privacy-2.0.0",
+    url = "https://github.com/google/differential-privacy/archive/refs/tags/v2.0.0.tar.gz",
+)
 
-# Loads transitive dependencies of GRPC.
-grpc_extra_deps()
+http_archive(
+    name = "com_google_cc_differential_privacy",
+    sha256 = "db54f30a4176a07543c54932690afa5932097203cb4be357e9310f99f624886c",
+    strip_prefix = "differential-privacy-2.0.0/cc",
+    url = "https://github.com/google/differential-privacy/archive/refs/tags/v2.0.0.tar.gz",
+)
+
+load("//build:any_sketch_deps.bzl", "any_sketch_deps")
+
+any_sketch_deps()
+
+load("//build:any_sketch_extra_deps.bzl", "any_sketch_extra_deps")
+
+any_sketch_extra_deps()

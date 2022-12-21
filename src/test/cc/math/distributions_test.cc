@@ -19,7 +19,6 @@
 #include "absl/status/statusor.h"
 #include "common_cpp/macros/macros.h"
 #include "common_cpp/testing/status_macros.h"
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 namespace wfa::math {
@@ -28,7 +27,7 @@ namespace {
 // Create a random number with twoSidedGeometricDistribution using the
 // decentralized mechanism, i.e., as the summation of N PolyaDiff.
 absl::StatusOr<int64_t> GetTwoSidedGeometricDistributedRandomNumber(
-    DistributedGeometricRandomComponentOptions options) {
+    DistributedRandomComponentOptions options) {
   int64_t result = 0;
   for (size_t i = 0; i < options.num; ++i) {
     ASSIGN_OR_RETURN(int64_t temp,
@@ -95,6 +94,12 @@ TEST(GlobalSummation, ProbabilityMassFunctionShouldBeCorrect) {
         (1 - p) / (1 + p) * std::pow(p, std::abs(x - total_offset));
     EXPECT_NEAR(probability, expected_probability, 0.01);
   }
+}
+
+TEST(GetDistributedDiscreteGaussianRandomComponent,
+     ReturnsExpectedDistribution) {
+  ASSERT_OK_AND_ASSIGN(int64_t y, GetDistributedDiscreteGaussianRandomComponent(
+                                      {.sigma = 0.73}));
 }
 
 }  // namespace

@@ -20,7 +20,7 @@
 
 namespace wfa::math {
 
-math::DistributedGeometricRandomComponentOptions GetPublisherNoiseOptions(
+math::DistributedRandomComponentOptions GetPublisherNoiseOptions(
     const wfa::any_sketch::DifferentialPrivacyParams& params,
     int publisher_count);
 
