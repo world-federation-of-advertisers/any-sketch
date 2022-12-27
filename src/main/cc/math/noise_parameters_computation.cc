@@ -39,6 +39,17 @@ std::unique_ptr<AdditiveNoisePrivacyLoss> GaussianNoiseFunction(
   return GaussianPrivacyLoss::Create(standard_deviation, sensitivity).value();
 }
 
+double ComputeSigma(double epsilon, double delta) {
+  ABSL_ASSERT(epsilon > 0);
+  ABSL_ASSERT(delta > 0);
+
+  EpsilonDelta epsilon_delta = {.epsilon = epsilon, .delta = delta};
+  auto sigma = GetSmallestParameter(epsilon_delta, 5, 1, GaussianNoiseFunction,
+                                    absl::optional<double>());
+
+  return sigma.value();
+}
+
 }  // namespace
 
 math::DistributedRandomComponentOptions GetPublisherNoiseOptions(
@@ -49,16 +60,13 @@ math::DistributedRandomComponentOptions GetPublisherNoiseOptions(
   int offset =
       ComputateMuPolya(params.epsilon(), params.delta(), publisher_count, 1);
 
-  EpsilonDelta epsilon_delta = {.epsilon = params.epsilon(),
-                                .delta = params.delta()};
-  auto sigma = GetSmallestParameter(epsilon_delta, 5, 1, GaussianNoiseFunction,
-                                    absl::optional<double>());
+  double sigma = ComputeSigma(params.epsilon(), params.delta());
 
   return {.num = 1,
           .p = success_ratio,
           .truncate_threshold = offset,
           .shift_offset = offset,
-          .sigma = sigma.value()};
+          .sigma = sigma};
 }
 
 }  // namespace wfa::math
