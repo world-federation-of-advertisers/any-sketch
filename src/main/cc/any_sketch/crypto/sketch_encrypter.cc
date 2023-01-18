@@ -20,9 +20,9 @@
 
 #include "absl/container/flat_hash_map.h"
 #include "common_cpp/macros/macros.h"
+#include "math/distributed_discrete_gaussian_random_noise.h"
 #include "math/distributed_geometric_random_noise.h"
 #include "math/distributed_random_noise.h"
-#include "math/distributions.h"
 #include "math/noise_parameters_computation.h"
 #include "private_join_and_compute/crypto/commutative_elgamal.h"
 #include "private_join_and_compute/crypto/context.h"
@@ -41,8 +41,6 @@ using ::private_join_and_compute::ECPoint;
 using ::wfa::any_sketch::DifferentialPrivacyParams;
 using ::wfa::any_sketch::Sketch;
 using ::wfa::any_sketch::SketchConfig;
-using ::wfa::math::GetDistributedGeometricRandomComponent;
-using ::wfa::math::GetPublisherNoiseOptions;
 using DestroyedRegisterStrategy =
     ::wfa::any_sketch::crypto::EncryptSketchRequest::DestroyedRegisterStrategy;
 using BlindersCiphertext = std::pair<std::string, std::string>;
@@ -218,20 +216,25 @@ absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
   }
 
   DifferentialPrivacyParams params;
-  math::DistributedRandomNoise* pDistributedRandomNoise;
-
-  if (true) {
-    pDistributedRandomNoise = new math::DistributedGeometricRandomNoise();
-  }
-
   params.set_epsilon(publisher_noise_parameter.epsilon());
   params.set_delta(publisher_noise_parameter.delta());
 
-  ASSIGN_OR_RETURN(
-      int64_t noise_count,
-      pDistributedRandomNoise->GenerateNoiseComponent(
-          math::GetPublisherNoiseOptions(
-              params, publisher_noise_parameter.publisher_count())));
+  math::DistributedRandomNoise* pDistributedRandomNoise;
+
+  if (true) {
+    math::DistributedGeometricRandomComponentOptions geometricOptions =
+        math::GetGeometricPublisherNoiseOptions(
+            params, publisher_noise_parameter.publisher_count());
+    pDistributedRandomNoise =
+        new math::DistributedGeometricRandomNoise(geometricOptions);
+  } else {
+    double sigma = math::ComputeSigma(params);
+    pDistributedRandomNoise =
+        new math::DistributedDiscreteGaussianRandomNoise(sigma);
+  }
+
+  ASSIGN_OR_RETURN(int64_t noise_count,
+                   pDistributedRandomNoise->GenerateNoiseComponent());
 
   delete pDistributedRandomNoise;
 

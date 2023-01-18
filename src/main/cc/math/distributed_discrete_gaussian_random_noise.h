@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_MATH_DISTRIBUTED_GAUSSIAN_RANDOM_NOISE_H_
-#define SRC_MAIN_CC_MATH_DISTRIBUTED_GAUSSIAN_RANDOM_NOISE_H_
+#ifndef SRC_MAIN_CC_MATH_DISTRIBUTED_DISCRETE_GAUSSIAN_RANDOM_NOISE_H_
+#define SRC_MAIN_CC_MATH_DISTRIBUTED_DISCRETE_GAUSSIAN_RANDOM_NOISE_H_
 
 #include "absl/random/bit_gen_ref.h"
 #include "src/main/cc/math/distributed_random_noise.h"
 
 namespace wfa::math {
 
-class DistributedGaussianRandomNoise : public DistributedRandomNoise {
+class DistributedDiscreteGaussianRandomNoise : public DistributedRandomNoise {
  public:
-  absl::StatusOr<int64_t> GenerateNoiseComponent(
-      DistributedRandomComponentOptions options) override;
+  explicit DistributedDiscreteGaussianRandomNoise(double sigma);
+  absl::StatusOr<int64_t> GenerateNoiseComponent() override;
 
  private:
+  double sigma_;
 };
 }  // namespace wfa::math
 
-#endif  // SRC_MAIN_CC_MATH_DISTRIBUTED_GAUSSIAN_RANDOM_NOISE_H_
+#endif  // SRC_MAIN_CC_MATH_DISTRIBUTED_DISCRETE_GAUSSIAN_RANDOM_NOISE_H_

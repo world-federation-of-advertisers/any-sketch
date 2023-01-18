@@ -23,17 +23,17 @@
 
 namespace wfa::math {
 namespace {
-DistributedGeometricRandomNoise distributedGeometricRandomNoise;
 
 // Create a random number with twoSidedGeometricDistribution using the
 // decentralized mechanism, i.e., as the summation of N PolyaDiff.
 absl::StatusOr<int64_t> GetTwoSidedGeometricDistributedRandomNumber(
-    DistributedRandomComponentOptions options) {
+    DistributedGeometricRandomNoise* p_distributedGeometricRandomNoise,
+    int64_t num) {
   int64_t result = 0;
-  for (size_t i = 0; i < options.num; ++i) {
+  for (size_t i = 0; i < num; ++i) {
     ASSIGN_OR_RETURN(
         int64_t temp,
-        distributedGeometricRandomNoise.GenerateNoiseComponent(options));
+        p_distributedGeometricRandomNoise->GenerateNoiseComponent());
     result += temp;
   }
   return result;
@@ -48,13 +48,16 @@ TEST(GeometricRandomNoiseIndividualComponent, MeanMaxMinShouldBeCorrect) {
   int64_t max_value = 0;
 
   size_t num_trials = 100000;
+
+  DistributedGeometricRandomNoise distributedGeometricRandomNoise(
+      {.num = 3,
+       .p = 0.6,
+       .truncate_threshold = truncate_threshold,
+       .shift_offset = shift_offset});
+
   for (size_t i = 0; i < num_trials; ++i) {
-    ASSERT_OK_AND_ASSIGN(int64_t temp,
-                         distributedGeometricRandomNoise.GenerateNoiseComponent(
-                             {.num = 3,
-                              .p = 0.6,
-                              .truncate_threshold = truncate_threshold,
-                              .shift_offset = shift_offset}));
+    ASSERT_OK_AND_ASSIGN(
+        int64_t temp, distributedGeometricRandomNoise.GenerateNoiseComponent());
     sum += temp;
     min_value = std::min(min_value, temp);
     max_value = std::max(max_value, temp);
@@ -73,6 +76,12 @@ TEST(GeometricRandomNoiseGlobalSummation,
   int64_t num = 3;                  // 3 contributors
   int64_t shift_offset = 10;        // Individual offset
   int64_t truncate_threshold = 10;  // The value should be reasonably large.
+
+  auto* pDistributedGeometricRandomNoise = new DistributedGeometricRandomNoise(
+      {.num = num,
+       .p = p,
+       .truncate_threshold = truncate_threshold,
+       .shift_offset = shift_offset});
   int64_t total_offset = num * shift_offset;
   int64_t min_output = total_offset - truncate_threshold * num;
   int64_t max_output = total_offset + truncate_threshold * num;
@@ -82,14 +91,14 @@ TEST(GeometricRandomNoiseGlobalSummation,
   for (size_t i = 0; i < num_trials; ++i) {
     ASSERT_OK_AND_ASSIGN(int64_t temp,
                          GetTwoSidedGeometricDistributedRandomNumber(
-                             {.num = num,
-                              .p = p,
-                              .truncate_threshold = truncate_threshold,
-                              .shift_offset = shift_offset}));
+                             pDistributedGeometricRandomNoise, num));
     ASSERT_GE(temp, min_output);
     ASSERT_LE(temp, max_output);
     ++frequency_distribution[temp];
   }
+
+  delete pDistributedGeometricRandomNoise;
+
   for (int64_t x = min_output; x <= max_output; ++x) {
     double probability =
         static_cast<double>(frequency_distribution[x]) / num_trials;

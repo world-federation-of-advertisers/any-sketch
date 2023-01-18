@@ -14,6 +14,7 @@
 
 #include "math/noise_parameters_computation.h"
 
+#include "math/distributed_geometric_random_noise.h"
 #include "math/distributed_random_noise.h"
 
 namespace wfa::math {
@@ -32,7 +33,8 @@ int ComputateMuPolya(double epsilon, double delta, int sensitivity, int n) {
 
 }  // namespace
 
-math::DistributedRandomComponentOptions GetPublisherNoiseOptions(
+math::DistributedGeometricRandomComponentOptions
+GetGeometricPublisherNoiseOptions(
     const wfa::any_sketch::DifferentialPrivacyParams& params,
     int publisher_count) {
   ABSL_ASSERT(publisher_count > 0);
@@ -45,6 +47,24 @@ math::DistributedRandomComponentOptions GetPublisherNoiseOptions(
       .truncate_threshold = offset,
       .shift_offset = offset,
   };
+}
+
+double ComputeSigma(const wfa::any_sketch::DifferentialPrivacyParams& params) {
+  double epsilon = params.epsilon();
+  double delta = params.delta();
+
+  ABSL_ASSERT(epsilon > 0);
+  ABSL_ASSERT(delta > 0);
+
+  // TODO(alberthsuu): Update formula to sigma = 1 / sqrt(2 * rho) once
+  // concentrated DP (CDP) for accounting is implemented
+
+  // The sigma calculation formula is a closed-form formula from The Algorithmic
+  // Foundations of Differential Privacy p.265 Theorem A.1
+  // https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf
+  // This formula generally works for epsilon <= 1 but not epsilon > 1
+
+  return std::sqrt(2 * std::log(1.25 / delta)) / epsilon;
 }
 
 }  // namespace wfa::math

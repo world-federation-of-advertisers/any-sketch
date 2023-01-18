@@ -23,6 +23,10 @@
 
 namespace wfa::math {
 
+wfa::math::DistributedGeometricRandomNoise::DistributedGeometricRandomNoise(
+    DistributedGeometricRandomComponentOptions options)
+    : options_(options) {}
+
 absl::StatusOr<int64_t>
 wfa::math::DistributedGeometricRandomNoise::GetPolyaRandomVariable(
     double r, double p, absl::BitGenRef rnd) {
@@ -44,10 +48,10 @@ wfa::math::DistributedGeometricRandomNoise::GetTruncatedPolyaRandomVariable(
     return GetPolyaRandomVariable(r, p, rnd);
   }
 
-  for (int i = 0; i < kMaximumAttempts; ++i) {
-    ASSIGN_OR_RETURN(polya, GetPolyaRandomVariable(r, p, rnd));
-    if (polya <= truncate_threshold) {
-      return polya;
+  for (int i = 0; i < kMaximumAttempts_; ++i) {
+    ASSIGN_OR_RETURN(polya_, GetPolyaRandomVariable(r, p, rnd));
+    if (polya_ <= truncate_threshold) {
+      return polya_;
     }
   }
 
@@ -56,9 +60,8 @@ wfa::math::DistributedGeometricRandomNoise::GetTruncatedPolyaRandomVariable(
 }
 
 absl::StatusOr<int64_t>
-wfa::math::DistributedGeometricRandomNoise::GenerateNoiseComponent(
-    wfa::math::DistributedRandomComponentOptions options) {
-  if (options.num < 1) {
+wfa::math::DistributedGeometricRandomNoise::GenerateNoiseComponent() {
+  if (options_.num < 1) {
     return absl::InvalidArgumentError("The num should be positive.");
   }
 
@@ -66,12 +69,12 @@ wfa::math::DistributedGeometricRandomNoise::GenerateNoiseComponent(
   absl::BitGen rnd;
 
   ASSIGN_OR_RETURN(int64_t polya_a, GetTruncatedPolyaRandomVariable(
-                                        options.truncate_threshold,
-                                        1.0 / options.num, options.p, rnd));
+                                        options_.truncate_threshold,
+                                        1.0 / options_.num, options_.p, rnd));
   ASSIGN_OR_RETURN(int64_t polya_b, GetTruncatedPolyaRandomVariable(
-                                        options.truncate_threshold,
-                                        1.0 / options.num, options.p, rnd));
+                                        options_.truncate_threshold,
+                                        1.0 / options_.num, options_.p, rnd));
 
-  return options.shift_offset + polya_a - polya_b;
+  return options_.shift_offset + polya_a - polya_b;
 }
 }  // namespace wfa::math

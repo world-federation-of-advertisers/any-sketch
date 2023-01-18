@@ -15,15 +15,18 @@
 #ifndef SRC_MAIN_CC_MATH_NOISE_PARAMETERS_COMPUTATION_H_
 #define SRC_MAIN_CC_MATH_NOISE_PARAMETERS_COMPUTATION_H_
 
+#include "math/distributed_geometric_random_noise.h"
 #include "math/distributed_random_noise.h"
-#include "math/distributions.h"
 #include "wfa/any_sketch/differential_privacy.pb.h"
 
 namespace wfa::math {
 
-math::DistributedRandomComponentOptions GetPublisherNoiseOptions(
+math::DistributedGeometricRandomComponentOptions
+GetGeometricPublisherNoiseOptions(
     const wfa::any_sketch::DifferentialPrivacyParams& params,
     int publisher_count);
+
+double ComputeSigma(const wfa::any_sketch::DifferentialPrivacyParams& params);
 
 }  // namespace wfa::math
 

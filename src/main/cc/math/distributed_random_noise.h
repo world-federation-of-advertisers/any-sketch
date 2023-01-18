@@ -19,27 +19,17 @@
 
 namespace wfa::math {
 
-struct DistributedRandomComponentOptions {
-  // For DistributedGeometricRandomComponent
-  // The number of contributors to the global random variable.
-  int64_t num;
-  // The p (success ratio) parameter of the polya distribution. 0<p<1.
-  double p;
-  // The threshold to truncate the polya random variables. A negative value
-  // indicates no truncation.
-  int64_t truncate_threshold = -1;
-  // The offset added to the PolyaDiff. Usually greater than the
-  // truncate_threshold such that the final result is positive.
-  int64_t shift_offset = 0;
-
-  // For DistributedGaussianRandomComponent
-};
-
 class DistributedRandomNoise {
  public:
-  virtual absl::StatusOr<int64_t> GenerateNoiseComponent(
-      DistributedRandomComponentOptions options) = 0;
+  DistributedRandomNoise(const DistributedRandomNoise& other) = delete;
+  DistributedRandomNoise& operator=(const DistributedRandomNoise& other) =
+      delete;
   virtual ~DistributedRandomNoise() = default;
+
+  virtual absl::StatusOr<int64_t> GenerateNoiseComponent() = 0;
+
+ protected:
+  DistributedRandomNoise() = default;
 };
 
 }  // namespace wfa::math

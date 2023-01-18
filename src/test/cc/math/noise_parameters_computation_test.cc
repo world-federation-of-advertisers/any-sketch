@@ -25,7 +25,8 @@ TEST(GetPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
   test_params.set_delta(0.2 / 100000);
   int publisher_count = 3;
 
-  auto options = GetPublisherNoiseOptions(test_params, publisher_count);
+  auto options =
+      GetGeometricPublisherNoiseOptions(test_params, publisher_count);
 
   EXPECT_EQ(options.num, 1);
   EXPECT_NEAR(options.p, 0.964, 0.001);

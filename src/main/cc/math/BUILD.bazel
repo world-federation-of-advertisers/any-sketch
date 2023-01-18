@@ -26,6 +26,7 @@ cc_library(
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         "//src/main/cc/math:distributed_random_noise",
+        "//src/main/proto/wfa/any_sketch:differential_privacy_cc_proto",
         "@com_google_absl//absl/random",
         "@com_google_absl//absl/random:bit_gen_ref",
         "@com_google_absl//absl/random:distributions",
@@ -35,34 +36,16 @@ cc_library(
 )
 
 cc_library(
-    name = "distributed_gaussian_random_noise",
+    name = "distributed_discrete_gaussian_random_noise",
     srcs = [
-        "distributed_gaussian_random_noise.cc",
+        "distributed_discrete_gaussian_random_noise.cc",
     ],
     hdrs = [
-        "distributed_gaussian_random_noise.h",
+        "distributed_discrete_gaussian_random_noise.h",
     ],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         "//src/main/cc/math:distributed_random_noise",
-        "@com_google_absl//absl/random",
-        "@com_google_absl//absl/random:bit_gen_ref",
-        "@com_google_absl//absl/random:distributions",
-        "@com_google_absl//absl/status:statusor",
-        "@wfa_common_cpp//src/main/cc/common_cpp/macros",
-    ],
-)
-
-cc_library(
-    name = "distributions",
-    srcs = [
-        "distributions.cc",
-    ],
-    hdrs = [
-        "distributions.h",
-    ],
-    strip_include_prefix = _INCLUDE_PREFIX,
-    deps = [
         "@com_google_absl//absl/random",
         "@com_google_absl//absl/random:bit_gen_ref",
         "@com_google_absl//absl/random:distributions",
@@ -83,7 +66,6 @@ cc_library(
     deps = [
         "//src/main/cc/math:distributed_geometric_random_noise",
         "//src/main/cc/math:distributed_random_noise",
-        "//src/main/cc/math:distributions",
         "//src/main/proto/wfa/any_sketch:differential_privacy_cc_proto",
     ],
 )
