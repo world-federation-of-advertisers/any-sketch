@@ -18,16 +18,29 @@
 
 #include "common_cpp/macros/macros.h"
 #include "common_cpp/testing/status_macros.h"
+#include "common_cpp/testing/status_matchers.h"
 #include "gtest/gtest.h"
 
 namespace wfa::math {
 namespace {
 DistributedDiscreteGaussianRandomNoise distributedGaussianRandomNoise(0.73);
 
-TEST(GaussianRandomNoiseIndividualComponent, SimpleTest) {
-  ASSERT_OK_AND_ASSIGN(int64_t result,
-                       distributedGaussianRandomNoise.GenerateNoiseComponent());
-  //  EXPECT_EQ(result, 100);
+TEST(GaussianRandomNoiseIndividualComponent, StatusIsOK) {
+  ASSERT_THAT(distributedGaussianRandomNoise.GenerateNoiseComponent(), IsOk());
 }
+
+TEST(GaussianRandomNoiseGenerateNoiseComponent, ReturnsSampledValues) {
+  int num = 5;
+  std::vector<int64_t> results;
+
+  for (size_t i = 0; i < num; ++i) {
+    ASSERT_OK_AND_ASSIGN(
+        int64_t temp, distributedGaussianRandomNoise.GenerateNoiseComponent());
+    results.push_back(temp);
+  }
+
+  ASSERT_THAT(results.size(), num);
+}
+
 }  // namespace
 }  // namespace wfa::math

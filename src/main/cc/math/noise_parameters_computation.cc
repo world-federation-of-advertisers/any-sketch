@@ -56,8 +56,8 @@ double ComputeSigma(const wfa::any_sketch::DifferentialPrivacyParams& params) {
   ABSL_ASSERT(epsilon > 0);
   ABSL_ASSERT(delta > 0);
 
-  // TODO(alberthsuu): Update formula to sigma = 1 / sqrt(2 * rho) once
-  // concentrated DP (CDP) for accounting is implemented
+  // TODO(@iverson52000): Update formula to sigma = 1 / sqrt(2 * rho) once
+  // Almost Concentrated DP (ACDP) for accounting is implemented
 
   // The sigma calculation formula is a closed-form formula from The Algorithmic
   // Foundations of Differential Privacy p.265 Theorem A.1

@@ -8,9 +8,8 @@ cc_library(
     hdrs = ["sketch_encrypter.h"],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
-        #        "//src/main/cc/math:distributions",
-        "//src/main/cc/math:distributed_geometric_random_noise",
         "//src/main/cc/math:distributed_discrete_gaussian_random_noise",
+        "//src/main/cc/math:distributed_geometric_random_noise",
         "//src/main/cc/math:noise_parameters_computation",
         "//src/main/proto/wfa/any_sketch:sketch_cc_proto",
         "//src/main/proto/wfa/any_sketch/crypto:el_gamal_key_cc_proto",

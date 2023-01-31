@@ -221,17 +221,11 @@ absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
 
   math::DistributedRandomNoise* pDistributedRandomNoise;
 
-  if (true) {
-    math::DistributedGeometricRandomComponentOptions geometricOptions =
-        math::GetGeometricPublisherNoiseOptions(
-            params, publisher_noise_parameter.publisher_count());
-    pDistributedRandomNoise =
-        new math::DistributedGeometricRandomNoise(geometricOptions);
-  } else {
-    double sigma = math::ComputeSigma(params);
-    pDistributedRandomNoise =
-        new math::DistributedDiscreteGaussianRandomNoise(sigma);
-  }
+  math::DistributedGeometricRandomComponentOptions geometricOptions =
+      math::GetGeometricPublisherNoiseOptions(
+          params, publisher_noise_parameter.publisher_count());
+  pDistributedRandomNoise =
+      new math::DistributedGeometricRandomNoise(geometricOptions);
 
   ASSIGN_OR_RETURN(int64_t noise_count,
                    pDistributedRandomNoise->GenerateNoiseComponent());
