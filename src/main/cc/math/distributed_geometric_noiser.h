@@ -12,23 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_RANDOM_NOISE_H_
-#define SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_RANDOM_NOISE_H_
+#ifndef SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_NOISER_H_
+#define SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_NOISER_H_
 
 #include "absl/random/bit_gen_ref.h"
 #include "absl/status/statusor.h"
-#include "src/main/cc/math/distributed_random_noise.h"
-#include "wfa/any_sketch/differential_privacy.pb.h"
+#include "math/distributed_noiser.h"
 
 namespace wfa::math {
-using wfa::any_sketch::DifferentialPrivacyParams;
 
-struct DistributedGeometricRandomComponentOptions {
-  // For DistributedGeometricRandomComponent
+struct DistributedGeometricNoiseComponentOptions {
+  // For DistributedGeometricNoiser.
   // The number of contributors to the global random variable.
-  int64_t num{};
+  int64_t contributor_count;
   // The p (success ratio) parameter of the polya distribution. 0<p<1.
-  double p{};
+  double p;
   // The threshold to truncate the polya random variables. A negative value
   // indicates no truncation.
   int64_t truncate_threshold = -1;
@@ -37,15 +35,16 @@ struct DistributedGeometricRandomComponentOptions {
   int64_t shift_offset = 0;
 };
 
-class DistributedGeometricRandomNoise : public DistributedRandomNoise {
+class DistributedGeometricNoiser : public DistributedNoiser {
  public:
-  explicit DistributedGeometricRandomNoise(
-      DistributedGeometricRandomComponentOptions options);
+  explicit DistributedGeometricNoiser(
+      DistributedGeometricNoiseComponentOptions options);
   absl::StatusOr<int64_t> GenerateNoiseComponent() override;
 
  private:
-  DistributedGeometricRandomComponentOptions options_;
+  DistributedGeometricNoiseComponentOptions options_;
   static constexpr int kMaximumAttempts_ = 20;
+  // Truncated Polya random variable
   int64_t polya_{};
   absl::StatusOr<int64_t> GetPolyaRandomVariable(double r, double p,
                                                  absl::BitGenRef rnd);
@@ -55,4 +54,4 @@ class DistributedGeometricRandomNoise : public DistributedRandomNoise {
 
 }  // namespace wfa::math
 
-#endif  // SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_RANDOM_NOISE_H_
+#endif  // SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_NOISER_H_

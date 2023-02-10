@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "math/distributed_discrete_gaussian_random_noise.h"
+#include "math/distributed_discrete_gaussian_noiser.h"
 
 #include <unordered_map>
 
@@ -23,13 +23,14 @@
 
 namespace wfa::math {
 namespace {
-DistributedDiscreteGaussianRandomNoise distributedGaussianRandomNoise(0.73);
+DistributedDiscreteGaussianNoiser distributedGaussianRandomNoise(
+    {.sigma = 0.73});
 
-TEST(GaussianRandomNoiseIndividualComponent, StatusIsOK) {
+TEST(DiscreteGaussianNoiseIndividualComponent, StatusIsOK) {
   ASSERT_THAT(distributedGaussianRandomNoise.GenerateNoiseComponent(), IsOk());
 }
 
-TEST(GaussianRandomNoiseGenerateNoiseComponent, ReturnsSampledValues) {
+TEST(DiscreteGaussianNoiseGenerateNoiseComponent, ReturnsSampledValues) {
   int num = 5;
   std::vector<int64_t> results;
 

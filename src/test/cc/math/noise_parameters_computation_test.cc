@@ -19,7 +19,7 @@
 namespace wfa::math {
 namespace {
 
-TEST(GetPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
+TEST(GetGeometricPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
   wfa::any_sketch::DifferentialPrivacyParams test_params;
   test_params.set_epsilon(std::log(3) / 10);
   test_params.set_delta(0.2 / 100000);
@@ -28,10 +28,20 @@ TEST(GetPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
   auto options =
       GetGeometricPublisherNoiseOptions(test_params, publisher_count);
 
-  EXPECT_EQ(options.num, 1);
+  EXPECT_EQ(options.contributor_count, 1);
   EXPECT_NEAR(options.p, 0.964, 0.001);
   EXPECT_EQ(options.shift_offset, 428);
   EXPECT_EQ(options.truncate_threshold, 428);
+}
+
+TEST(GetDiscreteGaussianPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
+  wfa::any_sketch::DifferentialPrivacyParams test_params;
+  test_params.set_epsilon(std::log(3) / 10);
+  test_params.set_delta(0.2 / 100000);
+
+  auto options = GetDiscreteGaussianPublisherNoiseOptions(test_params);
+
+  EXPECT_NEAR(options.sigma, 47.026, 0.001);
 }
 
 }  // namespace

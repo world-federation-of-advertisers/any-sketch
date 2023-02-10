@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "math/distributed_discrete_gaussian_random_noise.h"
+#include "math/distributed_discrete_gaussian_noiser.h"
 
 #include <random>
 
@@ -21,39 +21,40 @@
 
 namespace wfa::math {
 
-wfa::math::DistributedDiscreteGaussianRandomNoise::
-    DistributedDiscreteGaussianRandomNoise(double sigma)
-    : sigma_(sigma) {}
+DistributedDiscreteGaussianNoiser::DistributedDiscreteGaussianNoiser(
+    DistributedDiscreteGaussianNoiseComponentOptions options)
+    : options_(options) {}
 
 /**
  * Generate a sample from a discrete Gaussian distribution with parameter sigma.
  *
- * This implementation is adapted from Pasin Manurangsi's implementation linked
+ * This implementation is adapted from @pasin30055 implementation linked
  * below:
  * https://github.com/world-federation-of-advertisers/cardinality_estimation_evaluation_framework/blob/master/src/common/noisers.py#L207
  */
 absl::StatusOr<int64_t>
-wfa::math::DistributedDiscreteGaussianRandomNoise::GenerateNoiseComponent() {
+DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() {
   absl::BitGen rnd;
-  double sigmaSq = sigma_ * sigma_;
+  double sigma_ = options_.sigma;
+  double sigma_sq = sigma_ * sigma_;
   double t = std::floor(sigma_) + 1;
-  double pGeometric = 1 - exp(-1 / t);
-  if (pGeometric <= 0 || pGeometric >= 1) {
+  double p_geometric = 1 - exp(-1 / t);
+  if (p_geometric <= 0 || p_geometric >= 1) {
     return absl::InvalidArgumentError(
-        "Probability pGeometric should "
+        "Probability p_geometric should "
         "be in (0,1).");
   }
 
-  std::geometric_distribution<int> geometric_distribution(pGeometric);
+  std::geometric_distribution<int> geometric_distribution(p_geometric);
   std::uniform_real_distribution<double> uniform_real_distribution;
 
   int64_t y;
-  double pBernoulli;
+  double p_bernoulli;
 
   do {
     y = geometric_distribution(rnd) - geometric_distribution(rnd);
-    pBernoulli = exp(-pow((std::abs(y) - sigmaSq / t), 2.0) * 0.5 / sigmaSq);
-  } while (uniform_real_distribution(rnd) > pBernoulli);
+    p_bernoulli = exp(-pow((std::abs(y) - sigma_sq / t), 2.0) * 0.5 / sigma_sq);
+  } while (uniform_real_distribution(rnd) > p_bernoulli);
 
   return y;
 }

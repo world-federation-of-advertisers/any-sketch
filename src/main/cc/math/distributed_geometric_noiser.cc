@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "math/distributed_geometric_random_noise.h"
+#include "math/distributed_geometric_noiser.h"
 
 #include <random>
 
@@ -23,25 +23,22 @@
 
 namespace wfa::math {
 
-wfa::math::DistributedGeometricRandomNoise::DistributedGeometricRandomNoise(
-    DistributedGeometricRandomComponentOptions options)
+DistributedGeometricNoiser::DistributedGeometricNoiser(
+    DistributedGeometricNoiseComponentOptions options)
     : options_(options) {}
 
-absl::StatusOr<int64_t>
-wfa::math::DistributedGeometricRandomNoise::GetPolyaRandomVariable(
+absl::StatusOr<int64_t> DistributedGeometricNoiser::GetPolyaRandomVariable(
     double r, double p, absl::BitGenRef rnd) {
   if (p <= 0 || p >= 1) {
     return absl::InvalidArgumentError("Probability p should be in (0,1).");
   }
-
   std::gamma_distribution<double> gamma_distribution(r, p / (1 - p));
   absl::poisson_distribution<int> poisson_distribution(gamma_distribution(rnd));
-
   return poisson_distribution(rnd);
 }
 
 absl::StatusOr<int64_t>
-wfa::math::DistributedGeometricRandomNoise::GetTruncatedPolyaRandomVariable(
+DistributedGeometricNoiser::GetTruncatedPolyaRandomVariable(
     int64_t truncate_threshold, double r, double p, absl::BitGenRef rnd) {
   if (truncate_threshold < 0) {
     // Negative truncate_threshold means no truncation.
@@ -59,21 +56,22 @@ wfa::math::DistributedGeometricRandomNoise::GetTruncatedPolyaRandomVariable(
       "Failed to create the polya random variable within the attempt limit.");
 }
 
-absl::StatusOr<int64_t>
-wfa::math::DistributedGeometricRandomNoise::GenerateNoiseComponent() {
-  if (options_.num < 1) {
+absl::StatusOr<int64_t> DistributedGeometricNoiser::GenerateNoiseComponent() {
+  if (options_.contributor_count < 1) {
     return absl::InvalidArgumentError("The num should be positive.");
   }
 
   // TODO(@wangyaopw): switch to an OpenSSL-based random number generator
   absl::BitGen rnd;
 
-  ASSIGN_OR_RETURN(int64_t polya_a, GetTruncatedPolyaRandomVariable(
-                                        options_.truncate_threshold,
-                                        1.0 / options_.num, options_.p, rnd));
-  ASSIGN_OR_RETURN(int64_t polya_b, GetTruncatedPolyaRandomVariable(
-                                        options_.truncate_threshold,
-                                        1.0 / options_.num, options_.p, rnd));
+  ASSIGN_OR_RETURN(int64_t polya_a,
+                   GetTruncatedPolyaRandomVariable(
+                       options_.truncate_threshold,
+                       1.0 / options_.contributor_count, options_.p, rnd));
+  ASSIGN_OR_RETURN(int64_t polya_b,
+                   GetTruncatedPolyaRandomVariable(
+                       options_.truncate_threshold,
+                       1.0 / options_.contributor_count, options_.p, rnd));
 
   return options_.shift_offset + polya_a - polya_b;
 }

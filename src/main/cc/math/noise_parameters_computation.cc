@@ -14,8 +14,8 @@
 
 #include "math/noise_parameters_computation.h"
 
-#include "math/distributed_geometric_random_noise.h"
-#include "math/distributed_random_noise.h"
+#include "math/distributed_discrete_gaussian_noiser.h"
+#include "math/distributed_geometric_noiser.h"
 
 namespace wfa::math {
 
@@ -33,8 +33,7 @@ int ComputateMuPolya(double epsilon, double delta, int sensitivity, int n) {
 
 }  // namespace
 
-math::DistributedGeometricRandomComponentOptions
-GetGeometricPublisherNoiseOptions(
+DistributedGeometricNoiseComponentOptions GetGeometricPublisherNoiseOptions(
     const wfa::any_sketch::DifferentialPrivacyParams& params,
     int publisher_count) {
   ABSL_ASSERT(publisher_count > 0);
@@ -42,14 +41,16 @@ GetGeometricPublisherNoiseOptions(
   int offset =
       ComputateMuPolya(params.epsilon(), params.delta(), publisher_count, 1);
   return {
-      .num = 1,
+      .contributor_count = 1,
       .p = success_ratio,
       .truncate_threshold = offset,
       .shift_offset = offset,
   };
 }
 
-double ComputeSigma(const wfa::any_sketch::DifferentialPrivacyParams& params) {
+DistributedDiscreteGaussianNoiseComponentOptions
+GetDiscreteGaussianPublisherNoiseOptions(
+    const wfa::any_sketch::DifferentialPrivacyParams& params) {
   double epsilon = params.epsilon();
   double delta = params.delta();
 
@@ -63,8 +64,9 @@ double ComputeSigma(const wfa::any_sketch::DifferentialPrivacyParams& params) {
   // Foundations of Differential Privacy p.265 Theorem A.1
   // https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf
   // This formula generally works for epsilon <= 1 but not epsilon > 1
+  double sigma = std::sqrt(2 * std::log(1.25 / delta)) / epsilon;
 
-  return std::sqrt(2 * std::log(1.25 / delta)) / epsilon;
+  return {.sigma = sigma};
 }
 
 }  // namespace wfa::math

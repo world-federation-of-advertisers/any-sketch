@@ -5,9 +5,9 @@ package(default_visibility = ["//visibility:public"])
 _INCLUDE_PREFIX = "/src/main/cc"
 
 cc_library(
-    name = "distributed_random_noise",
+    name = "distributed_noiser",
     hdrs = [
-        "distributed_random_noise.h",
+        "distributed_noiser.h",
     ],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
@@ -16,17 +16,16 @@ cc_library(
 )
 
 cc_library(
-    name = "distributed_geometric_random_noise",
+    name = "distributed_geometric_noiser",
     srcs = [
-        "distributed_geometric_random_noise.cc",
+        "distributed_geometric_noiser.cc",
     ],
     hdrs = [
-        "distributed_geometric_random_noise.h",
+        "distributed_geometric_noiser.h",
     ],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
-        "//src/main/cc/math:distributed_random_noise",
-        "//src/main/proto/wfa/any_sketch:differential_privacy_cc_proto",
+        "//src/main/cc/math:distributed_noiser",
         "@com_google_absl//absl/random",
         "@com_google_absl//absl/random:bit_gen_ref",
         "@com_google_absl//absl/random:distributions",
@@ -36,16 +35,16 @@ cc_library(
 )
 
 cc_library(
-    name = "distributed_discrete_gaussian_random_noise",
+    name = "distributed_discrete_gaussian_noiser",
     srcs = [
-        "distributed_discrete_gaussian_random_noise.cc",
+        "distributed_discrete_gaussian_noiser.cc",
     ],
     hdrs = [
-        "distributed_discrete_gaussian_random_noise.h",
+        "distributed_discrete_gaussian_noiser.h",
     ],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
-        "//src/main/cc/math:distributed_random_noise",
+        "//src/main/cc/math:distributed_noiser",
         "@com_google_absl//absl/random",
         "@com_google_absl//absl/random:bit_gen_ref",
         "@com_google_absl//absl/random:distributions",
@@ -64,8 +63,9 @@ cc_library(
     ],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
-        "//src/main/cc/math:distributed_geometric_random_noise",
-        "//src/main/cc/math:distributed_random_noise",
+        "//src/main/cc/math:distributed_discrete_gaussian_noiser",
+        "//src/main/cc/math:distributed_geometric_noiser",
+        "//src/main/cc/math:distributed_noiser",
         "//src/main/proto/wfa/any_sketch:differential_privacy_cc_proto",
     ],
 )

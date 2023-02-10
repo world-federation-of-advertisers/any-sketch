@@ -12,25 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_MATH_DISTRIBUTED_RANDOM_NOISE_H_
-#define SRC_MAIN_CC_MATH_DISTRIBUTED_RANDOM_NOISE_H_
+#ifndef SRC_MAIN_CC_MATH_DISTRIBUTED_NOISER_H_
+#define SRC_MAIN_CC_MATH_DISTRIBUTED_NOISER_H_
 
 #include "absl/status/statusor.h"
 
 namespace wfa::math {
 
-class DistributedRandomNoise {
+class DistributedNoiser {
  public:
-  DistributedRandomNoise(const DistributedRandomNoise& other) = delete;
-  DistributedRandomNoise& operator=(const DistributedRandomNoise& other) =
-      delete;
-  virtual ~DistributedRandomNoise() = default;
+  DistributedNoiser(const DistributedNoiser& other) = delete;
+  DistributedNoiser& operator=(const DistributedNoiser& other) = delete;
+  DistributedNoiser(DistributedNoiser&& other) = delete;
+  virtual ~DistributedNoiser() = default;
 
   virtual absl::StatusOr<int64_t> GenerateNoiseComponent() = 0;
 
  protected:
-  DistributedRandomNoise() = default;
+  DistributedNoiser() = default;
 };
 
 }  // namespace wfa::math
-#endif  // SRC_MAIN_CC_MATH_DISTRIBUTED_RANDOM_NOISE_H_
+#endif  // SRC_MAIN_CC_MATH_DISTRIBUTED_NOISER_H_

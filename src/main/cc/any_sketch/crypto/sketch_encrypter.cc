@@ -20,9 +20,9 @@
 
 #include "absl/container/flat_hash_map.h"
 #include "common_cpp/macros/macros.h"
-#include "math/distributed_discrete_gaussian_random_noise.h"
-#include "math/distributed_geometric_random_noise.h"
-#include "math/distributed_random_noise.h"
+#include "math/distributed_discrete_gaussian_noiser.h"
+#include "math/distributed_geometric_noiser.h"
+#include "math/distributed_noiser.h"
 #include "math/noise_parameters_computation.h"
 #include "private_join_and_compute/crypto/commutative_elgamal.h"
 #include "private_join_and_compute/crypto/context.h"
@@ -219,18 +219,16 @@ absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
   params.set_epsilon(publisher_noise_parameter.epsilon());
   params.set_delta(publisher_noise_parameter.delta());
 
-  math::DistributedRandomNoise* pDistributedRandomNoise;
+  std::unique_ptr<math::DistributedNoiser> distributed_noise;
 
-  math::DistributedGeometricRandomComponentOptions geometricOptions =
+  math::DistributedGeometricNoiseComponentOptions geometric_options =
       math::GetGeometricPublisherNoiseOptions(
           params, publisher_noise_parameter.publisher_count());
-  pDistributedRandomNoise =
-      new math::DistributedGeometricRandomNoise(geometricOptions);
+  distributed_noise =
+      std::make_unique<math::DistributedGeometricNoiser>(geometric_options);
 
   ASSIGN_OR_RETURN(int64_t noise_count,
-                   pDistributedRandomNoise->GenerateNoiseComponent());
-
-  delete pDistributedRandomNoise;
+                   distributed_noise->GenerateNoiseComponent());
 
   if (noise_count < 1) {
     // noise_count would be at least 0.
