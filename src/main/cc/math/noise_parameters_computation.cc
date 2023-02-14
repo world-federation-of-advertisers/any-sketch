@@ -63,10 +63,12 @@ GetDiscreteGaussianPublisherNoiseOptions(
   // The sigma calculation formula is a closed-form formula from The Algorithmic
   // Foundations of Differential Privacy p.265 Theorem A.1
   // https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf
-  // This formula generally works for epsilon <= 1 but not epsilon > 1
+  // This sigma formula is valid only for continuous Gaussian noise and used as
+  // an approximation for discrete Gaussian noise here. It generally works for
+  // epsilon <= 1 but not epsilon > 1
   double sigma = std::sqrt(2 * std::log(1.25 / delta)) / epsilon;
 
-  return {.sigma = sigma};
+  return {.contributor_count = 1, .sigma = sigma};
 }
 
 }  // namespace wfa::math

@@ -29,14 +29,18 @@ DistributedDiscreteGaussianNoiser::DistributedDiscreteGaussianNoiser(
  * Generate a sample from a discrete Gaussian distribution with parameter sigma.
  *
  * This implementation is adapted from @pasin30055 implementation linked
- * below:
+ * below. The original algorithm (and analysis) is in the Canone et al's paper,
+ * i.e. Algorithm 3 in https://arxiv.org/pdf/2004.00010.pdf.
  * https://github.com/world-federation-of-advertisers/cardinality_estimation_evaluation_framework/blob/master/src/common/noisers.py#L207
  */
 absl::StatusOr<int64_t>
 DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() {
   absl::BitGen rnd;
   double sigma_ = options_.sigma;
-  double sigma_sq = sigma_ * sigma_;
+  // This simple formula to derive sigma_distributed is valid only for
+  // continuous Gaussian and is used as an approximation here.
+  double sigma_distributed = sigma_ / sqrt(options_.contributor_count);
+  double sigma_sq = sigma_distributed * sigma_distributed;
   double t = std::floor(sigma_) + 1;
   double p_geometric = 1 - exp(-1 / t);
   if (p_geometric <= 0 || p_geometric >= 1) {
