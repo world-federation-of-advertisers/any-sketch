@@ -47,15 +47,15 @@ TEST(GeometricRandomNoiseIndividualComponent, MeanMaxMinShouldBeCorrect) {
 
   size_t num_trials = 100000;
 
-  DistributedGeometricNoiser distributedGeometricRandomNoise(
+  DistributedGeometricNoiser distributed_geometric_noiser(
       {.contributor_count = 3,
        .p = 0.6,
        .truncate_threshold = truncate_threshold,
        .shift_offset = shift_offset});
 
   for (size_t i = 0; i < num_trials; ++i) {
-    ASSERT_OK_AND_ASSIGN(
-        int64_t temp, distributedGeometricRandomNoise.GenerateNoiseComponent());
+    ASSERT_OK_AND_ASSIGN(int64_t temp,
+                         distributed_geometric_noiser.GenerateNoiseComponent());
     sum += temp;
     min_value = std::min(min_value, temp);
     max_value = std::max(max_value, temp);

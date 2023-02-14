@@ -22,6 +22,8 @@ namespace wfa::math {
 
 struct DistributedDiscreteGaussianNoiseComponentOptions {
   // For DistributedDiscreteGaussianNoiser.
+  // The number of contributors to the global random variable.
+  int64_t contributor_count;
   // sigma parameter for discrete Gaussian sampler.
   double sigma;
 };

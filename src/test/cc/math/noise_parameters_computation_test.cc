@@ -38,6 +38,7 @@ TEST(GetDiscreteGaussianPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
   wfa::any_sketch::DifferentialPrivacyParams test_params;
   test_params.set_epsilon(std::log(3) / 10);
   test_params.set_delta(0.2 / 100000);
+  int64_t contributor_count = 1;
 
   auto options = GetDiscreteGaussianPublisherNoiseOptions(test_params);
 
