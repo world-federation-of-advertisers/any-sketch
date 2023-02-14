@@ -23,11 +23,12 @@
 
 namespace wfa::math {
 namespace {
-DistributedDiscreteGaussianNoiser distributedGaussianRandomNoise(
+DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
     {.sigma = 0.73});
 
 TEST(DiscreteGaussianNoiseIndividualComponent, StatusIsOK) {
-  ASSERT_THAT(distributedGaussianRandomNoise.GenerateNoiseComponent(), IsOk());
+  ASSERT_THAT(distributed_discrete_gaussian_noiser.GenerateNoiseComponent(),
+              IsOk());
 }
 
 TEST(DiscreteGaussianNoiseGenerateNoiseComponent, ReturnsSampledValues) {
@@ -36,7 +37,8 @@ TEST(DiscreteGaussianNoiseGenerateNoiseComponent, ReturnsSampledValues) {
 
   for (size_t i = 0; i < num; ++i) {
     ASSERT_OK_AND_ASSIGN(
-        int64_t temp, distributedGaussianRandomNoise.GenerateNoiseComponent());
+        int64_t temp,
+        distributed_discrete_gaussian_noiser.GenerateNoiseComponent());
     results.push_back(temp);
   }
 
