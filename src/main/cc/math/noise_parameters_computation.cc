@@ -31,6 +31,20 @@ int ComputateMuPolya(double epsilon, double delta, int sensitivity, int n) {
       (epsilon / sensitivity));
 }
 
+int ComputeMuDiscreteGaussian(double epsilon, double delta, double sigma,
+                              int64_t contributor_count) {
+  ABSL_ASSERT(epsilon > 0);
+  ABSL_ASSERT(delta > 0);
+  ABSL_ASSERT(contributor_count > 0);
+
+  double sigma_distributed = sigma / sqrt(contributor_count);
+  double delta2 = 0.5 * delta;
+
+  return std::ceil(sigma_distributed *
+                   std::sqrt(2 * std::log(contributor_count *
+                                          (1 + std::exp(epsilon)) / delta2)));
+}
+
 }  // namespace
 
 DistributedGeometricNoiseComponentOptions GetGeometricPublisherNoiseOptions(
@@ -50,7 +64,8 @@ DistributedGeometricNoiseComponentOptions GetGeometricPublisherNoiseOptions(
 
 DistributedDiscreteGaussianNoiseComponentOptions
 GetDiscreteGaussianPublisherNoiseOptions(
-    const wfa::any_sketch::DifferentialPrivacyParams& params) {
+    const wfa::any_sketch::DifferentialPrivacyParams& params,
+    int64_t contributor_count) {
   double epsilon = params.epsilon();
   double delta = params.delta();
 
@@ -66,9 +81,17 @@ GetDiscreteGaussianPublisherNoiseOptions(
   // This sigma formula is valid only for continuous Gaussian noise and used as
   // an approximation for discrete Gaussian noise here. It generally works for
   // epsilon <= 1 but not epsilon > 1
-  double sigma = std::sqrt(2 * std::log(1.25 / delta)) / epsilon;
+  double delta1 = 0.5 * delta;
+  double sigma = std::sqrt(2 * std::log(1.25 / delta1)) / epsilon;
+  int offset = ComputeMuDiscreteGaussian(params.epsilon(), params.delta(),
+                                         sigma, contributor_count);
 
-  return {.contributor_count = 1, .sigma = sigma};
+  return {
+      .contributor_count = contributor_count,
+      .sigma = sigma,
+      .truncate_threshold = offset,
+      .shift_offset = offset,
+  };
 }
 
 }  // namespace wfa::math

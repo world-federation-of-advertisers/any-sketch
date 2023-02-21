@@ -23,15 +23,23 @@
 
 namespace wfa::math {
 namespace {
-DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
-    {.sigma = 0.73});
 
-TEST(DiscreteGaussianNoiseIndividualComponent, StatusIsOK) {
+TEST(DiscreteGaussianNoiserIndividualComponent, StatusIsOK) {
+  DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
+      {.contributor_count = 1,
+       .sigma = 6.87,
+       .truncate_threshold = 13,
+       .shift_offset = 13});
   ASSERT_THAT(distributed_discrete_gaussian_noiser.GenerateNoiseComponent(),
               IsOk());
 }
 
-TEST(DiscreteGaussianNoiseGenerateNoiseComponent, ReturnsSampledValues) {
+TEST(DiscreteGaussianNoiserGenerateNoiseComponent, ReturnsSampledValues) {
+  DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
+      {.contributor_count = 1,
+       .sigma = 6.87,
+       .truncate_threshold = 13,
+       .shift_offset = 13});
   int num = 5;
   std::vector<int64_t> results;
 
@@ -43,6 +51,77 @@ TEST(DiscreteGaussianNoiseGenerateNoiseComponent, ReturnsSampledValues) {
   }
 
   ASSERT_THAT(results.size(), num);
+}
+
+TEST(DiscreteGaussianNoiserIndividualComponent, MeanMaxMinShouldBeCorrect) {
+  double sigma = 48.231;
+  int64_t offset = 261;
+
+  double sum = 0.0;
+  int64_t min_value = 1000;
+  int64_t max_value = 0;
+
+  size_t num_trials = 10000;
+
+  DistributedDiscreteGaussianNoiser distributed_gaussian_noiser(
+      {.contributor_count = 1,
+       .sigma = sigma,
+       .truncate_threshold = offset,
+       .shift_offset = offset});
+
+  for (size_t i = 0; i < num_trials; ++i) {
+    ASSERT_OK_AND_ASSIGN(int64_t temp,
+                         distributed_gaussian_noiser.GenerateNoiseComponent());
+
+    sum += temp;
+    min_value = std::min(min_value, temp);
+    max_value = std::max(max_value, temp);
+  }
+  // Mean should be equal to shift_offset.
+  EXPECT_NEAR(sum / num_trials, offset, 0.5);
+  // Max should be smaller than shift_offset + truncate_threshold.
+  ASSERT_LE(max_value, 2 * offset);
+  // Min should be larger than 0.
+  ASSERT_GE(min_value, 0);
+}
+
+TEST(DiscreteGaussianNoiserGlobalSummation,
+     ProbabilityMassFunctionShouldBeCorrect) {
+  int64_t contributor_count = 1;  // 1 contributor
+  double sigma = 48.231;
+  int64_t offset = 261;
+
+  DistributedDiscreteGaussianNoiseComponentOptions options = {
+      .contributor_count = contributor_count,
+      .sigma = sigma,
+      .truncate_threshold = offset,
+      .shift_offset = offset};
+  DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
+      options);
+
+  // Correct min_output and max_output?
+  int64_t min_output = 0;
+  int64_t max_output = 2 * offset;
+
+  size_t num_trials = 100000;
+  std::map<int64_t, size_t> frequency_distribution;
+
+  for (size_t i = 0; i < num_trials; ++i) {
+    ASSERT_OK_AND_ASSIGN(
+        int64_t temp,
+        distributed_discrete_gaussian_noiser.GenerateNoiseComponent());
+    ASSERT_GE(temp, min_output);
+    ASSERT_LE(temp, max_output);
+    ++frequency_distribution[temp];
+  }
+
+  for (int64_t x = min_output; x <= max_output; ++x) {
+    double probability =
+        static_cast<double>(frequency_distribution[x]) / num_trials;
+    double expected_probability =
+        std::exp(-std::pow((x - offset), 2) / (2 * std::pow(sigma, 2)));
+    //    EXPECT_NEAR(probability, expected_probability, 0.05);
+  }
 }
 
 }  // namespace

@@ -37,7 +37,8 @@ DistributedGeometricNoiseComponentOptions GetGeometricPublisherNoiseOptions(
  */
 DistributedDiscreteGaussianNoiseComponentOptions
 GetDiscreteGaussianPublisherNoiseOptions(
-    const wfa::any_sketch::DifferentialPrivacyParams& params);
+    const wfa::any_sketch::DifferentialPrivacyParams& params,
+    int64_t contributor_count);
 
 }  // namespace wfa::math
 

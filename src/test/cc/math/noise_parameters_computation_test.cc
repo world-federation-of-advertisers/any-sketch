@@ -40,9 +40,12 @@ TEST(GetDiscreteGaussianPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
   test_params.set_delta(0.2 / 100000);
   int64_t contributor_count = 1;
 
-  auto options = GetDiscreteGaussianPublisherNoiseOptions(test_params);
+  auto options =
+      GetDiscreteGaussianPublisherNoiseOptions(test_params, contributor_count);
 
-  EXPECT_NEAR(options.sigma, 47.026, 0.001);
+  EXPECT_NEAR(options.sigma, 48.231, 0.001);
+  EXPECT_EQ(options.shift_offset, 261);
+  EXPECT_EQ(options.truncate_threshold, 261);
 }
 
 }  // namespace

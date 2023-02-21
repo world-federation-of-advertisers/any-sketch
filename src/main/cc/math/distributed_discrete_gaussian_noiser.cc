@@ -25,14 +25,6 @@ DistributedDiscreteGaussianNoiser::DistributedDiscreteGaussianNoiser(
     DistributedDiscreteGaussianNoiseComponentOptions options)
     : options_(options) {}
 
-/**
- * Generate a sample from a discrete Gaussian distribution with parameter sigma.
- *
- * This implementation is adapted from @pasin30055 implementation linked
- * below. The original algorithm (and analysis) is in the Canone et al's paper,
- * i.e. Algorithm 3 in https://arxiv.org/pdf/2004.00010.pdf.
- * https://github.com/world-federation-of-advertisers/cardinality_estimation_evaluation_framework/blob/master/src/common/noisers.py#L207
- */
 absl::StatusOr<int64_t>
 DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() {
   absl::BitGen rnd;
@@ -58,8 +50,10 @@ DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() {
   do {
     y = geometric_distribution(rnd) - geometric_distribution(rnd);
     p_bernoulli = exp(-pow((std::abs(y) - sigma_sq / t), 2.0) * 0.5 / sigma_sq);
-  } while (uniform_real_distribution(rnd) > p_bernoulli);
+  } while (
+      uniform_real_distribution(rnd) > p_bernoulli ||
+      (y < -options_.truncate_threshold || y > options_.truncate_threshold));
 
-  return y;
+  return options_.shift_offset + y;
 }
 }  // namespace wfa::math

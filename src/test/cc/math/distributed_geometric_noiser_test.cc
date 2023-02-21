@@ -68,8 +68,7 @@ TEST(GeometricRandomNoiseIndividualComponent, MeanMaxMinShouldBeCorrect) {
   EXPECT_EQ(min_value, shift_offset - truncate_threshold);
 }
 
-TEST(GeometricRandomNoiseGlobalSummation,
-     ProbabilityMassFunctionShouldBeCorrect) {
+TEST(GeometricNoiserGlobalSummation, ProbabilityMassFunctionShouldBeCorrect) {
   double p = 0.6;
   int64_t contributor_count = 3;    // 3 contributors
   int64_t shift_offset = 10;        // Individual offset

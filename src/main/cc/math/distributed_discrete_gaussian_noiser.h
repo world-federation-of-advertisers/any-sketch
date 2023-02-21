@@ -26,12 +26,27 @@ struct DistributedDiscreteGaussianNoiseComponentOptions {
   int64_t contributor_count;
   // sigma parameter for discrete Gaussian sampler.
   double sigma;
+  // The threshold to truncate the discrete Gaussian random variables. A
+  // negative value indicates no truncation.
+  int64_t truncate_threshold = -1;
+  // The offset added to the discrete Gaussian samples. Usually greater than the
+  // truncate_threshold such that the final result is positive.
+  int64_t shift_offset = 0;
 };
 
 class DistributedDiscreteGaussianNoiser : public DistributedNoiser {
  public:
   explicit DistributedDiscreteGaussianNoiser(
       DistributedDiscreteGaussianNoiseComponentOptions options);
+  /**
+   * Generate a sample from a discrete Gaussian distribution with parameter
+   * sigma.
+   *
+   * This implementation is adapted from pasin30055 implementation linked
+   * below. The original algorithm (and analysis) is in the Canone et al's
+   * paper, i.e. Algorithm 3 in https://arxiv.org/pdf/2004.00010.pdf.
+   * https://github.com/world-federation-of-advertisers/cardinality_estimation_evaluation_framework/blob/master/src/common/noisers.py#L207
+   */
   absl::StatusOr<int64_t> GenerateNoiseComponent() override;
 
  private:
