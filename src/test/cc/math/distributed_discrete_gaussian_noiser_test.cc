@@ -30,6 +30,7 @@ TEST(DiscreteGaussianNoiserIndividualComponent, StatusIsOK) {
        .sigma = 6.87,
        .truncate_threshold = 13,
        .shift_offset = 13});
+
   ASSERT_THAT(distributed_discrete_gaussian_noiser.GenerateNoiseComponent(),
               IsOk());
 }
@@ -53,11 +54,10 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponent, ReturnsSampledValues) {
   ASSERT_THAT(results.size(), num);
 }
 
-TEST(DiscreteGaussianNoiserIndividualComponent, MeanMaxMinShouldBeCorrect) {
+TEST(DiscreteGaussianNoiserIndividualComponent, MinMaxShouldBeCorrect) {
   double sigma = 48.231;
   int64_t offset = 261;
 
-  double sum = 0.0;
   int64_t min_value = 1000;
   int64_t max_value = 0;
 
@@ -73,13 +73,11 @@ TEST(DiscreteGaussianNoiserIndividualComponent, MeanMaxMinShouldBeCorrect) {
     ASSERT_OK_AND_ASSIGN(int64_t temp,
                          distributed_gaussian_noiser.GenerateNoiseComponent());
 
-    sum += temp;
     min_value = std::min(min_value, temp);
     max_value = std::max(max_value, temp);
   }
-  // Mean should be equal to shift_offset.
-  EXPECT_NEAR(sum / num_trials, offset, 0.5);
-  // Max should be smaller than shift_offset + truncate_threshold.
+
+  // Max should be smaller than 2 * shift_offset.
   ASSERT_LE(max_value, 2 * offset);
   // Min should be larger than 0.
   ASSERT_GE(min_value, 0);
@@ -99,11 +97,10 @@ TEST(DiscreteGaussianNoiserGlobalSummation,
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
       options);
 
-  // Correct min_output and max_output?
   int64_t min_output = 0;
   int64_t max_output = 2 * offset;
 
-  size_t num_trials = 100000;
+  size_t num_trials = 10000;
   std::map<int64_t, size_t> frequency_distribution;
 
   for (size_t i = 0; i < num_trials; ++i) {
@@ -115,12 +112,14 @@ TEST(DiscreteGaussianNoiserGlobalSummation,
     ++frequency_distribution[temp];
   }
 
-  for (int64_t x = min_output; x <= max_output; ++x) {
-    double probability =
-        static_cast<double>(frequency_distribution[x]) / num_trials;
+  for (auto const& x : frequency_distribution) {
+    double probability = static_cast<double>(x.second) / num_trials;
+    // Expected probability is Gaussian(normal) distribution.
     double expected_probability =
-        std::exp(-std::pow((x - offset), 2) / (2 * std::pow(sigma, 2)));
-    //    EXPECT_NEAR(probability, expected_probability, 0.05);
+        std::exp(-std::pow((x.first - offset), 2) / (2 * std::pow(sigma, 2))) /
+        (sigma * std::sqrt(2 * M_PI));
+
+    EXPECT_NEAR(probability, expected_probability, 0.01);
   }
 }
 

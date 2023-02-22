@@ -38,6 +38,8 @@ int ComputeMuDiscreteGaussian(double epsilon, double delta, double sigma,
   ABSL_ASSERT(contributor_count > 0);
 
   double sigma_distributed = sigma / sqrt(contributor_count);
+  // The sum of delta1 and delta2 should be delta.
+  // In practice, set delta1=delta2=0.5 * delta for simplicity.
   double delta2 = 0.5 * delta;
 
   return std::ceil(sigma_distributed *
@@ -81,6 +83,9 @@ GetDiscreteGaussianPublisherNoiseOptions(
   // This sigma formula is valid only for continuous Gaussian noise and used as
   // an approximation for discrete Gaussian noise here. It generally works for
   // epsilon <= 1 but not epsilon > 1
+
+  // The sum of delta1 and delta2 should be delta.
+  // In practice, set delta1=delta2=0.5 * delta for simplicity.
   double delta1 = 0.5 * delta;
   double sigma = std::sqrt(2 * std::log(1.25 / delta1)) / epsilon;
   int offset = ComputeMuDiscreteGaussian(params.epsilon(), params.delta(),
