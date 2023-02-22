@@ -24,8 +24,9 @@ struct DistributedDiscreteGaussianNoiseComponentOptions {
   // For DistributedDiscreteGaussianNoiser.
   // The number of contributors to the global random variable.
   int64_t contributor_count;
-  // sigma parameter for discrete Gaussian sampler.
-  double sigma;
+  // Distributed sigma parameter for discrete Gaussian sampler which is
+  // sigma/sqrt(contributor_count).
+  double sigma_distributed;
   // The threshold to truncate the discrete Gaussian random variables. A
   // negative value indicates no truncation.
   int64_t truncate_threshold = -1;

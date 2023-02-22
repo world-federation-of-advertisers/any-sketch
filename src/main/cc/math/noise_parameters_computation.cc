@@ -31,13 +31,13 @@ int ComputateMuPolya(double epsilon, double delta, int sensitivity, int n) {
       (epsilon / sensitivity));
 }
 
-int ComputeMuDiscreteGaussian(double epsilon, double delta, double sigma,
+int ComputeMuDiscreteGaussian(double epsilon, double delta,
+                              double sigma_distributed,
                               int64_t contributor_count) {
   ABSL_ASSERT(epsilon > 0);
   ABSL_ASSERT(delta > 0);
   ABSL_ASSERT(contributor_count > 0);
 
-  double sigma_distributed = sigma / sqrt(contributor_count);
   // The sum of delta1 and delta2 should be delta.
   // In practice, set delta1=delta2=0.5 * delta for simplicity.
   double delta2 = 0.5 * delta;
@@ -88,12 +88,15 @@ GetDiscreteGaussianPublisherNoiseOptions(
   // In practice, set delta1=delta2=0.5 * delta for simplicity.
   double delta1 = 0.5 * delta;
   double sigma = std::sqrt(2 * std::log(1.25 / delta1)) / epsilon;
+  // This simple formula to derive sigma_distributed is valid only for
+  // continuous Gaussian and is used as an approximation here.
+  double sigma_distributed = sigma / sqrt(contributor_count);
   int offset = ComputeMuDiscreteGaussian(params.epsilon(), params.delta(),
-                                         sigma, contributor_count);
+                                         sigma_distributed, contributor_count);
 
   return {
       .contributor_count = contributor_count,
-      .sigma = sigma,
+      .sigma_distributed = sigma_distributed,
       .truncate_threshold = offset,
       .shift_offset = offset,
   };

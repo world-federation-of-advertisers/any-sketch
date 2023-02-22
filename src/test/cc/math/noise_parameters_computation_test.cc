@@ -43,7 +43,7 @@ TEST(GetDiscreteGaussianPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
   auto options =
       GetDiscreteGaussianPublisherNoiseOptions(test_params, contributor_count);
 
-  EXPECT_NEAR(options.sigma, 48.231, 0.001);
+  EXPECT_NEAR(options.sigma_distributed, 48.231, 0.001);
   EXPECT_EQ(options.shift_offset, 261);
   EXPECT_EQ(options.truncate_threshold, 261);
 }
@@ -57,8 +57,8 @@ TEST(GetDiscreteGaussianPublisherNoiseOptions,
 
   auto options =
       GetDiscreteGaussianPublisherNoiseOptions(test_params, contributor_count);
-
-  EXPECT_NEAR(options.sigma, 48.231, 0.001);
+  // sigma_distributed = sigma / sqrt(contributor_count)
+  EXPECT_NEAR(options.sigma_distributed, 24.115, 0.001);
   // mu should be scaled by contributor_count.
   EXPECT_EQ(options.shift_offset, 137);
   EXPECT_EQ(options.truncate_threshold, 137);

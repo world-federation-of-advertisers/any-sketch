@@ -28,18 +28,16 @@ DistributedDiscreteGaussianNoiser::DistributedDiscreteGaussianNoiser(
 absl::StatusOr<int64_t>
 DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() {
   absl::BitGen rnd;
-  double sigma_ = options_.sigma;
-  // This simple formula to derive sigma_distributed is valid only for
-  // continuous Gaussian and is used as an approximation here.
-  double sigma_distributed = sigma_ / sqrt(options_.contributor_count);
+  double sigma_distributed = options_.sigma_distributed;
   double sigma_sq = sigma_distributed * sigma_distributed;
-  double t = std::floor(sigma_) + 1;
+  double t = std::floor(sigma_distributed) + 1;
   double p_geometric = 1 - exp(-1 / t);
   if (p_geometric <= 0 || p_geometric >= 1) {
     return absl::InvalidArgumentError(
         "Probability p_geometric should "
         "be in (0,1).");
   }
+  int64_t truncate_threshold = options_.truncate_threshold;
 
   std::geometric_distribution<int> geometric_distribution(p_geometric);
   std::uniform_real_distribution<double> uniform_real_distribution;
@@ -47,12 +45,15 @@ DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() {
   int64_t y;
   double p_bernoulli;
 
-  do {
+  while (true) {
     y = geometric_distribution(rnd) - geometric_distribution(rnd);
     p_bernoulli = exp(-pow((std::abs(y) - sigma_sq / t), 2.0) * 0.5 / sigma_sq);
-  } while (
-      uniform_real_distribution(rnd) > p_bernoulli ||
-      (y < -options_.truncate_threshold || y > options_.truncate_threshold));
+    std::binomial_distribution<int> binomial_distribution(1, p_bernoulli);
+    if (binomial_distribution(rnd) == 1 &&
+        (truncate_threshold < 0 ||
+         (y >= -truncate_threshold && y <= truncate_threshold)))
+      break;
+  }
 
   return options_.shift_offset + y;
 }
