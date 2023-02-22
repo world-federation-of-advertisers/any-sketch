@@ -48,5 +48,21 @@ TEST(GetDiscreteGaussianPublisherNoiseOptions, ExampleResultShouldBeCorrect) {
   EXPECT_EQ(options.truncate_threshold, 261);
 }
 
+TEST(GetDiscreteGaussianPublisherNoiseOptions,
+     ExampleResultShouldBeScaledByContributorCount) {
+  wfa::any_sketch::DifferentialPrivacyParams test_params;
+  test_params.set_epsilon(std::log(3) / 10);
+  test_params.set_delta(0.2 / 100000);
+  int64_t contributor_count = 4;
+
+  auto options =
+      GetDiscreteGaussianPublisherNoiseOptions(test_params, contributor_count);
+
+  EXPECT_NEAR(options.sigma, 48.231, 0.001);
+  // mu should be scaled by contributor_count.
+  EXPECT_EQ(options.shift_offset, 137);
+  EXPECT_EQ(options.truncate_threshold, 137);
+}
+
 }  // namespace
 }  // namespace wfa::math
