@@ -27,11 +27,12 @@ namespace {
 // Create a random number with twoSidedGeometricDistribution using the
 // decentralized mechanism, i.e., as the summation of N PolyaDiff.
 absl::StatusOr<int64_t> GetTwoSidedGeometricDistributedRandomNumber(
-    std::unique_ptr<DistributedNoiser>& distributed_noiser, int64_t num) {
+    const DistributedGeometricNoiser& distributed_geometric_noiser,
+    int64_t num) {
   int64_t result = 0;
   for (size_t i = 0; i < num; ++i) {
     ASSIGN_OR_RETURN(int64_t temp,
-                     distributed_noiser->GenerateNoiseComponent());
+                     distributed_geometric_noiser.GenerateNoiseComponent());
     result += temp;
   }
   return result;
@@ -79,8 +80,7 @@ TEST(GeometricNoiserGlobalSummation, ProbabilityMassFunctionShouldBeCorrect) {
       .p = p,
       .truncate_threshold = truncate_threshold,
       .shift_offset = shift_offset};
-  std::unique_ptr<DistributedNoiser> distributed_noiser;
-  distributed_noiser = std::make_unique<DistributedGeometricNoiser>(options);
+  auto distributed_geometric_noiser = DistributedGeometricNoiser(options);
 
   int64_t total_offset = contributor_count * shift_offset;
   int64_t min_output = total_offset - truncate_threshold * contributor_count;
@@ -91,7 +91,7 @@ TEST(GeometricNoiserGlobalSummation, ProbabilityMassFunctionShouldBeCorrect) {
   for (size_t i = 0; i < num_trials; ++i) {
     ASSERT_OK_AND_ASSIGN(int64_t temp,
                          GetTwoSidedGeometricDistributedRandomNumber(
-                             distributed_noiser, contributor_count));
+                             distributed_geometric_noiser, contributor_count));
     ASSERT_GE(temp, min_output);
     ASSERT_LE(temp, max_output);
     ++frequency_distribution[temp];

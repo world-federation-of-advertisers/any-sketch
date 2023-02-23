@@ -39,7 +39,7 @@ int ComputeMuDiscreteGaussian(double epsilon, double delta,
   ABSL_ASSERT(contributor_count > 0);
 
   // The sum of delta1 and delta2 should be delta.
-  // In practice, set delta1=delta2=0.5 * delta for simplicity.
+  // In practice, set delta1 = delta2 = 0.5 * delta for simplicity.
   double delta2 = 0.5 * delta;
 
   return std::ceil(sigma_distributed *
@@ -85,7 +85,7 @@ GetDiscreteGaussianPublisherNoiseOptions(
   // epsilon <= 1 but not epsilon > 1
 
   // The sum of delta1 and delta2 should be delta.
-  // In practice, set delta1=delta2=0.5 * delta for simplicity.
+  // In practice, set delta1 = delta2 = 0.5 * delta for simplicity.
   double delta1 = 0.5 * delta;
   double sigma = std::sqrt(2 * std::log(1.25 / delta1)) / epsilon;
   // This simple formula to derive sigma_distributed is valid only for

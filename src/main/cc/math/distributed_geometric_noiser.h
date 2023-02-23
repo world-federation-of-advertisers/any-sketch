@@ -39,17 +39,17 @@ class DistributedGeometricNoiser : public DistributedNoiser {
  public:
   explicit DistributedGeometricNoiser(
       DistributedGeometricNoiseComponentOptions options);
-  absl::StatusOr<int64_t> GenerateNoiseComponent() override;
+  absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
 
  private:
   DistributedGeometricNoiseComponentOptions options_;
   static constexpr int kMaximumAttempts_ = 20;
-  // Truncated Polya random variable
-  int64_t polya_{};
+
   absl::StatusOr<int64_t> GetPolyaRandomVariable(double r, double p,
-                                                 absl::BitGenRef rnd);
+                                                 absl::BitGenRef rnd) const;
   absl::StatusOr<int64_t> GetTruncatedPolyaRandomVariable(
-      int64_t truncate_threshold, double r, double p, absl::BitGenRef rnd);
+      int64_t truncate_threshold, double r, double p,
+      absl::BitGenRef rnd) const;
 };
 
 }  // namespace wfa::math

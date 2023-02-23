@@ -48,7 +48,7 @@ class DistributedDiscreteGaussianNoiser : public DistributedNoiser {
    * paper, i.e. Algorithm 3 in https://arxiv.org/pdf/2004.00010.pdf.
    * https://github.com/world-federation-of-advertisers/cardinality_estimation_evaluation_framework/blob/master/src/common/noisers.py#L207
    */
-  absl::StatusOr<int64_t> GenerateNoiseComponent() override;
+  absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
 
  private:
   DistributedDiscreteGaussianNoiseComponentOptions options_;

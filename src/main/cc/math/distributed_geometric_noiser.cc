@@ -28,7 +28,7 @@ DistributedGeometricNoiser::DistributedGeometricNoiser(
     : options_(options) {}
 
 absl::StatusOr<int64_t> DistributedGeometricNoiser::GetPolyaRandomVariable(
-    double r, double p, absl::BitGenRef rnd) {
+    double r, double p, absl::BitGenRef rnd) const {
   if (p <= 0 || p >= 1) {
     return absl::InvalidArgumentError("Probability p should be in (0,1).");
   }
@@ -39,16 +39,16 @@ absl::StatusOr<int64_t> DistributedGeometricNoiser::GetPolyaRandomVariable(
 
 absl::StatusOr<int64_t>
 DistributedGeometricNoiser::GetTruncatedPolyaRandomVariable(
-    int64_t truncate_threshold, double r, double p, absl::BitGenRef rnd) {
+    int64_t truncate_threshold, double r, double p, absl::BitGenRef rnd) const {
   if (truncate_threshold < 0) {
     // Negative truncate_threshold means no truncation.
     return GetPolyaRandomVariable(r, p, rnd);
   }
 
   for (int i = 0; i < kMaximumAttempts_; ++i) {
-    ASSIGN_OR_RETURN(polya_, GetPolyaRandomVariable(r, p, rnd));
-    if (polya_ <= truncate_threshold) {
-      return polya_;
+    ASSIGN_OR_RETURN(int64_t polya, GetPolyaRandomVariable(r, p, rnd));
+    if (polya <= truncate_threshold) {
+      return polya;
     }
   }
 
@@ -56,7 +56,8 @@ DistributedGeometricNoiser::GetTruncatedPolyaRandomVariable(
       "Failed to create the polya random variable within the attempt limit.");
 }
 
-absl::StatusOr<int64_t> DistributedGeometricNoiser::GenerateNoiseComponent() {
+absl::StatusOr<int64_t> DistributedGeometricNoiser::GenerateNoiseComponent()
+    const {
   if (options_.contributor_count < 1) {
     return absl::InvalidArgumentError("The num should be positive.");
   }

@@ -26,7 +26,7 @@ DistributedDiscreteGaussianNoiser::DistributedDiscreteGaussianNoiser(
     : options_(options) {}
 
 absl::StatusOr<int64_t>
-DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() {
+DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() const {
   absl::BitGen rnd;
   double sigma_distributed = options_.sigma_distributed;
   double sigma_sq = sigma_distributed * sigma_distributed;

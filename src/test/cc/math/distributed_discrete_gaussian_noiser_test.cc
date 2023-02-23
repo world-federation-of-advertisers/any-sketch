@@ -23,13 +23,36 @@
 
 namespace wfa::math {
 namespace {
+constexpr int kContributorCount = 1;
+constexpr int kOffset = 10;
+constexpr int kSigmaDistributed = 5;
+
+std::map<int64_t, double> GetExpectedProbabilityDistribution(
+    int64_t min_output, int64_t max_output, int64_t offset,
+    double sigma_distributed) {
+  std::map<int64_t, double> expected_probability_distribution;
+  double sum = 0.0;
+
+  for (int64_t x = min_output; x <= max_output; ++x) {
+    double expected_pmf_value = std::exp(-std::pow((x - offset), 2) /
+                                         (2 * std::pow(sigma_distributed, 2)));
+    expected_probability_distribution[x] = expected_pmf_value;
+    sum += expected_pmf_value;
+  }
+
+  for (int64_t x = min_output; x <= max_output; ++x) {
+    expected_probability_distribution[x] /= sum;
+  }
+
+  return expected_probability_distribution;
+}
 
 TEST(DiscreteGaussianNoiserGenerateNoiseComponent, StatusIsOK) {
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
-      {.contributor_count = 1,
-       .sigma_distributed = 6.87,
-       .truncate_threshold = 13,
-       .shift_offset = 13});
+      {.contributor_count = kContributorCount,
+       .sigma_distributed = kSigmaDistributed,
+       .truncate_threshold = kOffset,
+       .shift_offset = kOffset});
 
   ASSERT_THAT(distributed_discrete_gaussian_noiser.GenerateNoiseComponent(),
               IsOk());
@@ -38,7 +61,9 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponent, StatusIsOK) {
 TEST(DiscreteGaussianNoiserGenerateNoiseComponent,
      TruncatedThresholdIsNegativeOneStatusIsOK) {
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
-      {.contributor_count = 1, .sigma_distributed = 6.87, .shift_offset = 13});
+      {.contributor_count = kContributorCount,
+       .sigma_distributed = kSigmaDistributed,
+       .shift_offset = kOffset});
 
   ASSERT_THAT(distributed_discrete_gaussian_noiser.GenerateNoiseComponent(),
               IsOk());
@@ -46,10 +71,10 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponent,
 
 TEST(DiscreteGaussianNoiserGenerateNoiseComponent, ReturnsSampledValues) {
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
-      {.contributor_count = 1,
-       .sigma_distributed = 6.87,
-       .truncate_threshold = 13,
-       .shift_offset = 13});
+      {.contributor_count = kContributorCount,
+       .sigma_distributed = kSigmaDistributed,
+       .truncate_threshold = kOffset,
+       .shift_offset = kOffset});
   int num = 5;
   std::vector<int64_t> results;
 
@@ -63,10 +88,10 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponent, ReturnsSampledValues) {
   ASSERT_THAT(results.size(), num);
 }
 
-TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
+TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
      MinMaxShouldBeCorrect) {
-  double sigma_distributed = 48.231;
-  int64_t offset = 261;
+  double sigma_distributed = kSigmaDistributed;
+  int64_t offset = kOffset;
 
   int64_t min_value = 1000;
   int64_t max_value = 0;
@@ -74,7 +99,7 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
   size_t num_trials = 10000;
 
   DistributedDiscreteGaussianNoiser distributed_gaussian_noiser(
-      {.contributor_count = 1,
+      {.contributor_count = kContributorCount,
        .sigma_distributed = sigma_distributed,
        .truncate_threshold = offset,
        .shift_offset = offset});
@@ -93,11 +118,11 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
   ASSERT_GE(min_value, 0);
 }
 
-TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
+TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
      ProbabilityMassFunctionShouldBeCorrectWithOneContributor) {
   int64_t contributor_count = 1;  // 1 contributor
-  double sigma_distributed = 48.231;
-  int64_t offset = 261;
+  double sigma_distributed = kSigmaDistributed;
+  int64_t offset = kOffset;
 
   DistributedDiscreteGaussianNoiseComponentOptions options = {
       .contributor_count = contributor_count,
@@ -123,18 +148,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
   }
 
   std::map<int64_t, double> expected_probability_distribution;
-  double sum = 0.0;
-
-  for (int64_t x = min_output; x <= max_output; ++x) {
-    double expected_pmf_value = std::exp(-std::pow((x - offset), 2) /
-                                         (2 * std::pow(sigma_distributed, 2)));
-    expected_probability_distribution[x] = expected_pmf_value;
-    sum += expected_pmf_value;
-  }
-
-  for (int64_t x = min_output; x <= max_output; ++x) {
-    expected_probability_distribution[x] /= sum;
-  }
+  expected_probability_distribution = GetExpectedProbabilityDistribution(
+      min_output, max_output, offset, sigma_distributed);
 
   for (int64_t x = min_output; x <= max_output; ++x) {
     double probability =
@@ -144,12 +159,12 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
   }
 }
 
-TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
+TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
      ProbabilityMassFunctionShouldBeCorrectWithFourContributor) {
   int64_t contributor_count = 4;  // 4 contributors
-  double sigma = 48.231;
+  double sigma = 20;
   double sigma_distributed = sigma / std::sqrt(contributor_count);
-  int64_t offset = 261;
+  int64_t offset = kOffset;
 
   DistributedDiscreteGaussianNoiseComponentOptions options = {
       .contributor_count = contributor_count,
@@ -175,18 +190,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
   }
 
   std::map<int64_t, double> expected_probability_distribution;
-  double sum = 0.0;
-
-  for (int64_t x = min_output; x <= max_output; ++x) {
-    double expected_pmf_value = std::exp(-std::pow((x - offset), 2) /
-                                         (2 * std::pow(sigma_distributed, 2)));
-    expected_probability_distribution[x] = expected_pmf_value;
-    sum += expected_pmf_value;
-  }
-
-  for (int64_t x = min_output; x <= max_output; ++x) {
-    expected_probability_distribution[x] /= sum;
-  }
+  expected_probability_distribution = GetExpectedProbabilityDistribution(
+      min_output, max_output, offset, sigma_distributed);
 
   for (int64_t x = min_output; x <= max_output; ++x) {
     double probability =
@@ -196,12 +201,11 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
   }
 }
 
-TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
+TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
      ProbabilityMassFunctionShouldBeCorrectWithDifferentOffset) {
-  int64_t contributor_count = 1;  // 1 contributor
-  double sigma = 48.231;
-  double sigma_distributed = sigma / std::sqrt(contributor_count);
-  int64_t offset = 10;
+  int64_t contributor_count = kContributorCount;
+  double sigma_distributed = kSigmaDistributed;
+  int64_t offset = 20;
 
   DistributedDiscreteGaussianNoiseComponentOptions options = {
       .contributor_count = contributor_count,
@@ -227,18 +231,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
   }
 
   std::map<int64_t, double> expected_probability_distribution;
-  double sum = 0.0;
-
-  for (int64_t x = min_output; x <= max_output; ++x) {
-    double expected_pmf_value = std::exp(-std::pow((x - offset), 2) /
-                                         (2 * std::pow(sigma_distributed, 2)));
-    expected_probability_distribution[x] = expected_pmf_value;
-    sum += expected_pmf_value;
-  }
-
-  for (int64_t x = min_output; x <= max_output; ++x) {
-    expected_probability_distribution[x] /= sum;
-  }
+  expected_probability_distribution = GetExpectedProbabilityDistribution(
+      min_output, max_output, offset, sigma_distributed);
 
   for (int64_t x = min_output; x <= max_output; ++x) {
     double probability =
@@ -248,12 +242,11 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
   }
 }
 
-TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
+TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
      ProbabilityMassFunctionShouldBeCorrectWithDifferentSigma) {
-  int64_t contributor_count = 1;  // 1 contributor
-  double sigma = 10;
-  double sigma_distributed = sigma / std::sqrt(contributor_count);
-  int64_t offset = 261;
+  int64_t contributor_count = kContributorCount;
+  double sigma_distributed = 1;
+  int64_t offset = kOffset;
 
   DistributedDiscreteGaussianNoiseComponentOptions options = {
       .contributor_count = contributor_count,
@@ -279,18 +272,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentSamples,
   }
 
   std::map<int64_t, double> expected_probability_distribution;
-  double sum = 0.0;
-
-  for (int64_t x = min_output; x <= max_output; ++x) {
-    double expected_pmf_value = std::exp(-std::pow((x - offset), 2) /
-                                         (2 * std::pow(sigma_distributed, 2)));
-    expected_probability_distribution[x] = expected_pmf_value;
-    sum += expected_pmf_value;
-  }
-
-  for (int64_t x = min_output; x <= max_output; ++x) {
-    expected_probability_distribution[x] /= sum;
-  }
+  expected_probability_distribution = GetExpectedProbabilityDistribution(
+      min_output, max_output, offset, sigma_distributed);
 
   for (int64_t x = min_output; x <= max_output; ++x) {
     double probability =
