@@ -147,9 +147,9 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
     ++frequency_distribution[temp];
   }
 
-  std::map<int64_t, double> expected_probability_distribution;
-  expected_probability_distribution = GetExpectedProbabilityDistribution(
-      min_output, max_output, offset, sigma_distributed);
+  std::map<int64_t, double> expected_probability_distribution =
+      GetExpectedProbabilityDistribution(min_output, max_output, offset,
+                                         sigma_distributed);
 
   for (int64_t x = min_output; x <= max_output; ++x) {
     double probability =
@@ -189,9 +189,9 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
     ++frequency_distribution[temp];
   }
 
-  std::map<int64_t, double> expected_probability_distribution;
-  expected_probability_distribution = GetExpectedProbabilityDistribution(
-      min_output, max_output, offset, sigma_distributed);
+  std::map<int64_t, double> expected_probability_distribution =
+      GetExpectedProbabilityDistribution(min_output, max_output, offset,
+                                         sigma_distributed);
 
   for (int64_t x = min_output; x <= max_output; ++x) {
     double probability =
@@ -230,9 +230,9 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
     ++frequency_distribution[temp];
   }
 
-  std::map<int64_t, double> expected_probability_distribution;
-  expected_probability_distribution = GetExpectedProbabilityDistribution(
-      min_output, max_output, offset, sigma_distributed);
+  std::map<int64_t, double> expected_probability_distribution =
+      GetExpectedProbabilityDistribution(min_output, max_output, offset,
+                                         sigma_distributed);
 
   for (int64_t x = min_output; x <= max_output; ++x) {
     double probability =
@@ -271,9 +271,9 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
     ++frequency_distribution[temp];
   }
 
-  std::map<int64_t, double> expected_probability_distribution;
-  expected_probability_distribution = GetExpectedProbabilityDistribution(
-      min_output, max_output, offset, sigma_distributed);
+  std::map<int64_t, double> expected_probability_distribution =
+      GetExpectedProbabilityDistribution(min_output, max_output, offset,
+                                         sigma_distributed);
 
   for (int64_t x = min_output; x <= max_output; ++x) {
     double probability =

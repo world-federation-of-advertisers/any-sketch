@@ -40,7 +40,6 @@ DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() const {
   int64_t truncate_threshold = options_.truncate_threshold;
 
   std::geometric_distribution<int> geometric_distribution(p_geometric);
-  std::uniform_real_distribution<double> uniform_real_distribution;
 
   int64_t y;
   double p_bernoulli;

@@ -59,7 +59,8 @@ DistributedGeometricNoiser::GetTruncatedPolyaRandomVariable(
 absl::StatusOr<int64_t> DistributedGeometricNoiser::GenerateNoiseComponent()
     const {
   if (options_.contributor_count < 1) {
-    return absl::InvalidArgumentError("The num should be positive.");
+    return absl::InvalidArgumentError(
+        "The contributor_count should be positive.");
   }
 
   // TODO(@wangyaopw): switch to an OpenSSL-based random number generator
