@@ -20,7 +20,9 @@
 
 #include "absl/container/flat_hash_map.h"
 #include "common_cpp/macros/macros.h"
-#include "math/distributions.h"
+#include "math/distributed_discrete_gaussian_noiser.h"
+#include "math/distributed_geometric_noiser.h"
+#include "math/distributed_noiser.h"
 #include "math/noise_parameters_computation.h"
 #include "private_join_and_compute/crypto/commutative_elgamal.h"
 #include "private_join_and_compute/crypto/context.h"
@@ -39,8 +41,6 @@ using ::private_join_and_compute::ECPoint;
 using ::wfa::any_sketch::DifferentialPrivacyParams;
 using ::wfa::any_sketch::Sketch;
 using ::wfa::any_sketch::SketchConfig;
-using ::wfa::math::GetDistributedGeometricRandomComponent;
-using ::wfa::math::GetPublisherNoiseOptions;
 using DestroyedRegisterStrategy =
     ::wfa::any_sketch::crypto::EncryptSketchRequest::DestroyedRegisterStrategy;
 using BlindersCiphertext = std::pair<std::string, std::string>;
@@ -214,13 +214,21 @@ absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
   if (value_count < 1) {
     return absl::InvalidArgumentError("value_count should be positive.");
   }
+
   DifferentialPrivacyParams params;
   params.set_epsilon(publisher_noise_parameter.epsilon());
   params.set_delta(publisher_noise_parameter.delta());
-  ASSIGN_OR_RETURN(
-      int64_t noise_count,
-      GetDistributedGeometricRandomComponent(GetPublisherNoiseOptions(
-          params, publisher_noise_parameter.publisher_count())));
+
+  std::unique_ptr<math::DistributedNoiser> distributed_noiser;
+
+  math::DistributedGeometricNoiseComponentOptions geometric_options =
+      math::GetGeometricPublisherNoiseOptions(
+          params, publisher_noise_parameter.publisher_count());
+  distributed_noiser =
+      std::make_unique<math::DistributedGeometricNoiser>(geometric_options);
+
+  ASSIGN_OR_RETURN(int64_t noise_count,
+                   distributed_noiser->GenerateNoiseComponent());
 
   if (noise_count < 1) {
     // noise_count would be at least 0.

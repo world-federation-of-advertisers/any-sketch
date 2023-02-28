@@ -1,4 +1,4 @@
-// Copyright 2020 The Cross-Media Measurement Authors
+// Copyright 2022 The Cross-Media Measurement Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,17 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_MATH_DISTRIBUTIONS_H_
-#define SRC_MAIN_CC_MATH_DISTRIBUTIONS_H_
+#ifndef SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_NOISER_H_
+#define SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_NOISER_H_
 
-#include "absl/random/random.h"
+#include "absl/random/bit_gen_ref.h"
 #include "absl/status/statusor.h"
+#include "math/distributed_noiser.h"
 
 namespace wfa::math {
 
-struct DistributedGeometricRandomComponentOptions {
+struct DistributedGeometricNoiseComponentOptions {
+  // For DistributedGeometricNoiser.
   // The number of contributors to the global random variable.
-  int64_t num;
+  int64_t contributor_count;
   // The p (success ratio) parameter of the polya distribution. 0<p<1.
   double p;
   // The threshold to truncate the polya random variables. A negative value
@@ -33,12 +35,23 @@ struct DistributedGeometricRandomComponentOptions {
   int64_t shift_offset = 0;
 };
 
-// Gets one component of a truncatedShiftedTwoSidedGeometricDistributed random
-// variable using the decentralized mechanism, i.e., a truncated shifted
-// PolyaDiff.
-absl::StatusOr<int64_t> GetDistributedGeometricRandomComponent(
-    DistributedGeometricRandomComponentOptions options);
+class DistributedGeometricNoiser : public DistributedNoiser {
+ public:
+  explicit DistributedGeometricNoiser(
+      DistributedGeometricNoiseComponentOptions options);
+  absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
+
+ private:
+  DistributedGeometricNoiseComponentOptions options_;
+  static constexpr int kMaximumAttempts_ = 20;
+
+  absl::StatusOr<int64_t> GetPolyaRandomVariable(double r, double p,
+                                                 absl::BitGenRef rnd) const;
+  absl::StatusOr<int64_t> GetTruncatedPolyaRandomVariable(
+      int64_t truncate_threshold, double r, double p,
+      absl::BitGenRef rnd) const;
+};
 
 }  // namespace wfa::math
 
-#endif  // SRC_MAIN_CC_MATH_DISTRIBUTIONS_H_
+#endif  // SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_NOISER_H_

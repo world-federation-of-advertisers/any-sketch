@@ -8,3 +8,5 @@
 # IntelliJ projects.
 .idea/
 *.iml
+
+.vscode/

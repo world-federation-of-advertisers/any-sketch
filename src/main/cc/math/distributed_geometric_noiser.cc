@@ -1,4 +1,4 @@
-// Copyright 2020 The Cross-Media Measurement Authors
+// Copyright 2022 The Cross-Media Measurement Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "math/distributions.h"
+#include "math/distributed_geometric_noiser.h"
 
 #include <random>
 
@@ -23,17 +23,12 @@
 
 namespace wfa::math {
 
-namespace {
+DistributedGeometricNoiser::DistributedGeometricNoiser(
+    DistributedGeometricNoiseComponentOptions options)
+    : options_(options) {}
 
-constexpr int kMaximumAttempts = 20;
-
-// Creates a Polya random variable with distribution of Polya(r,p).
-// S. Goryczka and L. Xiong, "A Comprehensive Comparison of Multiparty Secure
-// Additions with Differential Privacy," in IEEE Transactions on Dependable and
-// Secure Computing, vol. 14, no. 5, pp. 463-477, 1 Sept.-Oct. 2017,
-// doi: 10.1109/TDSC.2015.2484326.
-absl::StatusOr<int64_t> GetPolyaRandomVariable(double r, double p,
-                                               absl::BitGenRef rnd) {
+absl::StatusOr<int64_t> DistributedGeometricNoiser::GetPolyaRandomVariable(
+    double r, double p, absl::BitGenRef rnd) const {
   if (p <= 0 || p >= 1) {
     return absl::InvalidArgumentError("Probability p should be in (0,1).");
   }
@@ -42,39 +37,44 @@ absl::StatusOr<int64_t> GetPolyaRandomVariable(double r, double p,
   return poisson_distribution(rnd);
 }
 
-absl::StatusOr<int64_t> GetTruncatedPolyaRandomVariable(
-    int64_t truncate_threshold, double r, double p, absl::BitGenRef rnd) {
+absl::StatusOr<int64_t>
+DistributedGeometricNoiser::GetTruncatedPolyaRandomVariable(
+    int64_t truncate_threshold, double r, double p, absl::BitGenRef rnd) const {
   if (truncate_threshold < 0) {
     // Negative truncate_threshold means no truncation.
     return GetPolyaRandomVariable(r, p, rnd);
   }
-  for (int i = 0; i < kMaximumAttempts; ++i) {
+
+  for (int i = 0; i < kMaximumAttempts_; ++i) {
     ASSIGN_OR_RETURN(int64_t polya, GetPolyaRandomVariable(r, p, rnd));
     if (polya <= truncate_threshold) {
       return polya;
     }
   }
+
   return absl::InternalError(
       "Failed to create the polya random variable within the attempt limit.");
 }
 
-}  // namespace
-
-absl::StatusOr<int64_t> GetDistributedGeometricRandomComponent(
-    DistributedGeometricRandomComponentOptions options) {
-  if (options.num < 1) {
-    return absl::InvalidArgumentError("The num should be positive.");
+absl::StatusOr<int64_t> DistributedGeometricNoiser::GenerateNoiseComponent()
+    const {
+  if (options_.contributor_count < 1) {
+    return absl::InvalidArgumentError(
+        "The contributor_count should be positive.");
   }
 
   // TODO(@wangyaopw): switch to an OpenSSL-based random number generator
   absl::BitGen rnd;
-  ASSIGN_OR_RETURN(int64_t polya_a, GetTruncatedPolyaRandomVariable(
-                                        options.truncate_threshold,
-                                        1.0 / options.num, options.p, rnd));
-  ASSIGN_OR_RETURN(int64_t polya_b, GetTruncatedPolyaRandomVariable(
-                                        options.truncate_threshold,
-                                        1.0 / options.num, options.p, rnd));
-  return options.shift_offset + polya_a - polya_b;
-}
 
+  ASSIGN_OR_RETURN(int64_t polya_a,
+                   GetTruncatedPolyaRandomVariable(
+                       options_.truncate_threshold,
+                       1.0 / options_.contributor_count, options_.p, rnd));
+  ASSIGN_OR_RETURN(int64_t polya_b,
+                   GetTruncatedPolyaRandomVariable(
+                       options_.truncate_threshold,
+                       1.0 / options_.contributor_count, options_.p, rnd));
+
+  return options_.shift_offset + polya_a - polya_b;
+}
 }  // namespace wfa::math

@@ -14,6 +14,9 @@
 
 #include "math/noise_parameters_computation.h"
 
+#include "math/distributed_discrete_gaussian_noiser.h"
+#include "math/distributed_geometric_noiser.h"
+
 namespace wfa::math {
 
 namespace {
@@ -28,9 +31,25 @@ int ComputateMuPolya(double epsilon, double delta, int sensitivity, int n) {
       (epsilon / sensitivity));
 }
 
+int ComputeMuDiscreteGaussian(double epsilon, double delta,
+                              double sigma_distributed,
+                              int64_t contributor_count) {
+  ABSL_ASSERT(epsilon > 0);
+  ABSL_ASSERT(delta > 0);
+  ABSL_ASSERT(contributor_count > 0);
+
+  // The sum of delta1 and delta2 should be delta.
+  // In practice, set delta1 = delta2 = 0.5 * delta for simplicity.
+  double delta2 = 0.5 * delta;
+
+  return std::ceil(sigma_distributed *
+                   std::sqrt(2 * std::log(contributor_count *
+                                          (1 + std::exp(epsilon)) / delta2)));
+}
+
 }  // namespace
 
-math::DistributedGeometricRandomComponentOptions GetPublisherNoiseOptions(
+DistributedGeometricNoiseComponentOptions GetGeometricPublisherNoiseOptions(
     const wfa::any_sketch::DifferentialPrivacyParams& params,
     int publisher_count) {
   ABSL_ASSERT(publisher_count > 0);
@@ -38,8 +57,46 @@ math::DistributedGeometricRandomComponentOptions GetPublisherNoiseOptions(
   int offset =
       ComputateMuPolya(params.epsilon(), params.delta(), publisher_count, 1);
   return {
-      .num = 1,
+      .contributor_count = 1,
       .p = success_ratio,
+      .truncate_threshold = offset,
+      .shift_offset = offset,
+  };
+}
+
+DistributedDiscreteGaussianNoiseComponentOptions
+GetDiscreteGaussianPublisherNoiseOptions(
+    const wfa::any_sketch::DifferentialPrivacyParams& params,
+    int64_t contributor_count) {
+  double epsilon = params.epsilon();
+  double delta = params.delta();
+
+  ABSL_ASSERT(epsilon > 0);
+  ABSL_ASSERT(delta > 0);
+
+  // TODO(@iverson52000): Update formula to sigma = 1 / sqrt(2 * rho) once
+  // Almost Concentrated DP (ACDP) for accounting is implemented
+
+  // The sigma calculation formula is a closed-form formula from The Algorithmic
+  // Foundations of Differential Privacy p.265 Theorem A.1
+  // https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf
+  // This sigma formula is valid only for continuous Gaussian noise and used as
+  // an approximation for discrete Gaussian noise here. It generally works for
+  // epsilon <= 1 but not epsilon > 1
+
+  // The sum of delta1 and delta2 should be delta.
+  // In practice, set delta1 = delta2 = 0.5 * delta for simplicity.
+  double delta1 = 0.5 * delta;
+  double sigma = std::sqrt(2 * std::log(1.25 / delta1)) / epsilon;
+  // This simple formula to derive sigma_distributed is valid only for
+  // continuous Gaussian and is used as an approximation here.
+  double sigma_distributed = sigma / sqrt(contributor_count);
+  int offset = ComputeMuDiscreteGaussian(params.epsilon(), params.delta(),
+                                         sigma_distributed, contributor_count);
+
+  return {
+      .contributor_count = contributor_count,
+      .sigma_distributed = sigma_distributed,
       .truncate_threshold = offset,
       .shift_offset = offset,
   };
