@@ -19,6 +19,14 @@
 
 namespace wfa::math {
 
+class NoiseComponentOptions {
+ public:
+  explicit NoiseComponentOptions(int64_t contributor_count)
+      : contributor_count(contributor_count) {}
+  // The number of contributors to the global random variable.
+  int64_t contributor_count;
+};
+
 class DistributedNoiser {
  public:
   DistributedNoiser(const DistributedNoiser& other) = delete;
@@ -26,7 +34,8 @@ class DistributedNoiser {
   DistributedNoiser(DistributedNoiser&& other) = delete;
   virtual ~DistributedNoiser() = default;
 
-  virtual absl::StatusOr<int64_t> GenerateNoiseComponent() const = 0;
+  [[nodiscard]] virtual absl::StatusOr<int64_t> GenerateNoiseComponent()
+      const = 0;
 
  protected:
   DistributedNoiser() = default;

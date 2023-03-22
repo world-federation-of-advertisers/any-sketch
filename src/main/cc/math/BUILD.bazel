@@ -25,7 +25,7 @@ cc_library(
     ],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
-        "//src/main/cc/math:distributed_noiser",
+        ":distributed_noiser",
         "@com_google_absl//absl/random",
         "@com_google_absl//absl/random:bit_gen_ref",
         "@com_google_absl//absl/random:distributions",
@@ -44,7 +44,7 @@ cc_library(
     ],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
-        "//src/main/cc/math:distributed_noiser",
+        ":distributed_noiser",
         "@com_google_absl//absl/random",
         "@com_google_absl//absl/random:bit_gen_ref",
         "@com_google_absl//absl/random:distributions",
@@ -63,9 +63,9 @@ cc_library(
     ],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
-        "//src/main/cc/math:distributed_discrete_gaussian_noiser",
-        "//src/main/cc/math:distributed_geometric_noiser",
-        "//src/main/cc/math:distributed_noiser",
+        ":distributed_discrete_gaussian_noiser",
+        ":distributed_geometric_noiser",
+        ":distributed_noiser",
         "//src/main/proto/wfa/any_sketch:differential_privacy_cc_proto",
     ],
 )

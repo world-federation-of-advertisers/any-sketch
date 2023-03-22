@@ -49,10 +49,8 @@ TEST(GeometricRandomNoiseIndividualComponent, MeanMaxMinShouldBeCorrect) {
   size_t num_trials = 100000;
 
   DistributedGeometricNoiser distributed_geometric_noiser(
-      {.contributor_count = 3,
-       .p = 0.6,
-       .truncate_threshold = truncate_threshold,
-       .shift_offset = shift_offset});
+      DistributedGeometricNoiseComponentOptions{3, 0.6, truncate_threshold,
+                                                shift_offset});
 
   for (size_t i = 0; i < num_trials; ++i) {
     ASSERT_OK_AND_ASSIGN(int64_t temp,
@@ -75,11 +73,8 @@ TEST(GeometricNoiserGlobalSummation, ProbabilityMassFunctionShouldBeCorrect) {
   int64_t shift_offset = 10;        // Individual offset
   int64_t truncate_threshold = 10;  // The value should be reasonably large.
 
-  DistributedGeometricNoiseComponentOptions options = {
-      .contributor_count = contributor_count,
-      .p = p,
-      .truncate_threshold = truncate_threshold,
-      .shift_offset = shift_offset};
+  DistributedGeometricNoiseComponentOptions options{
+      contributor_count, p, truncate_threshold, shift_offset};
   auto distributed_geometric_noiser = DistributedGeometricNoiser(options);
 
   int64_t total_offset = contributor_count * shift_offset;

@@ -49,10 +49,8 @@ std::map<int64_t, double> GetExpectedProbabilityDistribution(
 
 TEST(DiscreteGaussianNoiserGenerateNoiseComponent, StatusIsOK) {
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
-      {.contributor_count = kContributorCount,
-       .sigma_distributed = kSigmaDistributed,
-       .truncate_threshold = kOffset,
-       .shift_offset = kOffset});
+      DistributedDiscreteGaussianNoiseComponentOptions{
+          kContributorCount, kSigmaDistributed, kOffset, kOffset});
 
   ASSERT_THAT(distributed_discrete_gaussian_noiser.GenerateNoiseComponent(),
               IsOk());
@@ -61,9 +59,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponent, StatusIsOK) {
 TEST(DiscreteGaussianNoiserGenerateNoiseComponent,
      TruncatedThresholdIsNegativeOneStatusIsOK) {
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
-      {.contributor_count = kContributorCount,
-       .sigma_distributed = kSigmaDistributed,
-       .shift_offset = kOffset});
+      DistributedDiscreteGaussianNoiseComponentOptions{
+          kContributorCount, kSigmaDistributed, kOffset});
 
   ASSERT_THAT(distributed_discrete_gaussian_noiser.GenerateNoiseComponent(),
               IsOk());
@@ -71,10 +68,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponent,
 
 TEST(DiscreteGaussianNoiserGenerateNoiseComponent, ReturnsSampledValues) {
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
-      {.contributor_count = kContributorCount,
-       .sigma_distributed = kSigmaDistributed,
-       .truncate_threshold = kOffset,
-       .shift_offset = kOffset});
+      DistributedDiscreteGaussianNoiseComponentOptions{
+          kContributorCount, kSigmaDistributed, kOffset, kOffset});
   int num = 5;
   std::vector<int64_t> results;
 
@@ -99,10 +94,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   size_t num_trials = 10000;
 
   DistributedDiscreteGaussianNoiser distributed_gaussian_noiser(
-      {.contributor_count = kContributorCount,
-       .sigma_distributed = sigma_distributed,
-       .truncate_threshold = offset,
-       .shift_offset = offset});
+      DistributedDiscreteGaussianNoiseComponentOptions{
+          kContributorCount, sigma_distributed, offset, offset});
 
   for (size_t i = 0; i < num_trials; ++i) {
     ASSERT_OK_AND_ASSIGN(int64_t temp,
@@ -124,11 +117,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   double sigma_distributed = kSigmaDistributed;
   int64_t offset = kOffset;
 
-  DistributedDiscreteGaussianNoiseComponentOptions options = {
-      .contributor_count = contributor_count,
-      .sigma_distributed = sigma_distributed,
-      .truncate_threshold = offset,
-      .shift_offset = offset};
+  DistributedDiscreteGaussianNoiseComponentOptions options{
+      contributor_count, sigma_distributed, offset, offset};
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
       options);
 
@@ -166,11 +156,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   double sigma_distributed = sigma / std::sqrt(contributor_count);
   int64_t offset = kOffset;
 
-  DistributedDiscreteGaussianNoiseComponentOptions options = {
-      .contributor_count = contributor_count,
-      .sigma_distributed = sigma_distributed,
-      .truncate_threshold = offset,
-      .shift_offset = offset};
+  DistributedDiscreteGaussianNoiseComponentOptions options{
+      contributor_count, sigma_distributed, offset, offset};
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
       options);
 
@@ -207,11 +194,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   double sigma_distributed = kSigmaDistributed;
   int64_t offset = 20;
 
-  DistributedDiscreteGaussianNoiseComponentOptions options = {
-      .contributor_count = contributor_count,
-      .sigma_distributed = sigma_distributed,
-      .truncate_threshold = offset,
-      .shift_offset = offset};
+  DistributedDiscreteGaussianNoiseComponentOptions options{
+      contributor_count, sigma_distributed, offset, offset};
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
       options);
 
@@ -248,11 +232,8 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   double sigma_distributed = 1;
   int64_t offset = kOffset;
 
-  DistributedDiscreteGaussianNoiseComponentOptions options = {
-      .contributor_count = contributor_count,
-      .sigma_distributed = sigma_distributed,
-      .truncate_threshold = offset,
-      .shift_offset = offset};
+  DistributedDiscreteGaussianNoiseComponentOptions options{
+      contributor_count, sigma_distributed, offset, offset};
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
       options);
 
