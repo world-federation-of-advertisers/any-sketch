@@ -26,19 +26,12 @@ class DistributedDiscreteGaussianNoiseComponentOptions
   explicit DistributedDiscreteGaussianNoiseComponentOptions(
       int64_t contributor_count, double sigma_distributed,
       int64_t truncate_threshold = -1, int64_t shift_offset = 0)
-      : NoiseComponentOptions(contributor_count),
-        sigma_distributed(sigma_distributed),
-        truncate_threshold(truncate_threshold),
-        shift_offset(shift_offset) {}
+      : NoiseComponentOptions(contributor_count, truncate_threshold,
+                              shift_offset),
+        sigma_distributed(sigma_distributed) {}
   // Distributed sigma parameter for discrete Gaussian sampler which is
   // sigma/sqrt(contributor_count).
   double sigma_distributed;
-  // The threshold to truncate the discrete Gaussian random variables. A
-  // negative value indicates no truncation.
-  int64_t truncate_threshold = -1;
-  // The offset added to the discrete Gaussian samples. Usually greater than the
-  // truncate_threshold such that the final result is positive.
-  int64_t shift_offset = 0;
 };
 
 class DistributedDiscreteGaussianNoiser : public DistributedNoiser {

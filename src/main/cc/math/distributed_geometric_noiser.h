@@ -27,18 +27,11 @@ class DistributedGeometricNoiseComponentOptions : public NoiseComponentOptions {
                                                      double p,
                                                      int64_t truncate_threshold,
                                                      int64_t shift_offset)
-      : NoiseComponentOptions(contributor_count),
-        p(p),
-        truncate_threshold(truncate_threshold),
-        shift_offset(shift_offset) {}
+      : NoiseComponentOptions(contributor_count, truncate_threshold,
+                              shift_offset),
+        p(p) {}
   // The p (success ratio) parameter of the polya distribution. 0<p<1.
   double p;
-  // The threshold to truncate the polya random variables. A negative value
-  // indicates no truncation.
-  int64_t truncate_threshold = -1;
-  // The offset added to the PolyaDiff. Usually greater than the
-  // truncate_threshold such that the final result is positive.
-  int64_t shift_offset = 0;
 };
 
 class DistributedGeometricNoiser : public DistributedNoiser {
