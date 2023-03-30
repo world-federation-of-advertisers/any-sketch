@@ -19,6 +19,24 @@
 
 namespace wfa::math {
 
+class NoiseComponentOptions {
+ public:
+  explicit NoiseComponentOptions(int64_t contributor_count,
+                                 int64_t truncate_threshold,
+                                 int64_t shift_offset)
+      : contributor_count(contributor_count),
+        truncate_threshold(truncate_threshold),
+        shift_offset(shift_offset) {}
+  // The number of contributors to the global random variable.
+  int64_t contributor_count;
+  // The threshold to truncate the random variables. A negative value
+  // indicates no truncation.
+  int64_t truncate_threshold;
+  // The offset added to the samples. Usually greater than the
+  // truncate_threshold such that the final result is positive.
+  int64_t shift_offset;
+};
+
 class DistributedNoiser {
  public:
   DistributedNoiser(const DistributedNoiser& other) = delete;
@@ -26,7 +44,8 @@ class DistributedNoiser {
   DistributedNoiser(DistributedNoiser&& other) = delete;
   virtual ~DistributedNoiser() = default;
 
-  virtual absl::StatusOr<int64_t> GenerateNoiseComponent() const = 0;
+  [[nodiscard]] virtual absl::StatusOr<int64_t> GenerateNoiseComponent()
+      const = 0;
 
  protected:
   DistributedNoiser() = default;

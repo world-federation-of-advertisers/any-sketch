@@ -16,23 +16,22 @@
 #define SRC_MAIN_CC_MATH_DISTRIBUTED_DISCRETE_GAUSSIAN_NOISER_H_
 
 #include "absl/random/bit_gen_ref.h"
-#include "math/distributed_noiser.h"
+#include "src/main/cc/math/distributed_noiser.h"
 
 namespace wfa::math {
 
-struct DistributedDiscreteGaussianNoiseComponentOptions {
-  // For DistributedDiscreteGaussianNoiser.
-  // The number of contributors to the global random variable.
-  int64_t contributor_count;
+class DistributedDiscreteGaussianNoiseComponentOptions
+    : public NoiseComponentOptions {
+ public:
+  explicit DistributedDiscreteGaussianNoiseComponentOptions(
+      int64_t contributor_count, double sigma_distributed,
+      int64_t truncate_threshold = -1, int64_t shift_offset = 0)
+      : NoiseComponentOptions(contributor_count, truncate_threshold,
+                              shift_offset),
+        sigma_distributed(sigma_distributed) {}
   // Distributed sigma parameter for discrete Gaussian sampler which is
   // sigma/sqrt(contributor_count).
   double sigma_distributed;
-  // The threshold to truncate the discrete Gaussian random variables. A
-  // negative value indicates no truncation.
-  int64_t truncate_threshold = -1;
-  // The offset added to the discrete Gaussian samples. Usually greater than the
-  // truncate_threshold such that the final result is positive.
-  int64_t shift_offset = 0;
 };
 
 class DistributedDiscreteGaussianNoiser : public DistributedNoiser {
@@ -48,7 +47,7 @@ class DistributedDiscreteGaussianNoiser : public DistributedNoiser {
    * paper, i.e. Algorithm 3 in https://arxiv.org/pdf/2004.00010.pdf.
    * https://github.com/world-federation-of-advertisers/cardinality_estimation_evaluation_framework/blob/master/src/common/noisers.py#L207
    */
-  absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
+  [[nodiscard]] absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
 
  private:
   DistributedDiscreteGaussianNoiseComponentOptions options_;

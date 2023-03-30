@@ -17,37 +17,36 @@
 
 #include "absl/random/bit_gen_ref.h"
 #include "absl/status/statusor.h"
-#include "math/distributed_noiser.h"
+#include "src/main/cc/math/distributed_noiser.h"
 
 namespace wfa::math {
 
-struct DistributedGeometricNoiseComponentOptions {
-  // For DistributedGeometricNoiser.
-  // The number of contributors to the global random variable.
-  int64_t contributor_count;
+class DistributedGeometricNoiseComponentOptions : public NoiseComponentOptions {
+ public:
+  explicit DistributedGeometricNoiseComponentOptions(int64_t contributor_count,
+                                                     double p,
+                                                     int64_t truncate_threshold,
+                                                     int64_t shift_offset)
+      : NoiseComponentOptions(contributor_count, truncate_threshold,
+                              shift_offset),
+        p(p) {}
   // The p (success ratio) parameter of the polya distribution. 0<p<1.
   double p;
-  // The threshold to truncate the polya random variables. A negative value
-  // indicates no truncation.
-  int64_t truncate_threshold = -1;
-  // The offset added to the PolyaDiff. Usually greater than the
-  // truncate_threshold such that the final result is positive.
-  int64_t shift_offset = 0;
 };
 
 class DistributedGeometricNoiser : public DistributedNoiser {
  public:
   explicit DistributedGeometricNoiser(
       DistributedGeometricNoiseComponentOptions options);
-  absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
+  [[nodiscard]] absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
 
  private:
   DistributedGeometricNoiseComponentOptions options_;
   static constexpr int kMaximumAttempts_ = 20;
 
-  absl::StatusOr<int64_t> GetPolyaRandomVariable(double r, double p,
-                                                 absl::BitGenRef rnd) const;
-  absl::StatusOr<int64_t> GetTruncatedPolyaRandomVariable(
+  [[nodiscard]] absl::StatusOr<int64_t> GetPolyaRandomVariable(
+      double r, double p, absl::BitGenRef rnd) const;
+  [[nodiscard]] absl::StatusOr<int64_t> GetTruncatedPolyaRandomVariable(
       int64_t truncate_threshold, double r, double p,
       absl::BitGenRef rnd) const;
 };

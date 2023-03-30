@@ -56,12 +56,8 @@ DistributedGeometricNoiseComponentOptions GetGeometricPublisherNoiseOptions(
   double success_ratio = std::exp(-params.epsilon() / publisher_count);
   int offset =
       ComputateMuPolya(params.epsilon(), params.delta(), publisher_count, 1);
-  return {
-      .contributor_count = 1,
-      .p = success_ratio,
-      .truncate_threshold = offset,
-      .shift_offset = offset,
-  };
+  return DistributedGeometricNoiseComponentOptions(1, success_ratio, offset,
+                                                   offset);
 }
 
 DistributedDiscreteGaussianNoiseComponentOptions
@@ -94,12 +90,8 @@ GetDiscreteGaussianPublisherNoiseOptions(
   int offset = ComputeMuDiscreteGaussian(params.epsilon(), params.delta(),
                                          sigma_distributed, contributor_count);
 
-  return {
-      .contributor_count = contributor_count,
-      .sigma_distributed = sigma_distributed,
-      .truncate_threshold = offset,
-      .shift_offset = offset,
-  };
+  return DistributedDiscreteGaussianNoiseComponentOptions(
+      contributor_count, sigma_distributed, offset, offset);
 }
 
 }  // namespace wfa::math
