@@ -101,5 +101,19 @@ TEST(GeometricNoiserGlobalSummation, ProbabilityMassFunctionShouldBeCorrect) {
   }
 }
 
+TEST(GeometricNoiser, GetNoiseOptionReturnsConstReference) {
+  double p = 0.6;
+  int64_t contributor_count = 3;    // 3 contributors
+  int64_t shift_offset = 10;        // Individual offset
+  int64_t truncate_threshold = 10;  // The value should be reasonably large.
+  DistributedGeometricNoiseComponentOptions options{
+      contributor_count, p, truncate_threshold, shift_offset};
+  auto distributed_geometric_noiser = DistributedGeometricNoiser(options);
+  auto const_noise_options = distributed_geometric_noiser.getNoiseOptions();
+  EXPECT_EQ(const_noise_options.contributor_count, options.contributor_count);
+  EXPECT_EQ(const_noise_options.shift_offset, options.shift_offset);
+  EXPECT_EQ(const_noise_options.truncate_threshold, options.truncate_threshold);
+}
+
 }  // namespace
 }  // namespace wfa::math
