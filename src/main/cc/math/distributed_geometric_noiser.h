@@ -21,8 +21,8 @@
 
 namespace wfa::math {
 
-class DistributedGeometricNoiseComponentOptions : public NoiseComponentOptions {
- public:
+struct DistributedGeometricNoiseComponentOptions
+    : public NoiseComponentOptions {
   explicit DistributedGeometricNoiseComponentOptions(int64_t contributor_count,
                                                      double p,
                                                      int64_t truncate_threshold,
@@ -34,17 +34,14 @@ class DistributedGeometricNoiseComponentOptions : public NoiseComponentOptions {
   double p;
 };
 
-class DistributedGeometricNoiser : public DistributedNoiser {
+class DistributedGeometricNoiser
+    : public DistributedNoiserImpl<DistributedGeometricNoiseComponentOptions> {
  public:
   explicit DistributedGeometricNoiser(
       DistributedGeometricNoiseComponentOptions options);
   [[nodiscard]] absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
-  [[nodiscard]] const NoiseComponentOptions& options() const override {
-    return options_;
-  }
 
  private:
-  DistributedGeometricNoiseComponentOptions options_;
   static constexpr int kMaximumAttempts_ = 20;
 
   [[nodiscard]] absl::StatusOr<int64_t> GetPolyaRandomVariable(

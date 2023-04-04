@@ -264,7 +264,7 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   }
 }
 
-TEST(DiscreteGaussianNoiser, GetNoiseOptionReturnsConstReference) {
+TEST(DiscreteGaussianNoiser, OptionsAccessorReturnsOptions) {
   int64_t contributor_count = kContributorCount;
   double sigma_distributed = 1;
   int64_t offset = kOffset;
@@ -273,10 +273,29 @@ TEST(DiscreteGaussianNoiser, GetNoiseOptionReturnsConstReference) {
       contributor_count, sigma_distributed, offset, offset};
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
       options);
-  auto const_noise_options = distributed_discrete_gaussian_noiser.options();
+  const DistributedDiscreteGaussianNoiseComponentOptions& const_noise_options =
+      distributed_discrete_gaussian_noiser.options();
   EXPECT_EQ(const_noise_options.contributor_count, options.contributor_count);
   EXPECT_EQ(const_noise_options.shift_offset, options.shift_offset);
   EXPECT_EQ(const_noise_options.truncate_threshold, options.truncate_threshold);
+  EXPECT_EQ(const_noise_options.sigma_distributed, options.sigma_distributed);
+}
+
+// DO_NOT_SUBMIT(@SanjayVas): For example only.
+TEST(DiscreteGaussianNoiser, AssignableToBaseType) {
+  DistributedDiscreteGaussianNoiser concrete_noiser(
+      DistributedDiscreteGaussianNoiseComponentOptions{kContributorCount, 1});
+  DistributedNoiser& noiser = concrete_noiser;
+  const NoiseComponentOptions& options = noiser.options();
+
+  std::unique_ptr<DistributedNoiser> noiser_ptr =
+      std::make_unique<DistributedDiscreteGaussianNoiser>(
+          DistributedDiscreteGaussianNoiseComponentOptions{kContributorCount,
+                                                           1});
+
+  EXPECT_EQ(options.contributor_count,
+            concrete_noiser.options().contributor_count);
+  EXPECT_EQ(concrete_noiser.options().sigma_distributed, 1);
 }
 
 }  // namespace

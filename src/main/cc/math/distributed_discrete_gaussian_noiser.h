@@ -20,9 +20,8 @@
 
 namespace wfa::math {
 
-class DistributedDiscreteGaussianNoiseComponentOptions
+struct DistributedDiscreteGaussianNoiseComponentOptions
     : public NoiseComponentOptions {
- public:
   explicit DistributedDiscreteGaussianNoiseComponentOptions(
       int64_t contributor_count, double sigma_distributed,
       int64_t truncate_threshold = -1, int64_t shift_offset = 0)
@@ -34,7 +33,9 @@ class DistributedDiscreteGaussianNoiseComponentOptions
   double sigma_distributed;
 };
 
-class DistributedDiscreteGaussianNoiser : public DistributedNoiser {
+class DistributedDiscreteGaussianNoiser
+    : public DistributedNoiserImpl<
+          DistributedDiscreteGaussianNoiseComponentOptions> {
  public:
   explicit DistributedDiscreteGaussianNoiser(
       DistributedDiscreteGaussianNoiseComponentOptions options);
@@ -48,13 +49,8 @@ class DistributedDiscreteGaussianNoiser : public DistributedNoiser {
    * https://github.com/world-federation-of-advertisers/cardinality_estimation_evaluation_framework/blob/master/src/common/noisers.py#L207
    */
   [[nodiscard]] absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
-  [[nodiscard]] const NoiseComponentOptions& options() const override {
-    return options_;
-  }
-
- private:
-  DistributedDiscreteGaussianNoiseComponentOptions options_;
 };
+
 }  // namespace wfa::math
 
 #endif  // SRC_MAIN_CC_MATH_DISTRIBUTED_DISCRETE_GAUSSIAN_NOISER_H_
