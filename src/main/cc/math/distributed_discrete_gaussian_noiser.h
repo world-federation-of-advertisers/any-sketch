@@ -48,7 +48,7 @@ class DistributedDiscreteGaussianNoiser : public DistributedNoiser {
    * https://github.com/world-federation-of-advertisers/cardinality_estimation_evaluation_framework/blob/master/src/common/noisers.py#L207
    */
   [[nodiscard]] absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
-  [[nodiscard]] const NoiseComponentOptions& getNoiseOptions() const override {
+  [[nodiscard]] const NoiseComponentOptions& options() const override {
     return options_;
   }
 

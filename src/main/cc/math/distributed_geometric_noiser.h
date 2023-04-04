@@ -39,7 +39,7 @@ class DistributedGeometricNoiser : public DistributedNoiser {
   explicit DistributedGeometricNoiser(
       DistributedGeometricNoiseComponentOptions options);
   [[nodiscard]] absl::StatusOr<int64_t> GenerateNoiseComponent() const override;
-  [[nodiscard]] const NoiseComponentOptions& getNoiseOptions() const override {
+  [[nodiscard]] const NoiseComponentOptions& options() const override {
     return options_;
   }
 

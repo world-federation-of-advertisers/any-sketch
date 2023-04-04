@@ -46,8 +46,7 @@ class DistributedNoiser {
 
   [[nodiscard]] virtual absl::StatusOr<int64_t> GenerateNoiseComponent()
       const = 0;
-  [[nodiscard]] virtual const NoiseComponentOptions& getNoiseOptions()
-      const = 0;
+  [[nodiscard]] virtual const NoiseComponentOptions& options() const = 0;
 
  protected:
   DistributedNoiser() = default;

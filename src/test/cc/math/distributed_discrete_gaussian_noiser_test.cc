@@ -273,8 +273,7 @@ TEST(DiscreteGaussianNoiser, GetNoiseOptionReturnsConstReference) {
       contributor_count, sigma_distributed, offset, offset};
   DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
       options);
-  auto const_noise_options =
-      distributed_discrete_gaussian_noiser.getNoiseOptions();
+  auto const_noise_options = distributed_discrete_gaussian_noiser.options();
   EXPECT_EQ(const_noise_options.contributor_count, options.contributor_count);
   EXPECT_EQ(const_noise_options.shift_offset, options.shift_offset);
   EXPECT_EQ(const_noise_options.truncate_threshold, options.truncate_threshold);
