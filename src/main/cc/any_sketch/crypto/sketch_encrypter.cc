@@ -219,12 +219,10 @@ absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
   params.set_epsilon(publisher_noise_parameter.epsilon());
   params.set_delta(publisher_noise_parameter.delta());
 
-  std::unique_ptr<math::DistributedNoiser> distributed_noiser;
-
   math::DistributedGeometricNoiseComponentOptions geometric_options =
       math::GetGeometricPublisherNoiseOptions(
           params, publisher_noise_parameter.publisher_count());
-  distributed_noiser =
+  std::unique_ptr<math::DistributedNoiser> distributed_noiser =
       std::make_unique<math::DistributedGeometricNoiser>(geometric_options);
 
   ASSIGN_OR_RETURN(int64_t noise_count,

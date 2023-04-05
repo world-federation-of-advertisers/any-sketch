@@ -110,6 +110,7 @@ TEST(GeometricNoiser, GetNoiseOptionReturnsConstReference) {
       contributor_count, p, truncate_threshold, shift_offset};
   auto distributed_geometric_noiser = DistributedGeometricNoiser(options);
   auto const_noise_options = distributed_geometric_noiser.options();
+  EXPECT_NEAR(const_noise_options.p, p, 0.01);
   EXPECT_EQ(const_noise_options.contributor_count, options.contributor_count);
   EXPECT_EQ(const_noise_options.shift_offset, options.shift_offset);
   EXPECT_EQ(const_noise_options.truncate_threshold, options.truncate_threshold);

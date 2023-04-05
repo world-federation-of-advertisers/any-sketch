@@ -19,8 +19,7 @@
 
 namespace wfa::math {
 
-class NoiseComponentOptions {
- public:
+struct NoiseComponentOptions {
   explicit NoiseComponentOptions(int64_t contributor_count,
                                  int64_t truncate_threshold,
                                  int64_t shift_offset)
@@ -50,6 +49,18 @@ class DistributedNoiser {
 
  protected:
   DistributedNoiser() = default;
+};
+
+template <typename T>
+class DistributedNoiserImpl : public DistributedNoiser {
+ public:
+  explicit DistributedNoiserImpl(const T& options)
+      : DistributedNoiser(), options_(options) {}
+
+  [[nodiscard]] const T& options() const override { return options_; }
+
+ private:
+  const T options_;
 };
 
 }  // namespace wfa::math

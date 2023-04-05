@@ -25,7 +25,8 @@ namespace wfa::math {
 
 DistributedGeometricNoiser::DistributedGeometricNoiser(
     DistributedGeometricNoiseComponentOptions options)
-    : options_(options) {}
+    : DistributedNoiserImpl<DistributedGeometricNoiseComponentOptions>(
+          options) {}
 
 absl::StatusOr<int64_t> DistributedGeometricNoiser::GetPolyaRandomVariable(
     double r, double p, absl::BitGenRef rnd) const {
@@ -58,7 +59,7 @@ DistributedGeometricNoiser::GetTruncatedPolyaRandomVariable(
 
 absl::StatusOr<int64_t> DistributedGeometricNoiser::GenerateNoiseComponent()
     const {
-  if (options_.contributor_count < 1) {
+  if (options().contributor_count < 1) {
     return absl::InvalidArgumentError(
         "The contributor_count should be positive.");
   }
@@ -68,13 +69,13 @@ absl::StatusOr<int64_t> DistributedGeometricNoiser::GenerateNoiseComponent()
 
   ASSIGN_OR_RETURN(int64_t polya_a,
                    GetTruncatedPolyaRandomVariable(
-                       options_.truncate_threshold,
-                       1.0 / options_.contributor_count, options_.p, rnd));
+                       options().truncate_threshold,
+                       1.0 / options().contributor_count, options().p, rnd));
   ASSIGN_OR_RETURN(int64_t polya_b,
                    GetTruncatedPolyaRandomVariable(
-                       options_.truncate_threshold,
-                       1.0 / options_.contributor_count, options_.p, rnd));
+                       options().truncate_threshold,
+                       1.0 / options().contributor_count, options().p, rnd));
 
-  return options_.shift_offset + polya_a - polya_b;
+  return options().shift_offset + polya_a - polya_b;
 }
 }  // namespace wfa::math
