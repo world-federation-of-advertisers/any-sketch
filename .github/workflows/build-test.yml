@@ -35,3 +35,6 @@ jobs:
         with:
           cache-version: 1
           workspace-path: .
+          build-options: |
+            --compilation_mode=opt
+            --host_platform=//build/platforms:ubuntu_20_04
