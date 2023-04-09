@@ -1,6 +1,5 @@
 # Use clang as C++ compiler.
 build --repo_env='CC=clang'
-build --compiler=clang-12.0.0
 
 # Use C++17 language features.
 build --cxxopt='-std=c++17'
