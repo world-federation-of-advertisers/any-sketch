@@ -35,8 +35,6 @@ class NoiseComponentOptions {
   // The offset added to the samples. Usually greater than the
   // truncate_threshold such that the final result is positive.
   int64_t shift_offset;
-
-  int64_t test_field = 0;
 };
 
 class DistributedNoiser {
