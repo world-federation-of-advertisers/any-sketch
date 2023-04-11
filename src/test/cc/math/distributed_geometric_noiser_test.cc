@@ -27,7 +27,7 @@ namespace {
 // Create a random number with twoSidedGeometricDistribution using the
 // decentralized mechanism, i.e., as the summation of N PolyaDiff.
 absl::StatusOr<int64_t> GetTwoSidedGeometricDistributedRandomNumber(
-    const DistributedGeometricNoiser& distributed_geometric_noiser,
+    const DistributedGeometricNoiser &distributed_geometric_noiser,
     int64_t num) {
   int64_t result = 0;
   for (size_t i = 0; i < num; ++i) {
@@ -75,7 +75,8 @@ TEST(GeometricNoiserGlobalSummation, ProbabilityMassFunctionShouldBeCorrect) {
 
   DistributedGeometricNoiseComponentOptions options{
       contributor_count, p, truncate_threshold, shift_offset};
-  auto distributed_geometric_noiser = DistributedGeometricNoiser(options);
+  const auto &distributed_geometric_noiser =
+      DistributedGeometricNoiser(options);
 
   int64_t total_offset = contributor_count * shift_offset;
   int64_t min_output = total_offset - truncate_threshold * contributor_count;
@@ -108,8 +109,9 @@ TEST(GeometricNoiser, GetNoiseOptionReturnsConstReference) {
   int64_t truncate_threshold = 10;  // The value should be reasonably large.
   DistributedGeometricNoiseComponentOptions options{
       contributor_count, p, truncate_threshold, shift_offset};
-  auto distributed_geometric_noiser = DistributedGeometricNoiser(options);
-  auto const_noise_options = distributed_geometric_noiser.options();
+  DistributedGeometricNoiser distributed_geometric_noiser =
+      DistributedGeometricNoiser(options);
+  const auto &const_noise_options = distributed_geometric_noiser.options();
   EXPECT_NEAR(const_noise_options.p, p, 0.01);
   EXPECT_EQ(const_noise_options.contributor_count, options.contributor_count);
   EXPECT_EQ(const_noise_options.shift_offset, options.shift_offset);
