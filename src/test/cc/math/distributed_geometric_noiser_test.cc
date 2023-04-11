@@ -27,7 +27,7 @@ namespace {
 // Create a random number with twoSidedGeometricDistribution using the
 // decentralized mechanism, i.e., as the summation of N PolyaDiff.
 absl::StatusOr<int64_t> GetTwoSidedGeometricDistributedRandomNumber(
-    const DistributedGeometricNoiser& distributed_geometric_noiser,
+    const DistributedGeometricNoiser &distributed_geometric_noiser,
     int64_t num) {
   int64_t result = 0;
   for (size_t i = 0; i < num; ++i) {
@@ -75,7 +75,8 @@ TEST(GeometricNoiserGlobalSummation, ProbabilityMassFunctionShouldBeCorrect) {
 
   DistributedGeometricNoiseComponentOptions options{
       contributor_count, p, truncate_threshold, shift_offset};
-  auto distributed_geometric_noiser = DistributedGeometricNoiser(options);
+  const auto &distributed_geometric_noiser =
+      DistributedGeometricNoiser(options);
 
   int64_t total_offset = contributor_count * shift_offset;
   int64_t min_output = total_offset - truncate_threshold * contributor_count;
@@ -99,6 +100,22 @@ TEST(GeometricNoiserGlobalSummation, ProbabilityMassFunctionShouldBeCorrect) {
         (1 - p) / (1 + p) * std::pow(p, std::abs(x - total_offset));
     EXPECT_NEAR(probability, expected_probability, 0.01);
   }
+}
+
+TEST(GeometricNoiser, GetNoiseOptionReturnsConstReference) {
+  double p = 0.6;
+  int64_t contributor_count = 3;    // 3 contributors
+  int64_t shift_offset = 10;        // Individual offset
+  int64_t truncate_threshold = 10;  // The value should be reasonably large.
+  DistributedGeometricNoiseComponentOptions options{
+      contributor_count, p, truncate_threshold, shift_offset};
+  DistributedGeometricNoiser distributed_geometric_noiser =
+      DistributedGeometricNoiser(options);
+  const auto &const_noise_options = distributed_geometric_noiser.options();
+  EXPECT_NEAR(const_noise_options.p, p, 0.01);
+  EXPECT_EQ(const_noise_options.contributor_count, options.contributor_count);
+  EXPECT_EQ(const_noise_options.shift_offset, options.shift_offset);
+  EXPECT_EQ(const_noise_options.truncate_threshold, options.truncate_threshold);
 }
 
 }  // namespace

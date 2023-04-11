@@ -264,5 +264,22 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   }
 }
 
+TEST(DiscreteGaussianNoiser, GetNoiseOptionReturnsConstReference) {
+  int64_t contributor_count = kContributorCount;
+  double sigma_distributed = 1;
+  int64_t offset = kOffset;
+
+  DistributedDiscreteGaussianNoiseComponentOptions options{
+      contributor_count, sigma_distributed, offset, offset};
+  DistributedDiscreteGaussianNoiser distributed_discrete_gaussian_noiser(
+      options);
+  const auto &const_noise_options =
+      distributed_discrete_gaussian_noiser.options();
+  EXPECT_NEAR(const_noise_options.sigma_distributed, sigma_distributed, 0.01);
+  EXPECT_EQ(const_noise_options.contributor_count, options.contributor_count);
+  EXPECT_EQ(const_noise_options.shift_offset, options.shift_offset);
+  EXPECT_EQ(const_noise_options.truncate_threshold, options.truncate_threshold);
+}
+
 }  // namespace
 }  // namespace wfa::math

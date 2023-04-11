@@ -23,12 +23,13 @@ namespace wfa::math {
 
 DistributedDiscreteGaussianNoiser::DistributedDiscreteGaussianNoiser(
     DistributedDiscreteGaussianNoiseComponentOptions options)
-    : options_(options) {}
+    : DistributedNoiserImpl<DistributedDiscreteGaussianNoiseComponentOptions>(
+          options) {}
 
 absl::StatusOr<int64_t>
 DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() const {
   absl::BitGen rnd;
-  double sigma_distributed = options_.sigma_distributed;
+  double sigma_distributed = options().sigma_distributed;
   double sigma_sq = sigma_distributed * sigma_distributed;
   double t = std::floor(sigma_distributed) + 1;
   double p_geometric = 1 - exp(-1 / t);
@@ -37,7 +38,7 @@ DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() const {
         "Probability p_geometric should "
         "be in (0,1).");
   }
-  int64_t truncate_threshold = options_.truncate_threshold;
+  int64_t truncate_threshold = options().truncate_threshold;
 
   std::geometric_distribution<int> geometric_distribution(p_geometric);
 
@@ -54,6 +55,6 @@ DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() const {
       break;
   }
 
-  return options_.shift_offset + y;
+  return options().shift_offset + y;
 }
 }  // namespace wfa::math
