@@ -40,7 +40,6 @@ class DistributedNoiser {
  public:
   DistributedNoiser(const DistributedNoiser& other) = delete;
   DistributedNoiser& operator=(const DistributedNoiser& other) = delete;
-  DistributedNoiser(DistributedNoiser&& other) = delete;
   virtual ~DistributedNoiser() = default;
 
   [[nodiscard]] virtual absl::StatusOr<int64_t> GenerateNoiseComponent()
