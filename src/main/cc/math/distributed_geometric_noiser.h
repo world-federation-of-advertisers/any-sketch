@@ -15,9 +15,9 @@
 #ifndef SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_NOISER_H_
 #define SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_NOISER_H_
 
-#include "absl/random/bit_gen_ref.h"
 #include "absl/status/statusor.h"
 #include "src/main/cc/math/distributed_noiser.h"
+#include "src/main/cc/math/openssl_random_generator.h"
 
 namespace wfa::math {
 
@@ -45,10 +45,10 @@ class DistributedGeometricNoiser
   static constexpr int kMaximumAttempts_ = 20;
 
   [[nodiscard]] absl::StatusOr<int64_t> GetPolyaRandomVariable(
-      double r, double p, absl::BitGenRef rnd) const;
+      double r, double p, OpensslRandomGenerator rnd) const;
   [[nodiscard]] absl::StatusOr<int64_t> GetTruncatedPolyaRandomVariable(
       int64_t truncate_threshold, double r, double p,
-      absl::BitGenRef rnd) const;
+      OpensslRandomGenerator rnd) const;
 };
 
 }  // namespace wfa::math

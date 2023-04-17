@@ -16,8 +16,7 @@
 
 #include <random>
 
-#include "absl/random/bit_gen_ref.h"
-#include "absl/random/random.h"
+#include "src/main/cc/math/openssl_random_generator.h"
 
 namespace wfa::math {
 
@@ -28,7 +27,7 @@ DistributedDiscreteGaussianNoiser::DistributedDiscreteGaussianNoiser(
 
 absl::StatusOr<int64_t>
 DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() const {
-  absl::BitGen rnd;
+  OpensslRandomGenerator rnd;
   double sigma_distributed = options().sigma_distributed;
   double sigma_sq = sigma_distributed * sigma_distributed;
   double t = std::floor(sigma_distributed) + 1;
