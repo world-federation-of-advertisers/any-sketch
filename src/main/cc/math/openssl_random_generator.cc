@@ -26,9 +26,8 @@ uint64_t OpensslRandomGenerator::operator()() {
       throw std::runtime_error("Failed to generate a random number.");
     }
   }
-  uint64_t value;
-  memcpy(&value, bytes, sizeof(value));
-  return value;
+
+  return *reinterpret_cast<uint64_t*>(bytes);
 }
 
 }  // namespace wfa::math
