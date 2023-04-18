@@ -17,7 +17,7 @@
 namespace wfa::math {
 
 uint64_t OpensslRandomGenerator::operator()() {
-  unsigned char bytes[64];
+  unsigned char bytes[8];
 
   int attempts = 1;
   while (RAND_bytes(bytes, sizeof(bytes)) != 1) {
