@@ -25,7 +25,7 @@ DistributedGeometricNoiser::DistributedGeometricNoiser(
           options) {}
 
 absl::StatusOr<int64_t> DistributedGeometricNoiser::GetPolyaRandomVariable(
-    double r, double p, OpensslRandomGenerator rnd) const {
+    double r, double p, OpenSslUniformRandomGenerator rnd) const {
   if (p <= 0 || p >= 1) {
     return absl::InvalidArgumentError("Probability p should be in (0,1).");
   }
@@ -37,7 +37,7 @@ absl::StatusOr<int64_t> DistributedGeometricNoiser::GetPolyaRandomVariable(
 absl::StatusOr<int64_t>
 DistributedGeometricNoiser::GetTruncatedPolyaRandomVariable(
     int64_t truncate_threshold, double r, double p,
-    OpensslRandomGenerator rnd) const {
+    OpenSslUniformRandomGenerator rnd) const {
   if (truncate_threshold < 0) {
     // Negative truncate_threshold means no truncation.
     return GetPolyaRandomVariable(r, p, rnd);
@@ -61,7 +61,7 @@ absl::StatusOr<int64_t> DistributedGeometricNoiser::GenerateNoiseComponent()
         "The contributor_count should be positive.");
   }
 
-  OpensslRandomGenerator rnd;
+  OpenSslUniformRandomGenerator rnd;
 
   ASSIGN_OR_RETURN(int64_t polya_a,
                    GetTruncatedPolyaRandomVariable(

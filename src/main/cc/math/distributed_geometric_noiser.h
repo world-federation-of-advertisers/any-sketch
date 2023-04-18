@@ -17,7 +17,7 @@
 
 #include "absl/status/statusor.h"
 #include "src/main/cc/math/distributed_noiser.h"
-#include "src/main/cc/math/openssl_random_generator.h"
+#include "src/main/cc/math/open_ssl_uniform_random_generator.h"
 
 namespace wfa::math {
 
@@ -45,10 +45,10 @@ class DistributedGeometricNoiser
   static constexpr int kMaximumAttempts_ = 20;
 
   [[nodiscard]] absl::StatusOr<int64_t> GetPolyaRandomVariable(
-      double r, double p, OpensslRandomGenerator rnd) const;
+      double r, double p, OpenSslUniformRandomGenerator rnd) const;
   [[nodiscard]] absl::StatusOr<int64_t> GetTruncatedPolyaRandomVariable(
       int64_t truncate_threshold, double r, double p,
-      OpensslRandomGenerator rnd) const;
+      OpenSslUniformRandomGenerator rnd) const;
 };
 
 }  // namespace wfa::math

@@ -16,10 +16,10 @@ cc_library(
 )
 
 cc_library(
-    name = "openssl_random_generator",
-    srcs = ["openssl_random_generator.cc"],
+    name = "open_ssl_uniform_random_generator",
+    srcs = ["open_ssl_uniform_random_generator.cc"],
     hdrs = [
-        "openssl_random_generator.h",
+        "open_ssl_uniform_random_generator.h",
     ],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
@@ -38,7 +38,7 @@ cc_library(
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         ":distributed_noiser",
-        ":openssl_random_generator",
+        ":open_ssl_uniform_random_generator",
         "@com_google_absl//absl/random:distributions",
         "@com_google_absl//absl/status:statusor",
         "@wfa_common_cpp//src/main/cc/common_cpp/macros",
@@ -56,7 +56,7 @@ cc_library(
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         ":distributed_noiser",
-        ":openssl_random_generator",
+        ":open_ssl_uniform_random_generator",
         "@com_google_absl//absl/random:distributions",
         "@com_google_absl//absl/status:statusor",
         "@wfa_common_cpp//src/main/cc/common_cpp/macros",

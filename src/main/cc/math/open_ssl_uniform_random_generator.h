@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_MATH_OPENSSL_RANDOM_GENERATOR_H_
-#define SRC_MAIN_CC_MATH_OPENSSL_RANDOM_GENERATOR_H_
+#ifndef SRC_MAIN_CC_MATH_OPEN_SSL_UNIFORM_RANDOM_GENERATOR_H_
+#define SRC_MAIN_CC_MATH_OPEN_SSL_UNIFORM_RANDOM_GENERATOR_H_
 
 #include <cstring>
 #include <random>
@@ -23,11 +23,13 @@
 
 namespace wfa::math {
 
-class OpensslRandomGenerator : public std::uniform_int_distribution<uint64_t> {
+class OpenSslUniformRandomGenerator {
   static const int MAX_ATTEMPTS = 10;
 
  public:
-  OpensslRandomGenerator() = default;
+  OpenSslUniformRandomGenerator() = default;
+
+  using result_type = uint64_t;
 
   uint64_t operator()();
 
@@ -38,4 +40,4 @@ class OpensslRandomGenerator : public std::uniform_int_distribution<uint64_t> {
 
 }  // namespace wfa::math
 
-#endif  // SRC_MAIN_CC_MATH_OPENSSL_RANDOM_GENERATOR_H_
+#endif  // SRC_MAIN_CC_MATH_OPEN_SSL_UNIFORM_RANDOM_GENERATOR_H_

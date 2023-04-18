@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/math/openssl_random_generator.h"
+#include "src/main/cc/math/open_ssl_uniform_random_generator.h"
 
 namespace wfa::math {
 
-uint64_t OpensslRandomGenerator::operator()() {
-  unsigned char bytes[8];
+uint64_t OpenSslUniformRandomGenerator::operator()() {
+  unsigned char bytes[sizeof(uint64_t)];
 
   int attempts = 1;
   while (RAND_bytes(bytes, sizeof(bytes)) != 1) {
