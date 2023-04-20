@@ -27,6 +27,8 @@ DistributedDiscreteGaussianNoiser::DistributedDiscreteGaussianNoiser(
 
 absl::StatusOr<int64_t>
 DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() const {
+  // TODO(@renjiez): Allow to use any implementation of
+  // [UniformRandomBitGenerator].
   OpenSslUniformRandomGenerator rnd;
   double sigma_distributed = options().sigma_distributed;
   double sigma_sq = sigma_distributed * sigma_distributed;

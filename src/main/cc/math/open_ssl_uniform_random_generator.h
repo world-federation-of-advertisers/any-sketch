@@ -19,16 +19,13 @@
 
 namespace wfa::math {
 
-/**
- * A cryptographically secure uniform random generator.
- *
- * Satisfies [UniformRandomBitGenerator] that returning unsigned integer values
- * such that each value in the range of possible results has (ideally) equal
- * probability.
- */
-
+// A cryptographically secure uniform random generator.
+//
+// Satisfies [UniformRandomBitGenerator] that returning unsigned integer values
+// such that each value in the range of possible results has (ideally) equal
+// probability.
 class OpenSslUniformRandomGenerator {
-  static const int MAX_ATTEMPTS = 10;
+  static const int kMaxAttempts = 10;
 
  public:
   OpenSslUniformRandomGenerator() = default;

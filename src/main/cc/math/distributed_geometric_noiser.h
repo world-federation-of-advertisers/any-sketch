@@ -44,6 +44,8 @@ class DistributedGeometricNoiser
  private:
   static constexpr int kMaximumAttempts_ = 20;
 
+  // TODO(@renjiez): Allow to accept any implementation of
+  // [UniformRandomBitGenerator].
   [[nodiscard]] absl::StatusOr<int64_t> GetPolyaRandomVariable(
       double r, double p, OpenSslUniformRandomGenerator rnd) const;
   [[nodiscard]] absl::StatusOr<int64_t> GetTruncatedPolyaRandomVariable(
