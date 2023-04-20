@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "src/main/cc/math/open_ssl_uniform_random_generator.h"
+#include "math/open_ssl_uniform_random_generator.h"
+
+#include <stdexcept>
+
+#include "openssl/rand.h"
 
 namespace wfa::math {
 

@@ -15,13 +15,17 @@
 #ifndef SRC_MAIN_CC_MATH_OPEN_SSL_UNIFORM_RANDOM_GENERATOR_H_
 #define SRC_MAIN_CC_MATH_OPEN_SSL_UNIFORM_RANDOM_GENERATOR_H_
 
-#include <cstring>
-#include <random>
-#include <stdexcept>
-
-#include "openssl/rand.h"
+#include <cstdint>
 
 namespace wfa::math {
+
+/**
+ * A cryptographically secure uniform random generator.
+ *
+ * Satisfies [UniformRandomBitGenerator] that returning unsigned integer values
+ * such that each value in the range of possible results has (ideally) equal
+ * probability.
+ */
 
 class OpenSslUniformRandomGenerator {
   static const int MAX_ATTEMPTS = 10;
@@ -31,11 +35,11 @@ class OpenSslUniformRandomGenerator {
 
   using result_type = uint64_t;
 
-  uint64_t operator()();
+  result_type operator()();
 
-  static constexpr uint64_t min() { return 0; }
+  static constexpr result_type min() { return 0; }
 
-  static constexpr uint64_t max() { return UINT64_MAX; }
+  static constexpr result_type max() { return UINT64_MAX; }
 };
 
 }  // namespace wfa::math

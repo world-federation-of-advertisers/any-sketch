@@ -14,6 +14,8 @@
 
 #include "math/distributed_geometric_noiser.h"
 
+#include <random>
+
 #include "absl/random/poisson_distribution.h"
 #include "common_cpp/macros/macros.h"
 

@@ -16,8 +16,8 @@
 #define SRC_MAIN_CC_MATH_DISTRIBUTED_GEOMETRIC_NOISER_H_
 
 #include "absl/status/statusor.h"
-#include "src/main/cc/math/distributed_noiser.h"
-#include "src/main/cc/math/open_ssl_uniform_random_generator.h"
+#include "math/distributed_noiser.h"
+#include "math/open_ssl_uniform_random_generator.h"
 
 namespace wfa::math {
 

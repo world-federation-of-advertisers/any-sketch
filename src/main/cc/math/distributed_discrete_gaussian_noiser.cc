@@ -16,7 +16,7 @@
 
 #include <random>
 
-#include "src/main/cc/math/open_ssl_uniform_random_generator.h"
+#include "math/open_ssl_uniform_random_generator.h"
 
 namespace wfa::math {
 
