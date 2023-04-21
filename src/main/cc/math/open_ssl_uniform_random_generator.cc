@@ -27,7 +27,7 @@ uint64_t OpenSslUniformRandomGenerator::operator()() {
   while (RAND_bytes(bytes, sizeof(bytes)) != 1) {
     attempts += 1;
     if (attempts > kMaxAttempts) {
-      throw std::runtime_error("Failed to generate a random number.");
+      break;
     }
   }
 
