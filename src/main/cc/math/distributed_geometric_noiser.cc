@@ -64,6 +64,9 @@ absl::StatusOr<int64_t> DistributedGeometricNoiser::GenerateNoiseComponent()
   }
 
   OpenSslUniformRandomGenerator rnd;
+  if (rnd.status() != 1) {
+    return absl::InternalError("Failed to seed random generator.");
+  }
 
   ASSIGN_OR_RETURN(int64_t polya_a,
                    GetTruncatedPolyaRandomVariable(

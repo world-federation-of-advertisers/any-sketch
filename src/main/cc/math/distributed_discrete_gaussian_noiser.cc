@@ -30,6 +30,10 @@ DistributedDiscreteGaussianNoiser::GenerateNoiseComponent() const {
   // TODO(@renjiez): Allow to use any implementation of
   // [UniformRandomBitGenerator].
   OpenSslUniformRandomGenerator rnd;
+  if (rnd.status() != 1) {
+    return absl::InternalError("Failed to seed random generator.");
+  }
+
   double sigma_distributed = options().sigma_distributed;
   double sigma_sq = sigma_distributed * sigma_distributed;
   double t = std::floor(sigma_distributed) + 1;

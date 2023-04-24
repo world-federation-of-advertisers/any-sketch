@@ -25,8 +25,6 @@ namespace wfa::math {
 // such that each value in the range of possible results has (ideally) equal
 // probability.
 class OpenSslUniformRandomGenerator {
-  static const int kMaxAttempts = 10;
-
  public:
   OpenSslUniformRandomGenerator() = default;
 
@@ -37,6 +35,9 @@ class OpenSslUniformRandomGenerator {
   static constexpr result_type min() { return 0; }
 
   static constexpr result_type max() { return UINT64_MAX; }
+
+  // Returns 1 if random generator is seeded successfully with enough entropy.
+  int status();
 };
 
 }  // namespace wfa::math

@@ -23,15 +23,11 @@ namespace wfa::math {
 uint64_t OpenSslUniformRandomGenerator::operator()() {
   unsigned char bytes[sizeof(uint64_t)];
 
-  int attempts = 1;
-  while (RAND_bytes(bytes, sizeof(bytes)) != 1) {
-    attempts += 1;
-    if (attempts > kMaxAttempts) {
-      break;
-    }
-  }
+  RAND_bytes(bytes, sizeof(bytes));
 
   return *reinterpret_cast<uint64_t*>(bytes);
 }
+
+int OpenSslUniformRandomGenerator::status() { return RAND_status(); }
 
 }  // namespace wfa::math
