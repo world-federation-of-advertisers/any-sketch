@@ -15,8 +15,7 @@
 #ifndef SRC_MAIN_CC_MATH_DISTRIBUTED_DISCRETE_GAUSSIAN_NOISER_H_
 #define SRC_MAIN_CC_MATH_DISTRIBUTED_DISCRETE_GAUSSIAN_NOISER_H_
 
-#include "absl/random/bit_gen_ref.h"
-#include "src/main/cc/math/distributed_noiser.h"
+#include "math/distributed_noiser.h"
 
 namespace wfa::math {
 

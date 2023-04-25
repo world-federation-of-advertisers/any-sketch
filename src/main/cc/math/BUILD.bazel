@@ -16,6 +16,18 @@ cc_library(
 )
 
 cc_library(
+    name = "open_ssl_uniform_random_generator",
+    srcs = ["open_ssl_uniform_random_generator.cc"],
+    hdrs = [
+        "open_ssl_uniform_random_generator.h",
+    ],
+    strip_include_prefix = _INCLUDE_PREFIX,
+    deps = [
+        "@boringssl//:ssl",
+    ],
+)
+
+cc_library(
     name = "distributed_geometric_noiser",
     srcs = [
         "distributed_geometric_noiser.cc",
@@ -26,8 +38,7 @@ cc_library(
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         ":distributed_noiser",
-        "@com_google_absl//absl/random",
-        "@com_google_absl//absl/random:bit_gen_ref",
+        ":open_ssl_uniform_random_generator",
         "@com_google_absl//absl/random:distributions",
         "@com_google_absl//absl/status:statusor",
         "@wfa_common_cpp//src/main/cc/common_cpp/macros",
@@ -45,8 +56,7 @@ cc_library(
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         ":distributed_noiser",
-        "@com_google_absl//absl/random",
-        "@com_google_absl//absl/random:bit_gen_ref",
+        ":open_ssl_uniform_random_generator",
         "@com_google_absl//absl/random:distributions",
         "@com_google_absl//absl/status:statusor",
         "@wfa_common_cpp//src/main/cc/common_cpp/macros",

@@ -91,7 +91,7 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   int64_t min_value = 1000;
   int64_t max_value = 0;
 
-  size_t num_trials = 10000;
+  size_t num_trials = 100000;
 
   DistributedDiscreteGaussianNoiser distributed_gaussian_noiser(
       DistributedDiscreteGaussianNoiseComponentOptions{
@@ -125,7 +125,7 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   int64_t min_output = 0;
   int64_t max_output = 2 * offset;
 
-  size_t num_trials = 10000;
+  size_t num_trials = 100000;
   std::map<int64_t, size_t> frequency_distribution;
 
   for (size_t i = 0; i < num_trials; ++i) {
@@ -164,7 +164,7 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   int64_t min_output = 0;
   int64_t max_output = 2 * offset;
 
-  size_t num_trials = 10000;
+  size_t num_trials = 100000;
   std::map<int64_t, size_t> frequency_distribution;
 
   for (size_t i = 0; i < num_trials; ++i) {
@@ -202,7 +202,7 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   int64_t min_output = 0;
   int64_t max_output = 2 * offset;
 
-  size_t num_trials = 10000;
+  size_t num_trials = 100000;
   std::map<int64_t, size_t> frequency_distribution;
 
   for (size_t i = 0; i < num_trials; ++i) {
@@ -240,7 +240,7 @@ TEST(DiscreteGaussianNoiserGenerateNoiseComponentRandomSamples,
   int64_t min_output = 0;
   int64_t max_output = 2 * offset;
 
-  size_t num_trials = 10000;
+  size_t num_trials = 100000;
   std::map<int64_t, size_t> frequency_distribution;
 
   for (size_t i = 0; i < num_trials; ++i) {
