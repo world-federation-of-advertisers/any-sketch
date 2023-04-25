@@ -30,6 +30,8 @@ class OpenSslUniformRandomGenerator {
 
   using result_type = uint64_t;
 
+  // Check status() before call operator() to ensure the generated value is
+  // cryptographically secure.
   result_type operator()();
 
   static constexpr result_type min() { return 0; }
