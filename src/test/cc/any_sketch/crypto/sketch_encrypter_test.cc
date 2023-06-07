@@ -210,6 +210,22 @@ TEST_F(SketchEncrypterTest, ByteSizeShouldBeCorrect) {
   EXPECT_EQ(result.size(), register_size * (1 + unique_cnt + sum_cnt) * 66);
 }
 
+TEST_F(SketchEncrypterTest, EncryptionOfEmptyValuesShouldBeComplete) {
+  const int register_count = 1000;
+
+  Sketch plain_sketch;
+  // Sketch config specifies no values in registers.
+  *plain_sketch.mutable_config() =
+      CreateSketchConfig(/* unique_cnt = */ 0, /* sum_cnt = */ 0);
+  for (size_t i = 0; i < register_count; i++) {
+    plain_sketch.add_registers()->set_index(RandomInt64());
+  }
+
+  ASSERT_OK_AND_ASSIGN(std::string result,
+                       EncryptWithConflictingKeys(plain_sketch));
+  EXPECT_EQ(result.size(), register_count * 1 * 66);
+}
+
 TEST_F(SketchEncrypterTest, EncryptionShouldBeNonDeterministic) {
   Sketch plain_sketch;
   *plain_sketch.mutable_config() =

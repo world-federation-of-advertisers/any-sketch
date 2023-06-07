@@ -152,6 +152,13 @@ TEST(AnySketchTest, MultipleOracleDistributions) {
               UnorderedElementsAre(RegisterIs(4, {10, 11})));
 }
 
+TEST(AnySketchTest, EmptyValues) {
+  AnySketch sketch(MakeFakeDistributionIndex(), std::vector<ValueFunction>());
+
+  ASSERT_THAT(sketch.Insert("ABCD", {}), IsOk());
+  EXPECT_THAT(GetRegisters(sketch), UnorderedElementsAre(RegisterIs(4, {})));
+}
+
 TEST(AnySketchTest, FakeDistribution) {
   AnySketch sketch(MakeFakeDistributionIndex(),
                    MakeSingleItemVector(MakeValueFunction(
