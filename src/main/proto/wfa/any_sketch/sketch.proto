@@ -31,6 +31,8 @@ message ExponentialDistribution {
   // exp(-rate / max_value * i).
   double rate = 1;
   int64 num_values = 2;
+  // Salt used to generate fingerprint. Optional.
+  string salt = 3;
 }
 
 // Integer geometric distribution truncated to 0, ..., num_values - 1.
@@ -41,6 +43,8 @@ message GeometricDistribution {
   // Except for the last element, which gets the remaining probability.
   double success_probability = 1;
   int64 num_values = 2;
+  // Salt used to generate fingerprint. Optional.
+  string salt = 3;
 }
 
 // Integer uniform distribution from 0 to num_values - 1.
@@ -50,6 +54,8 @@ message GeometricDistribution {
 message UniformDistribution {
   // Max value. Full int64 random if unspecified.
   int64 num_values = 1;
+  // Salt used to generate fingerprint. Optional.
+  string salt = 2;
 }
 
 // Degenerate constant distribution.
