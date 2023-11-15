@@ -5,9 +5,9 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # Common-cpp
 http_archive(
     name = "wfa_common_cpp",
-    sha256 = "fd4475b587741fa8af65c580b783054d09bf3890197830290a22b3823c778eeb",
-    strip_prefix = "common-cpp-0.10.0",
-    url = "https://github.com/world-federation-of-advertisers/common-cpp/archive/v0.10.0.tar.gz",
+    sha256 = "dc0c388a8cc3ea36b189edd76efba50aebdc457b4662ed2fbca510a05cffb5ee",
+    strip_prefix = "common-cpp-0.10.2",
+    url = "https://github.com/world-federation-of-advertisers/common-cpp/archive/v0.10.2.tar.gz",
 )
 
 load("@wfa_common_cpp//build:common_cpp_repositories.bzl", "common_cpp_repositories")
