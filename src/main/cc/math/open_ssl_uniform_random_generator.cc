@@ -25,9 +25,64 @@ uint64_t OpenSslUniformRandomGenerator::operator()() {
 
   RAND_bytes(bytes, sizeof(bytes));
 
-  return *reinterpret_cast<uint64_t*>(bytes);
+  return *reinterpret_cast<uint64_t *>(bytes);
 }
 
 int OpenSslUniformRandomGenerator::status() { return RAND_status(); }
+
+absl::StatusOr<std::unique_ptr<UniformPseudoRandomGenerator>>
+UniformPseudoRandomGenerator::Create(const std::vector<unsigned char>& seed,
+                                     const std::vector<unsigned char>& iv) {
+  // Check that the seed has the required length.
+  if (seed.size() != kBytesPerAES256Seed) {
+    return absl::InvalidArgumentError(
+        absl::Substitute("The uniform pseudorandom generator seed has "
+                         "length of $0 bytes but $1 bytes are required.",
+                         seed.size(), kBytesPerAES256Seed));
+  }
+  // Check that the IV has the required length.
+  if (iv.size() != kBytesPerAES256IV) {
+    return absl::InvalidArgumentError(
+        absl::Substitute("The uniform pseudorandom generator iv has "
+                         "length of $0 bytes but $1 bytes are required.",
+                         iv.size(), kBytesPerAES256IV));
+  }
+
+  // Create new context.
+  EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+  if (ctx == NULL) {
+    return absl::InternalError(
+        "Error creating context for the uniform pseudorandom generator.");
+  }
+  // Initialize the uniform pseudorandom generator with seed and iv.
+  if (EVP_EncryptInit_ex(ctx, EVP_aes_256_ctr(), NULL,
+                         (const unsigned char *)seed.data(),
+                         (const unsigned char *)iv.data()) != 1) {
+    return absl::InternalError(
+        "Error initializing the uniform pseudorandom generator context.");
+  }
+
+  // Using `new` to access a non-public constructor.
+  return absl::WrapUnique(new UniformPseudoRandomGenerator(ctx));
+}
+
+absl::StatusOr<std::vector<unsigned char>>
+UniformPseudoRandomGenerator::GetPseudorandomBytes(int size) {
+  if (size <= 0) {
+    return absl::InvalidArgumentError(
+        "Number of pseudorandom bytes must be a positive value.");
+  }
+  std::vector<unsigned char> ret(size, 0);
+  int length;
+  if (EVP_EncryptUpdate(ctx_, ret.data(), &length, ret.data(), ret.size()) !=
+      1) {
+    return absl::InternalError(
+        "Error updating the uniform pseudorandom generator context.");
+  }
+  if (EVP_EncryptFinal_ex(ctx_, ret.data() + length, &length) != 1) {
+    return absl::InternalError("Error finalizing the generating random bytes.");
+  }
+  return ret;
+}
 
 }  // namespace wfa::math
