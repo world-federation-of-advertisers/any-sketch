@@ -20,6 +20,8 @@
 
 #include <cstdint>
 #include <cstring>
+#include <memory>
+#include <utility>
 #include <vector>
 
 #include "absl/status/status.h"
