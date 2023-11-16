@@ -78,12 +78,6 @@ TEST(UniformPseudoRandomGenerator,
       seq.status(),
       StatusIs(absl::StatusCode::kInvalidArgument,
                "Number of pseudorandom bytes must be a positive value."));
-
-  seq = prng->GetPseudorandomBytes(-1);
-  EXPECT_THAT(
-      seq.status(),
-      StatusIs(absl::StatusCode::kInvalidArgument,
-               "Number of pseudorandom bytes must be a positive value."));
 }
 
 TEST(UniformPseudoRandomGenerator,

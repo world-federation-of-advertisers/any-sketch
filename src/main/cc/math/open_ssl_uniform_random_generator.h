@@ -68,7 +68,8 @@ class UniformPseudoRandomGenerator {
   ~UniformPseudoRandomGenerator() { EVP_CIPHER_CTX_free(ctx_); }
 
   // Generate a vector of pseudorandom bytes with the given size.
-  absl::StatusOr<std::vector<unsigned char>> GetPseudorandomBytes(int size);
+  absl::StatusOr<std::vector<unsigned char>> GetPseudorandomBytes(
+      unsigned int size);
 
  private:
   explicit UniformPseudoRandomGenerator(EVP_CIPHER_CTX* ctx)

@@ -67,8 +67,8 @@ UniformPseudoRandomGenerator::Create(const std::vector<unsigned char> &seed,
 }
 
 absl::StatusOr<std::vector<unsigned char>>
-UniformPseudoRandomGenerator::GetPseudorandomBytes(int size) {
-  if (size <= 0) {
+UniformPseudoRandomGenerator::GetPseudorandomBytes(unsigned int size) {
+  if (size == 0) {
     return absl::InvalidArgumentError(
         "Number of pseudorandom bytes must be a positive value.");
   }
