@@ -69,9 +69,9 @@ class UniformPseudoRandomGenerator {
   absl::StatusOr<std::vector<unsigned char>> GetPseudorandomBytes(int size);
 
  private:
-  explicit UniformPseudoRandomGenerator(EVP_CIPHER_CTX *ctx)
+  explicit UniformPseudoRandomGenerator(EVP_CIPHER_CTX* ctx)
       : ctx_(std::move(ctx)) {}
-  EVP_CIPHER_CTX *ctx_;
+  EVP_CIPHER_CTX* ctx_;
 };
 
 }  // namespace wfa::math

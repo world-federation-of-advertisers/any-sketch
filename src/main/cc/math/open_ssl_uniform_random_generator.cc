@@ -31,8 +31,8 @@ uint64_t OpenSslUniformRandomGenerator::operator()() {
 int OpenSslUniformRandomGenerator::status() { return RAND_status(); }
 
 absl::StatusOr<std::unique_ptr<UniformPseudoRandomGenerator>>
-UniformPseudoRandomGenerator::Create(const std::vector<unsigned char>& seed,
-                                     const std::vector<unsigned char>& iv) {
+UniformPseudoRandomGenerator::Create(const std::vector<unsigned char> &seed,
+                                     const std::vector<unsigned char> &iv) {
   // Check that the seed has the required length.
   if (seed.size() != kBytesPerAES256Seed) {
     return absl::InvalidArgumentError(
