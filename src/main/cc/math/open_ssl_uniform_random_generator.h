@@ -27,11 +27,17 @@
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
 #include "absl/strings/substitute.h"
+#include "math/uniform_pseudorandom_generator.h"
 
 namespace wfa::math {
 
-inline constexpr int kBytesPerAES256Seed = 32;
-inline constexpr int kBytesPerAES256IV = 16;
+// Key length for EVP_aes_256_ctr.
+// See https://www.openssl.org/docs/man1.1.1/man3/EVP_aes_256_ctr.html
+inline constexpr int kBytesPerAes256Key = 32;
+
+// IV length is set to the max IV length.
+// See https://github.com/openssl/openssl/blob/master/include/openssl/evp.h
+inline constexpr int kBytesPerAes256Iv = 16;
 
 // A cryptographically secure uniform random generator.
 //
@@ -56,23 +62,24 @@ class OpenSslUniformRandomGenerator {
   int status();
 };
 
-class UniformPseudoRandomGenerator {
+class OpenSslUniformPseudorandomGenerator
+    : public UniformPseudorandomGenerator {
  public:
-  // Create a uniform pseudorandom generator from a seed and an iv.
-  // The seed and iv needs to have the length of 32 and 16 bytes respectively.
-  static absl::StatusOr<std::unique_ptr<UniformPseudoRandomGenerator>> Create(
-      const std::vector<unsigned char>& seed,
+  // Create a uniform pseudorandom generator from a key and an IV.
+  // The key and IV needs to have the length of 32 and 16 bytes respectively.
+  static absl::StatusOr<std::unique_ptr<UniformPseudorandomGenerator>> Create(
+      const std::vector<unsigned char>& key,
       const std::vector<unsigned char>& iv);
 
   // Destructor.
-  ~UniformPseudoRandomGenerator() { EVP_CIPHER_CTX_free(ctx_); }
+  ~OpenSslUniformPseudorandomGenerator() { EVP_CIPHER_CTX_free(ctx_); }
 
   // Generate a vector of pseudorandom bytes with the given size.
   absl::StatusOr<std::vector<unsigned char>> GetPseudorandomBytes(
-      unsigned int size);
+      uint64_t size);
 
  private:
-  explicit UniformPseudoRandomGenerator(EVP_CIPHER_CTX* ctx)
+  explicit OpenSslUniformPseudorandomGenerator(EVP_CIPHER_CTX* ctx)
       : ctx_(std::move(ctx)) {}
   EVP_CIPHER_CTX* ctx_;
 };

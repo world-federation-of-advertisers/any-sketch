@@ -30,22 +30,23 @@ uint64_t OpenSslUniformRandomGenerator::operator()() {
 
 int OpenSslUniformRandomGenerator::status() { return RAND_status(); }
 
-absl::StatusOr<std::unique_ptr<UniformPseudoRandomGenerator>>
-UniformPseudoRandomGenerator::Create(const std::vector<unsigned char> &seed,
-                                     const std::vector<unsigned char> &iv) {
-  // Check that the seed has the required length.
-  if (seed.size() != kBytesPerAES256Seed) {
+absl::StatusOr<std::unique_ptr<UniformPseudorandomGenerator>>
+OpenSslUniformPseudorandomGenerator::Create(
+    const std::vector<unsigned char> &key,
+    const std::vector<unsigned char> &iv) {
+  // Check that the key has the required length.
+  if (key.size() != kBytesPerAes256Key) {
     return absl::InvalidArgumentError(
-        absl::Substitute("The uniform pseudorandom generator seed has "
+        absl::Substitute("The uniform pseudorandom generator key has "
                          "length of $0 bytes but $1 bytes are required.",
-                         seed.size(), kBytesPerAES256Seed));
+                         key.size(), kBytesPerAes256Key));
   }
   // Check that the IV has the required length.
-  if (iv.size() != kBytesPerAES256IV) {
+  if (iv.size() != kBytesPerAes256Iv) {
     return absl::InvalidArgumentError(
-        absl::Substitute("The uniform pseudorandom generator iv has "
+        absl::Substitute("The uniform pseudorandom generator IV has "
                          "length of $0 bytes but $1 bytes are required.",
-                         iv.size(), kBytesPerAES256IV));
+                         iv.size(), kBytesPerAes256Iv));
   }
 
   // Create new context.
@@ -54,20 +55,20 @@ UniformPseudoRandomGenerator::Create(const std::vector<unsigned char> &seed,
     return absl::InternalError(
         "Error creating context for the uniform pseudorandom generator.");
   }
-  // Initialize the uniform pseudorandom generator with seed and iv.
+  // Initialize the uniform pseudorandom generator with key and IV.
   if (EVP_EncryptInit_ex(ctx, EVP_aes_256_ctr(), NULL,
-                         (const unsigned char *)seed.data(),
+                         (const unsigned char *)key.data(),
                          (const unsigned char *)iv.data()) != 1) {
     return absl::InternalError(
         "Error initializing the uniform pseudorandom generator context.");
   }
 
   // Using `new` to access a non-public constructor.
-  return absl::WrapUnique(new UniformPseudoRandomGenerator(ctx));
+  return absl::WrapUnique(new OpenSslUniformPseudorandomGenerator(ctx));
 }
 
 absl::StatusOr<std::vector<unsigned char>>
-UniformPseudoRandomGenerator::GetPseudorandomBytes(unsigned int size) {
+OpenSslUniformPseudorandomGenerator::GetPseudorandomBytes(uint64_t size) {
   if (size == 0) {
     return absl::InvalidArgumentError(
         "Number of pseudorandom bytes must be a positive value.");

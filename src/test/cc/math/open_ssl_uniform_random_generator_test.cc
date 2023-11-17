@@ -23,56 +23,58 @@
 namespace wfa::math {
 namespace {
 
-TEST(UniformPseudoRandomGenerator,
-     CreateTheGeneratorWithValidSeedAndIVSucceeds) {
-  std::vector<unsigned char> seed(kBytesPerAES256Seed);
-  std::vector<unsigned char> iv(kBytesPerAES256IV);
-  RAND_bytes(seed.data(), seed.size());
+TEST(OpenSslUniformPseudorandomGenerator,
+     CreateTheGeneratorWithValidkeyAndIVSucceeds) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
   RAND_bytes(iv.data(), iv.size());
 
-  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudoRandomGenerator> prng,
-                       UniformPseudoRandomGenerator::Create(seed, iv));
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
 }
 
-TEST(UniformPseudoRandomGenerator, CreateTheGeneratorWithInvalidSeedSizeFails) {
-  std::vector<unsigned char> seed(kBytesPerAES256Seed - 1);
-  std::vector<unsigned char> iv(kBytesPerAES256IV);
-  RAND_bytes(seed.data(), seed.size());
+TEST(OpenSslUniformPseudorandomGenerator,
+     CreateTheGeneratorWithInvalidkeySizeFails) {
+  std::vector<unsigned char> key(kBytesPerAes256Key - 1);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
   RAND_bytes(iv.data(), iv.size());
 
-  auto prng = UniformPseudoRandomGenerator::Create(seed, iv);
+  auto prng = OpenSslUniformPseudorandomGenerator::Create(key, iv);
   EXPECT_THAT(
       prng.status(),
       StatusIs(absl::StatusCode::kInvalidArgument,
-               absl::Substitute("The uniform pseudorandom generator seed has "
+               absl::Substitute("The uniform pseudorandom generator key has "
                                 "length of $0 bytes but $1 bytes are required.",
-                                seed.size(), kBytesPerAES256Seed)));
+                                key.size(), kBytesPerAes256Key)));
 }
 
-TEST(UniformPseudoRandomGenerator, CreateTheGeneratorWithInvalidIVSizeFails) {
-  std::vector<unsigned char> seed(kBytesPerAES256Seed);
-  std::vector<unsigned char> iv(kBytesPerAES256IV + 1);
-  RAND_bytes(seed.data(), seed.size());
+TEST(OpenSslUniformPseudorandomGenerator,
+     CreateTheGeneratorWithInvalidIVSizeFails) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv + 1);
+  RAND_bytes(key.data(), key.size());
   RAND_bytes(iv.data(), iv.size());
 
-  auto prng = UniformPseudoRandomGenerator::Create(seed, iv);
+  auto prng = OpenSslUniformPseudorandomGenerator::Create(key, iv);
   EXPECT_THAT(
       prng.status(),
       StatusIs(absl::StatusCode::kInvalidArgument,
-               absl::Substitute("The uniform pseudorandom generator iv has "
+               absl::Substitute("The uniform pseudorandom generator IV has "
                                 "length of $0 bytes but $1 bytes are required.",
-                                iv.size(), kBytesPerAES256IV)));
+                                iv.size(), kBytesPerAes256Iv)));
 }
 
-TEST(UniformPseudoRandomGenerator,
+TEST(OpenSslUniformPseudorandomGenerator,
      GeneratingNonPositiveNumberOfRandomBytesFails) {
-  std::vector<unsigned char> seed(kBytesPerAES256Seed);
-  std::vector<unsigned char> iv(kBytesPerAES256IV);
-  RAND_bytes(seed.data(), seed.size());
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
   RAND_bytes(iv.data(), iv.size());
 
-  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudoRandomGenerator> prng,
-                       UniformPseudoRandomGenerator::Create(seed, iv));
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
   auto seq = prng->GetPseudorandomBytes(0);
   EXPECT_THAT(
       seq.status(),
@@ -80,18 +82,18 @@ TEST(UniformPseudoRandomGenerator,
                "Number of pseudorandom bytes must be a positive value."));
 }
 
-TEST(UniformPseudoRandomGenerator,
-     TwoGeneratorsWithTheSameSeedAndIVProduceTheSameSequence) {
-  std::vector<unsigned char> seed(kBytesPerAES256Seed);
-  std::vector<unsigned char> iv(kBytesPerAES256IV);
-  RAND_bytes(seed.data(), seed.size());
+TEST(OpenSslUniformPseudorandomGenerator,
+     TwoGeneratorsWithTheSameKeyAndIVProduceTheSameSequence) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
   RAND_bytes(iv.data(), iv.size());
 
-  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudoRandomGenerator> prng1,
-                       UniformPseudoRandomGenerator::Create(seed, iv));
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng1,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
 
-  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudoRandomGenerator> prng2,
-                       UniformPseudoRandomGenerator::Create(seed, iv));
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng2,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
 
   int kNumRandomBytes = 100;
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq1,
@@ -104,18 +106,18 @@ TEST(UniformPseudoRandomGenerator,
   ASSERT_EQ(seq1, seq2);
 }
 
-TEST(UniformPseudoRandomGenerator,
-     TwoGeneratorsWithTheSameSeedAndIVProduceTheSameSequences) {
-  std::vector<unsigned char> seed(kBytesPerAES256Seed);
-  std::vector<unsigned char> iv(kBytesPerAES256IV);
-  RAND_bytes(seed.data(), seed.size());
+TEST(OpenSslUniformPseudorandomGenerator,
+     TwoGeneratorsWithTheSameKeyAndIVProduceTheSameSequences) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
   RAND_bytes(iv.data(), iv.size());
 
-  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudoRandomGenerator> prng1,
-                       UniformPseudoRandomGenerator::Create(seed, iv));
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng1,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
 
-  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudoRandomGenerator> prng2,
-                       UniformPseudoRandomGenerator::Create(seed, iv));
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng2,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
 
   int kNumRandomBytes = 100;
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq10,
@@ -134,18 +136,18 @@ TEST(UniformPseudoRandomGenerator,
   ASSERT_EQ(seq11, seq21);
 }
 
-TEST(UniformPseudoRandomGenerator,
-     TwoGeneratorsWithTheSameSeedAndIVProduceTheSameSmallSequences) {
-  std::vector<unsigned char> seed(kBytesPerAES256Seed);
-  std::vector<unsigned char> iv(kBytesPerAES256IV);
-  RAND_bytes(seed.data(), seed.size());
+TEST(OpenSslUniformPseudorandomGenerator,
+     TwoGeneratorsWithTheSameKeyAndIVProduceTheSameSmallSequences) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
   RAND_bytes(iv.data(), iv.size());
 
-  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudoRandomGenerator> prng1,
-                       UniformPseudoRandomGenerator::Create(seed, iv));
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng1,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
 
-  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudoRandomGenerator> prng2,
-                       UniformPseudoRandomGenerator::Create(seed, iv));
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng2,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
 
   int kNumRandomBytes = 1;
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq10,
@@ -164,18 +166,18 @@ TEST(UniformPseudoRandomGenerator,
   ASSERT_EQ(seq11, seq21);
 }
 
-TEST(UniformPseudoRandomGenerator,
-     TwoGeneratorsWithTheSameSeedAndIVProduceTheSameCombinedSequence) {
-  std::vector<unsigned char> seed(kBytesPerAES256Seed);
-  std::vector<unsigned char> iv(kBytesPerAES256IV);
-  RAND_bytes(seed.data(), seed.size());
+TEST(OpenSslUniformPseudorandomGenerator,
+     TwoGeneratorsWithTheSameKeyAndIVProduceTheSameCombinedSequence) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
   RAND_bytes(iv.data(), iv.size());
 
-  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudoRandomGenerator> prng1,
-                       UniformPseudoRandomGenerator::Create(seed, iv));
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng1,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
 
-  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudoRandomGenerator> prng2,
-                       UniformPseudoRandomGenerator::Create(seed, iv));
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng2,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
 
   int kNumRandomBytes1 = 45;
   int kNumRandomBytes2 = 55;
