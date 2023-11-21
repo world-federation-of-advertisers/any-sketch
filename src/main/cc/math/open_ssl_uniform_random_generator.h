@@ -66,7 +66,8 @@ class OpenSslUniformPseudorandomGenerator
     : public UniformPseudorandomGenerator {
  public:
   // Create a uniform pseudorandom generator from a key and an IV.
-  // The key and IV needs to have the length of 32 and 16 bytes respectively.
+  // The key and IV needs to have the length of kBytesPerAes256Key and
+  // kBytesPerAes256Iv respectively.
   static absl::StatusOr<std::unique_ptr<UniformPseudorandomGenerator>> Create(
       const std::vector<unsigned char>& key,
       const std::vector<unsigned char>& iv);
