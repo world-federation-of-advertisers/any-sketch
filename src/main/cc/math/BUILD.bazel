@@ -16,6 +16,17 @@ cc_library(
 )
 
 cc_library(
+    name = "uniform_pseudorandom_generator",
+    hdrs = [
+        "uniform_pseudorandom_generator.h",
+    ],
+    strip_include_prefix = _INCLUDE_PREFIX,
+    deps = [
+        "@com_google_absl//absl/status:statusor",
+    ],
+)
+
+cc_library(
     name = "open_ssl_uniform_random_generator",
     srcs = ["open_ssl_uniform_random_generator.cc"],
     hdrs = [
@@ -23,7 +34,10 @@ cc_library(
     ],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
+        ":uniform_pseudorandom_generator",
         "@boringssl//:ssl",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
     ],
 )
 
