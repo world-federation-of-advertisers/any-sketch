@@ -1,0 +1,59 @@
+module(
+    name = "any-sketch",
+    repo_name = "any_sketch",
+)
+
+BORINGSSL_VERSION = "0.0.0-20230215-5c22014"
+
+bazel_dep(
+    name = "rules_cc",
+    version = "0.0.9",
+)
+bazel_dep(
+    name = "rules_proto",
+    version = "5.3.0-21.7",
+)
+bazel_dep(
+    name = "abseil-cpp",
+    version = "20230802.0",
+    repo_name = "com_google_absl",
+)
+bazel_dep(
+    name = "googletest",
+    version = "1.14.0",
+    repo_name = "com_google_googletest",
+)
+bazel_dep(
+    name = "glog",
+    version = "0.6.0",
+    repo_name = "com_github_google_glog",
+)
+bazel_dep(
+    name = "boringssl",
+    version = BORINGSSL_VERSION,
+)
+single_version_override(
+    module_name = "boringssl",
+    version = BORINGSSL_VERSION,
+)
+
+bazel_dep(
+    name = "common-cpp",
+    version = "0.11.0-rc1",
+    repo_name = "wfa_common_cpp",
+)
+
+non_module_deps = use_extension("//build:non_module_deps.bzl", "non_module_deps")
+use_repo(non_module_deps, "com_google_private_join_and_compute")
+
+# Transitive dependencies for private-join-and-compute.
+bazel_dep(
+    name = "grpc",
+    version = "1.48.1.bcr.2",
+    repo_name = "com_github_grpc_grpc",
+)
+bazel_dep(
+    name = "protobuf",
+    version = "21.7",
+    repo_name = "com_google_protobuf",
+)
