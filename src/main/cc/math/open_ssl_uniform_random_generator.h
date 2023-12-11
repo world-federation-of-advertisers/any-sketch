@@ -62,6 +62,15 @@ class OpenSslUniformRandomGenerator {
   int status();
 };
 
+// A uniform pseudorandom generator based on AES-256 counter mode. This is one
+// of the approved Deterministic Random Bit Generators specified in the NIST
+// SP 800-90A Rev.1 documentation.
+//
+// The AES is initialized with a key and an IV. The IV is used as the initial
+// counter and has the same length as the block length.
+//
+// Any implementation of the AES-256 counter mode must be verified against the
+// test vectors specified in the NIST SP 800-38A documentation.
 class OpenSslUniformPseudorandomGenerator
     : public UniformPseudorandomGenerator {
  public:
