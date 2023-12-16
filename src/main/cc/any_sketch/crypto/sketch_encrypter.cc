@@ -19,6 +19,7 @@
 #include <utility>
 
 #include "absl/container/flat_hash_map.h"
+#include "absl/strings/str_cat.h"
 #include "common_cpp/macros/macros.h"
 #include "math/distributed_discrete_gaussian_noiser.h"
 #include "math/distributed_geometric_noiser.h"
