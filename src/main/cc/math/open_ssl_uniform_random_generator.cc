@@ -123,9 +123,8 @@ OpenSslUniformPseudorandomGenerator::GenerateUniformRandomRange(
     // To get current_size `good` elements, it is expected to sample
     // 1 + current_size*(1 + failure_rate/(1-failure_rate)) elements in
     // [0, 2^{bit_length}).
-    uint64_t sample_size =
-        (uint64_t)(current_size + 1 +
-                   failure_rate * current_size / (1 - failure_rate));
+    uint64_t sample_size = static_cast<uint64_t>(
+        current_size + 1.0 + failure_rate * current_size / (1 - failure_rate));
 
     ASSIGN_OR_RETURN(std::vector<unsigned char> arr,
                      GeneratePseudorandomBytes(sample_size * bytes_per_value));

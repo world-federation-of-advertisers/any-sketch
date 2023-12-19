@@ -14,6 +14,7 @@
 
 #include "any_sketch/crypto/secret_share_generator.h"
 
+#include <memory>
 #include <string>
 
 #include "absl/status/status.h"
