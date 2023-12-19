@@ -22,6 +22,18 @@ cc_library(
 )
 
 cc_library(
+    name = "secret_share",
+    srcs = [":secret_share.cc"],
+    hdrs = [":secret_share.h"],
+    strip_include_prefix = _INCLUDE_PREFIX,
+    deps = [
+        "//src/main/proto/wfa/any_sketch:secret_share_cc_proto",
+        "//src/main/cc/math:open_ssl_uniform_random_generator",
+        "@wfa_common_cpp//src/main/cc/common_cpp/macros",
+    ],
+)
+
+cc_library(
     name = "sketch_encrypter_adapter",
     srcs = [":sketch_encrypter_adapter.cc"],
     hdrs = [":sketch_encrypter_adapter.h"],

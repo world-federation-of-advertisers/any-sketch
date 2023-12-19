@@ -82,11 +82,19 @@ class OpenSslUniformPseudorandomGenerator
       const std::vector<unsigned char>& iv);
 
   // Destructor.
-  ~OpenSslUniformPseudorandomGenerator() { EVP_CIPHER_CTX_free(ctx_); }
+  ~OpenSslUniformPseudorandomGenerator() override { EVP_CIPHER_CTX_free(ctx_); }
 
   // Generate a vector of pseudorandom bytes with the given size.
   absl::StatusOr<std::vector<unsigned char>> GetPseudorandomBytes(
-      uint64_t size);
+      uint64_t size) override;
+
+  // Generate a vector of pseudorandom values in the range [0, modulus).
+  // First, we sample n random values in [0, 2^k) where k is the smallest value
+  // such that modulus <= 2^k. Only values in [0, modulus) are accepted. n is
+  // chosen such that the expected number of accepted values meets the given
+  // `size`.
+  absl::StatusOr<std::vector<uint32_t>> GetUniformRandomRange(
+      uint64_t size, uint32_t modulus) override;
 
  private:
   explicit OpenSslUniformPseudorandomGenerator(EVP_CIPHER_CTX* ctx)

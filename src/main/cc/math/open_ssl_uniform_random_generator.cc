@@ -16,6 +16,7 @@
 
 #include <stdexcept>
 
+#include "common_cpp/macros/macros.h"
 #include "openssl/rand.h"
 
 namespace wfa::math {
@@ -82,6 +83,73 @@ OpenSslUniformPseudorandomGenerator::GetPseudorandomBytes(uint64_t size) {
   }
   if (EVP_EncryptFinal_ex(ctx_, ret.data() + length, &length) != 1) {
     return absl::InternalError("Error finalizing the generating random bytes.");
+  }
+  return ret;
+}
+
+absl::StatusOr<std::vector<uint32_t>>
+OpenSslUniformPseudorandomGenerator::GetUniformRandomRange(uint64_t size,
+                                                           uint32_t modulus) {
+  if (size == 0) {
+    return absl::InvalidArgumentError(
+        "Number of pseudorandom elements must be a positive value.");
+  }
+
+  if (modulus <= 1) {
+    return absl::InvalidArgumentError("The modulus must be greater than 1.");
+  }
+
+  // Compute the bit length of the modulus.
+  int bit_length = std::ceil(std::log2(modulus));
+  // The number of bytes needed per element.
+  int bytes_per_value = (bit_length + 7) / 8;
+  // The mask to extract the last bit_length bits.
+  uint32_t mask = (1 << bit_length) - 1;
+
+  // Compute the failure probability, which happens when the sampled value is
+  // greater than or equal to modulus. As 2^{bit_length - 1} < modulus <=
+  // 2^{bit_length}, the failure probability is guaranteed to be less than 0.5.
+  double failure_rate =
+      (double)((1 << bit_length) - modulus) / (double)(1 << bit_length);
+
+  // Compute the expected number of samples needed.
+  uint64_t sample_size =
+      (uint64_t)(size + 2 * failure_rate * size / (1 - failure_rate));
+  std::vector<unsigned char> arr(sample_size * bytes_per_value, 0);
+  std::vector<uint32_t> ret;
+  ret.reserve(size);
+  int length;
+  if (EVP_EncryptUpdate(ctx_, arr.data(), &length, arr.data(), arr.size()) !=
+      1) {
+    return absl::InternalError(
+        "Error updating the uniform pseudorandom generator context.");
+  }
+  if (EVP_EncryptFinal_ex(ctx_, arr.data() + length, &length) != 1) {
+    return absl::InternalError("Error finalizing the generating random bytes.");
+  }
+
+  for (uint64_t i = 0; i < sample_size; i++) {
+    if (ret.size() >= size) {
+      break;
+    }
+    uint32_t temp = 0;
+    for (int j = 0; j < bytes_per_value; j++) {
+      temp = (temp << 8) + arr[i * bytes_per_value + j];
+    }
+    temp &= mask;
+
+    // Accept the value if it is less than modulus.
+    if (temp < modulus) {
+      ret.push_back(temp);
+    }
+  }
+
+  // In case the number of rejections is higher than expected, sample more
+  // random values in the range and append to the current result.
+  if (ret.size() < size) {
+    ASSIGN_OR_RETURN(std::vector<uint32_t> appendix,
+                     GetUniformRandomRange(size - ret.size(), modulus));
+    ret.insert(ret.end(), appendix.begin(), appendix.end());
   }
   return ret;
 }
