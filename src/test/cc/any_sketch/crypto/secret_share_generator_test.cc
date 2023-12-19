@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "any_sketch/crypto/secret_share.h"
+#include "any_sketch/crypto/secret_share_generator.h"
 
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
@@ -29,35 +29,28 @@ using math::UniformPseudorandomGenerator;
 
 TEST(AdditiveSecretSharing, EmptyInputVectorFails) {
   std::vector<uint32_t> input(0);
-  std::unique_ptr<SecretShareGenerator> secret_share_generator =
-      CreateSecretShareGenerator();
   SecretShareParameter param;
   param.set_modulus(128);
-  auto ret = secret_share_generator->GenerateSecretShares(param, input);
+  auto ret = GenerateSecretShares(param, input);
   EXPECT_THAT(ret.status(), StatusIs(absl::StatusCode::kInvalidArgument,
                                      "Input must be a non-empty vector."));
 }
 
 TEST(AdditiveSecretSharing, InvalidModulusFails) {
   std::vector<uint32_t> input = {0, 1, 2};
-  std::unique_ptr<SecretShareGenerator> secret_share_generator =
-      CreateSecretShareGenerator();
   SecretShareParameter param;
   param.set_modulus(1);
-  auto ret = secret_share_generator->GenerateSecretShares(param, input);
+  auto ret = GenerateSecretShares(param, input);
   EXPECT_THAT(ret.status(), StatusIs(absl::StatusCode::kInvalidArgument,
                                      "The modulus must be greater than 1."));
 }
 
 TEST(AdditiveSecretSharing, SecretShareOverRingZ2kElementsSucceeds) {
   std::vector<uint32_t> input = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-  std::unique_ptr<SecretShareGenerator> secret_share_generator =
-      CreateSecretShareGenerator();
   SecretShareParameter param;
   param.set_modulus(128);
-  ASSERT_OK_AND_ASSIGN(
-      SecretShare secret_share,
-      secret_share_generator->GenerateSecretShares(param, input));
+  ASSERT_OK_AND_ASSIGN(SecretShare secret_share,
+                       GenerateSecretShares(param, input));
 
   std::string key = secret_share.share_seed().key();
   std::string iv = secret_share.share_seed().iv();
@@ -72,7 +65,7 @@ TEST(AdditiveSecretSharing, SecretShareOverRingZ2kElementsSucceeds) {
 
   ASSERT_OK_AND_ASSIGN(
       std::vector<uint32_t> share_vector_from_seed,
-      prng->GetUniformRandomRange(input.size(), param.modulus()));
+      prng->GenerateUniformRandomRange(input.size(), param.modulus()));
 
   for (int i = 0; i < input.size(); i++) {
     ASSERT_EQ(input[i],
@@ -83,13 +76,10 @@ TEST(AdditiveSecretSharing, SecretShareOverRingZ2kElementsSucceeds) {
 
 TEST(AdditiveSecretSharing, SecretShareOverPrimeFieldElementsSucceeds) {
   std::vector<uint32_t> input = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-  std::unique_ptr<SecretShareGenerator> secret_share_generator =
-      CreateSecretShareGenerator();
   SecretShareParameter param;
   param.set_modulus(127);
-  ASSERT_OK_AND_ASSIGN(
-      SecretShare secret_share,
-      secret_share_generator->GenerateSecretShares(param, input));
+  ASSERT_OK_AND_ASSIGN(SecretShare secret_share,
+                       GenerateSecretShares(param, input));
 
   std::string key = secret_share.share_seed().key();
   std::string iv = secret_share.share_seed().iv();
@@ -104,13 +94,25 @@ TEST(AdditiveSecretSharing, SecretShareOverPrimeFieldElementsSucceeds) {
 
   ASSERT_OK_AND_ASSIGN(
       std::vector<uint32_t> share_vector_from_seed,
-      prng->GetUniformRandomRange(input.size(), param.modulus()));
+      prng->GenerateUniformRandomRange(input.size(), param.modulus()));
 
   for (int i = 0; i < input.size(); i++) {
     ASSERT_EQ(input[i],
               (share_vector_from_seed[i] + secret_share.share_vector(i)) %
                   param.modulus());
   }
+}
+
+TEST(AdditiveSecretSharing, InputOutOfBoundFails) {
+  std::vector<uint32_t> input = {0, 1, 2, 3, 4, 5, 6, 7};
+  SecretShareParameter param;
+  param.set_modulus(7);
+  auto secret_share = GenerateSecretShares(param, input);
+  EXPECT_THAT(secret_share.status(),
+              StatusIs(absl::StatusCode::kInvalidArgument,
+                       absl::Substitute(
+                           "Inputs must be less than the modulus, which is $0.",
+                           param.modulus())));
 }
 
 }  // namespace

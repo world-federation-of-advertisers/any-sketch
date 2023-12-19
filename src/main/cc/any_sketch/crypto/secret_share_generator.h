@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SECRET_SHARE_H_
-#define SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SECRET_SHARE_H_
+#ifndef SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SECRET_SHARE_GENERATOR_H_
+#define SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SECRET_SHARE_GENERATOR_H_
 
 #include <vector>
 
@@ -25,25 +25,10 @@ using wfa::any_sketch::SecretShareParameter;
 
 namespace wfa::any_sketch::crypto {
 
-class SecretShareGenerator {
- public:
-  virtual ~SecretShareGenerator(){};
-
-  SecretShareGenerator(SecretShareGenerator&& other) = delete;
-  SecretShareGenerator& operator=(SecretShareGenerator&& other) = delete;
-  SecretShareGenerator(const SecretShareGenerator&) = delete;
-  SecretShareGenerator& operator=(const SecretShareGenerator&) = delete;
-
-  virtual absl::StatusOr<SecretShare> GenerateSecretShares(
-      const SecretShareParameter& secret_share_parameter,
-      const std::vector<uint32_t>& input) = 0;
-
- protected:
-  SecretShareGenerator() = default;
-};
-
-std::unique_ptr<SecretShareGenerator> CreateSecretShareGenerator();
+absl::StatusOr<SecretShare> GenerateSecretShares(
+    const SecretShareParameter& secret_share_parameter,
+    const absl::Span<const uint32_t> input);
 
 }  // namespace wfa::any_sketch::crypto
 
-#endif  // SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SECRET_SHARE_H_
+#endif  // SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SECRET_SHARE_GENERATOR_H_

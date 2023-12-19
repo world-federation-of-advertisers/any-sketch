@@ -74,7 +74,7 @@ class OpenSslUniformRandomGenerator {
 class OpenSslUniformPseudorandomGenerator
     : public UniformPseudorandomGenerator {
  public:
-  // Create a uniform pseudorandom generator from a key and an IV.
+  // Creates a uniform pseudorandom generator from a key and an IV.
   // The key and IV needs to have the length of kBytesPerAes256Key and
   // kBytesPerAes256Iv respectively.
   static absl::StatusOr<std::unique_ptr<UniformPseudorandomGenerator>> Create(
@@ -84,16 +84,12 @@ class OpenSslUniformPseudorandomGenerator
   // Destructor.
   ~OpenSslUniformPseudorandomGenerator() override { EVP_CIPHER_CTX_free(ctx_); }
 
-  // Generate a vector of pseudorandom bytes with the given size.
-  absl::StatusOr<std::vector<unsigned char>> GetPseudorandomBytes(
+  // Generates a vector of pseudorandom bytes with the given size.
+  absl::StatusOr<std::vector<unsigned char>> GeneratePseudorandomBytes(
       uint64_t size) override;
 
-  // Generate a vector of pseudorandom values in the range [0, modulus).
-  // First, we sample n random values in [0, 2^k) where k is the smallest value
-  // such that modulus <= 2^k. Only values in [0, modulus) are accepted. n is
-  // chosen such that the expected number of accepted values meets the given
-  // `size`.
-  absl::StatusOr<std::vector<uint32_t>> GetUniformRandomRange(
+  // Generates a vector of `size` pseudorandom values in the range [0, modulus).
+  absl::StatusOr<std::vector<uint32_t>> GenerateUniformRandomRange(
       uint64_t size, uint32_t modulus) override;
 
  private:

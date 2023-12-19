@@ -75,7 +75,7 @@ TEST(OpenSslUniformPseudorandomGenerator,
 
   ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
                        OpenSslUniformPseudorandomGenerator::Create(key, iv));
-  auto seq = prng->GetPseudorandomBytes(0);
+  auto seq = prng->GeneratePseudorandomBytes(0);
   EXPECT_THAT(
       seq.status(),
       StatusIs(absl::StatusCode::kInvalidArgument,
@@ -97,9 +97,9 @@ TEST(OpenSslUniformPseudorandomGenerator,
 
   int kNumRandomBytes = 100;
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq1,
-                       prng1->GetPseudorandomBytes(kNumRandomBytes));
+                       prng1->GeneratePseudorandomBytes(kNumRandomBytes));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq2,
-                       prng2->GetPseudorandomBytes(kNumRandomBytes));
+                       prng2->GeneratePseudorandomBytes(kNumRandomBytes));
 
   ASSERT_EQ(seq1.size(), kNumRandomBytes);
   ASSERT_EQ(seq2.size(), kNumRandomBytes);
@@ -121,13 +121,13 @@ TEST(OpenSslUniformPseudorandomGenerator,
 
   int kNumRandomBytes = 100;
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq10,
-                       prng1->GetPseudorandomBytes(kNumRandomBytes));
+                       prng1->GeneratePseudorandomBytes(kNumRandomBytes));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq20,
-                       prng2->GetPseudorandomBytes(kNumRandomBytes));
+                       prng2->GeneratePseudorandomBytes(kNumRandomBytes));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq11,
-                       prng1->GetPseudorandomBytes(kNumRandomBytes));
+                       prng1->GeneratePseudorandomBytes(kNumRandomBytes));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq21,
-                       prng2->GetPseudorandomBytes(kNumRandomBytes));
+                       prng2->GeneratePseudorandomBytes(kNumRandomBytes));
   ASSERT_EQ(seq10.size(), kNumRandomBytes);
   ASSERT_EQ(seq20.size(), kNumRandomBytes);
   ASSERT_EQ(seq11.size(), kNumRandomBytes);
@@ -151,13 +151,13 @@ TEST(OpenSslUniformPseudorandomGenerator,
 
   int kNumRandomBytes = 1;
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq10,
-                       prng1->GetPseudorandomBytes(kNumRandomBytes));
+                       prng1->GeneratePseudorandomBytes(kNumRandomBytes));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq20,
-                       prng2->GetPseudorandomBytes(kNumRandomBytes));
+                       prng2->GeneratePseudorandomBytes(kNumRandomBytes));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq11,
-                       prng1->GetPseudorandomBytes(kNumRandomBytes));
+                       prng1->GeneratePseudorandomBytes(kNumRandomBytes));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq21,
-                       prng2->GetPseudorandomBytes(kNumRandomBytes));
+                       prng2->GeneratePseudorandomBytes(kNumRandomBytes));
   ASSERT_EQ(seq10.size(), kNumRandomBytes);
   ASSERT_EQ(seq20.size(), kNumRandomBytes);
   ASSERT_EQ(seq11.size(), kNumRandomBytes);
@@ -182,13 +182,13 @@ TEST(OpenSslUniformPseudorandomGenerator,
   int kNumRandomBytes1 = 45;
   int kNumRandomBytes2 = 55;
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq10,
-                       prng1->GetPseudorandomBytes(kNumRandomBytes1));
+                       prng1->GeneratePseudorandomBytes(kNumRandomBytes1));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq20,
-                       prng2->GetPseudorandomBytes(kNumRandomBytes2));
+                       prng2->GeneratePseudorandomBytes(kNumRandomBytes2));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq11,
-                       prng1->GetPseudorandomBytes(kNumRandomBytes2));
+                       prng1->GeneratePseudorandomBytes(kNumRandomBytes2));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq21,
-                       prng2->GetPseudorandomBytes(kNumRandomBytes1));
+                       prng2->GeneratePseudorandomBytes(kNumRandomBytes1));
   ASSERT_EQ(seq10.size(), kNumRandomBytes1);
   ASSERT_EQ(seq20.size(), kNumRandomBytes2);
   ASSERT_EQ(seq11.size(), kNumRandomBytes2);
@@ -231,13 +231,13 @@ TEST(OpenSslUniformPseudorandomGenerator,
 
   int kBlockSize = 16;
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq1,
-                       prng->GetPseudorandomBytes(kBlockSize));
+                       prng->GeneratePseudorandomBytes(kBlockSize));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq2,
-                       prng->GetPseudorandomBytes(kBlockSize));
+                       prng->GeneratePseudorandomBytes(kBlockSize));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq3,
-                       prng->GetPseudorandomBytes(kBlockSize));
+                       prng->GeneratePseudorandomBytes(kBlockSize));
   ASSERT_OK_AND_ASSIGN(std::vector<unsigned char> seq4,
-                       prng->GetPseudorandomBytes(kBlockSize));
+                       prng->GeneratePseudorandomBytes(kBlockSize));
 
   ASSERT_EQ(seq1.size(), kBlockSize);
   ASSERT_EQ(seq2.size(), kBlockSize);
@@ -261,7 +261,7 @@ TEST(OpenSslUniformPseudorandomGenerator,
 
   uint32_t kModulus = 128;
   uint64_t kNumRandomElements = 0;
-  auto seq = prng->GetUniformRandomRange(kNumRandomElements, kModulus);
+  auto seq = prng->GenerateUniformRandomRange(kNumRandomElements, kModulus);
   EXPECT_THAT(
       seq.status(),
       StatusIs(absl::StatusCode::kInvalidArgument,
@@ -279,7 +279,7 @@ TEST(OpenSslUniformPseudorandomGenerator,
 
   uint32_t kModulus = 1;
   uint64_t kNumRandomElements = 1;
-  auto seq = prng->GetUniformRandomRange(kNumRandomElements, kModulus);
+  auto seq = prng->GenerateUniformRandomRange(kNumRandomElements, kModulus);
   EXPECT_THAT(seq.status(), StatusIs(absl::StatusCode::kInvalidArgument,
                                      "The modulus must be greater than 1."));
 }
@@ -297,7 +297,7 @@ TEST(OpenSslUniformPseudorandomGenerator,
   uint64_t kNumRandomElements = 111;
   ASSERT_OK_AND_ASSIGN(
       std::vector<uint32_t> seq,
-      prng->GetUniformRandomRange(kNumRandomElements, kModulus));
+      prng->GenerateUniformRandomRange(kNumRandomElements, kModulus));
   ASSERT_EQ(seq.size(), kNumRandomElements);
   for (int i = 0; i < kNumRandomElements; i++) {
     ASSERT_LT(seq[i], kModulus);
@@ -317,7 +317,7 @@ TEST(OpenSslUniformPseudorandomGenerator,
   uint64_t kNumRandomElements = 111;
   ASSERT_OK_AND_ASSIGN(
       std::vector<uint32_t> seq,
-      prng->GetUniformRandomRange(kNumRandomElements, kModulus));
+      prng->GenerateUniformRandomRange(kNumRandomElements, kModulus));
   ASSERT_EQ(seq.size(), kNumRandomElements);
   for (int i = 0; i < kNumRandomElements; i++) {
     ASSERT_LT(seq[i], kModulus);
