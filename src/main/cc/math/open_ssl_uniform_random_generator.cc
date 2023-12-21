@@ -88,8 +88,8 @@ OpenSslUniformPseudorandomGenerator::GeneratePseudorandomBytes(uint64_t size) {
   return ret;
 }
 
-// Rejection sampling is used to generate uniformly random values in the range
-// [0, modulus).
+// Generates uniformly random values in the range [0, modulus) using rejection
+// sampling method.
 absl::StatusOr<std::vector<uint32_t>>
 OpenSslUniformPseudorandomGenerator::GenerateUniformRandomRange(
     uint64_t size, uint32_t modulus) {
