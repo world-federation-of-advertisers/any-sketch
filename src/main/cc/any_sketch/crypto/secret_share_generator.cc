@@ -31,18 +31,16 @@ using wfa::math::UniformPseudorandomGenerator;
 
 namespace {
 
-// This function computes (x + y) mod modulus and returns the result.
+// Computes (x + y) mod modulus and returns the result with constant time.
 // The input values x, y, and the output are all in [0, modulus)
 absl::StatusOr<uint32_t> SubMod(uint32_t x, uint32_t y, uint32_t modulus) {
   if (x >= modulus || y >= modulus) {
     return absl::InvalidArgumentError(absl::Substitute(
         "Inputs must be less than the modulus, which is $0.", modulus));
   }
-  if (x >= y) {
-    return x - y;
-  } else {
-    return x + (modulus - y);
-  }
+
+  uint32_t cmp = (x < y) ? 1 : 0;
+  return x - y + cmp * modulus;
 }
 
 }  // namespace
@@ -61,7 +59,7 @@ absl::StatusOr<SecretShare> GenerateSecretShares(
   // Verify OpenSSL random generator seed has been seeded with enough entropy.
   if (RAND_status() != 1) {
     return absl::InternalError(
-        "OpenSSL random generator has been seeded with enough entropy.");
+        "OpenSSL random generator has not been seeded with enough entropy.");
   }
 
   // Sample random seed as the first share.
