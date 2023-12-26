@@ -39,7 +39,7 @@ absl::StatusOr<uint32_t> SubMod(uint32_t x, uint32_t y, uint32_t modulus) {
         "Inputs must be less than the modulus, which is $0.", modulus));
   }
 
-  uint32_t cmp = (x < y) ? 1 : 0;
+  uint32_t cmp = (x < y);
   return x - y + cmp * modulus;
 }
 
