@@ -67,6 +67,9 @@ TEST(AdditiveSecretSharing, SecretShareOverRingZ2kElementsSucceeds) {
       std::vector<uint32_t> share_vector_from_seed,
       prng->GenerateUniformRandomRange(input.size(), param.modulus()));
 
+  ASSERT_EQ(secret_share.share_vector().size(), input.size());
+  ASSERT_EQ(share_vector_from_seed.size(), input.size());
+
   for (int i = 0; i < input.size(); i++) {
     ASSERT_EQ(input[i],
               (share_vector_from_seed[i] + secret_share.share_vector(i)) %
@@ -95,6 +98,9 @@ TEST(AdditiveSecretSharing, SecretShareOverPrimeFieldElementsSucceeds) {
   ASSERT_OK_AND_ASSIGN(
       std::vector<uint32_t> share_vector_from_seed,
       prng->GenerateUniformRandomRange(input.size(), param.modulus()));
+
+  ASSERT_EQ(secret_share.share_vector().size(), input.size());
+  ASSERT_EQ(share_vector_from_seed.size(), input.size());
 
   for (int i = 0; i < input.size(); i++) {
     ASSERT_EQ(input[i],
