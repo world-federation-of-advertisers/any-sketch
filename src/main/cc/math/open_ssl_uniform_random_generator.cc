@@ -14,8 +14,10 @@
 
 #include "math/open_ssl_uniform_random_generator.h"
 
+#include <functional>
 #include <stdexcept>
 
+#include "common_cpp/macros/macros.h"
 #include "openssl/rand.h"
 
 namespace wfa::math {
@@ -68,7 +70,7 @@ OpenSslUniformPseudorandomGenerator::Create(
 }
 
 absl::StatusOr<std::vector<unsigned char>>
-OpenSslUniformPseudorandomGenerator::GetPseudorandomBytes(uint64_t size) {
+OpenSslUniformPseudorandomGenerator::GeneratePseudorandomBytes(uint64_t size) {
   if (size == 0) {
     return absl::InvalidArgumentError(
         "Number of pseudorandom bytes must be a positive value.");
@@ -82,6 +84,67 @@ OpenSslUniformPseudorandomGenerator::GetPseudorandomBytes(uint64_t size) {
   }
   if (EVP_EncryptFinal_ex(ctx_, ret.data() + length, &length) != 1) {
     return absl::InternalError("Error finalizing the generating random bytes.");
+  }
+  return ret;
+}
+
+// Generates uniformly random values in the range [0, modulus) using rejection
+// sampling method.
+absl::StatusOr<std::vector<uint32_t>>
+OpenSslUniformPseudorandomGenerator::GenerateUniformRandomRange(
+    uint64_t size, uint32_t modulus) {
+  if (size == 0) {
+    return absl::InvalidArgumentError(
+        "Number of pseudorandom elements must be a positive value.");
+  }
+
+  if (modulus <= 1) {
+    return absl::InvalidArgumentError("The modulus must be greater than 1.");
+  }
+
+  // Compute the bit length of the modulus.
+  int bit_length = std::ceil(std::log2(modulus));
+  // The number of bytes needed per element.
+  int bytes_per_value = (bit_length + 7) / 8;
+  // The mask to extract the last bit_length bits.
+  uint32_t mask = (1 << bit_length) - 1;
+
+  // Compute the failure probability, which happens when the sampled value is
+  // greater than or equal to modulus. As 2^{bit_length - 1} < modulus <=
+  // 2^{bit_length}, the failure probability is guaranteed to be less than 0.5.
+  double failure_rate = static_cast<double>((1 << bit_length) - modulus) /
+                        static_cast<double>(1 << bit_length);
+
+  std::vector<uint32_t> ret;
+  ret.reserve(size);
+
+  while (ret.size() < size) {
+    uint64_t current_size = size - ret.size();
+    // To get current_size `good` elements, it is expected to sample
+    // 1 + current_size*(1 + failure_rate/(1-failure_rate)) elements in
+    // [0, 2^{bit_length}).
+    uint64_t sample_size = static_cast<uint64_t>(
+        current_size + 1.0 + failure_rate * current_size / (1 - failure_rate));
+
+    ASSIGN_OR_RETURN(std::vector<unsigned char> arr,
+                     GeneratePseudorandomBytes(sample_size * bytes_per_value));
+
+    // Rejection sampling step.
+    for (uint64_t i = 0; i < sample_size; i++) {
+      if (ret.size() >= size) {
+        break;
+      }
+      uint32_t temp = 0;
+      for (int j = 0; j < bytes_per_value; j++) {
+        temp = (temp << 8) + arr[i * bytes_per_value + j];
+      }
+      temp &= mask;
+
+      // Accept the value if it is less than modulus.
+      if (temp < modulus) {
+        ret.push_back(temp);
+      }
+    }
   }
   return ret;
 }
