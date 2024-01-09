@@ -20,13 +20,11 @@
 #include <vector>
 
 #include "absl/status/status.h"
-#include "math/open_ssl_uniform_random_generator.h"
 #include "wfa/any_sketch/secret_share.pb.h"
 
 namespace wfa::measurement::common::crypto {
 
 using any_sketch::PrngSeed;
-using wfa::math::UniformPseudorandomGenerator;
 
 absl::Status ShuffleWithSeed(std::vector<uint32_t>& data, const PrngSeed& seed);
 

@@ -19,6 +19,7 @@
 #include "common_cpp/testing/status_macros.h"
 #include "common_cpp/testing/status_matchers.h"
 #include "gtest/gtest.h"
+#include "math/open_ssl_uniform_random_generator.h"
 
 namespace wfa::any_sketch::crypto {
 namespace {
