@@ -151,6 +151,8 @@ OpenSslUniformPseudorandomGenerator::GenerateUniformRandomRange(
 
 absl::StatusOr<std::unique_ptr<UniformPseudorandomGenerator>>
 CreatePrngFromSeed(const PrngSeed &seed) {
+  // TODO(@ple13): use absl::Cord instead of making vector copies once we can
+  // upgrade to Protobuf v23.0+.
   std::vector<unsigned char> key(seed.key().begin(), seed.key().end());
   std::vector<unsigned char> iv(seed.iv().begin(), seed.iv().end());
 

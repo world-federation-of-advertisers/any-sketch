@@ -22,38 +22,35 @@
 
 namespace wfa::measurement::common::crypto {
 
-using math::CreatePrngFromSeed;
-using math::UniformPseudorandomGenerator;
-
 // Shuffles the vector data using Fisher-Yates approach. Let n be the size of
 // data, the Fisher-Yates shuffle is as below.
 // For i = (n-1) to 1:
 //   Draws a random value j in the range [0; i]
 //   Swaps data[i] and data[j]
 absl::Status ShuffleWithSeed(std::vector<uint32_t>& data,
-                             const PrngSeed& seed) {
+                             const any_sketch::PrngSeed& seed) {
   // Does nothing if the input is empty or has size 1.
   if (data.size() <= 1) {
     return absl::OkStatus();
   }
 
   // Initializes the pseudorandom generator using the provided seed.
-  ASSIGN_OR_RETURN(std::unique_ptr<UniformPseudorandomGenerator> prng,
-                   CreatePrngFromSeed(seed));
+  ASSIGN_OR_RETURN(std::unique_ptr<math::UniformPseudorandomGenerator> prng,
+                   math::CreatePrngFromSeed(seed));
 
   // Samples random values.
   ASSIGN_OR_RETURN(
       std::vector<unsigned char> arr,
-      prng->GeneratePseudorandomBytes(data.size() * sizeof(unsigned __int128)));
+      prng->GeneratePseudorandomBytes(data.size() * sizeof(absl::uint128)));
 
-  unsigned __int128* rand = (unsigned __int128*)arr.data();
+  absl::uint128* rand = (absl::uint128*)arr.data();
   for (uint64_t i = data.size() - 1; i >= 1; i--) {
     // Ideally, to make sure that the sampled permutation is not biased, rand[i]
     // needs to be re-sampled if rand[i] >= 2^128 - (2^128 % (i+1)). However,
     // the probability that this happens with any i in [1; data.size() - 1] is
     // less than (data.size())^2/2^{128}, which is less than 2^{-40} for any
     // input vector of size less than 2^{43}.
-    int index = rand[i] % (i + 1);
+    uint64_t index = static_cast<uint64_t>(rand[i] % (i + 1));
     // Swaps the element at current position with the one at position index.
     std::swap(data[i], data[index]);
   }

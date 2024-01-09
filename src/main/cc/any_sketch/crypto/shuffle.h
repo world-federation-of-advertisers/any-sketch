@@ -24,9 +24,8 @@
 
 namespace wfa::measurement::common::crypto {
 
-using any_sketch::PrngSeed;
-
-absl::Status ShuffleWithSeed(std::vector<uint32_t>& data, const PrngSeed& seed);
+absl::Status ShuffleWithSeed(std::vector<uint32_t>& data,
+                             const any_sketch::PrngSeed& seed);
 
 }  // namespace wfa::measurement::common::crypto
 
