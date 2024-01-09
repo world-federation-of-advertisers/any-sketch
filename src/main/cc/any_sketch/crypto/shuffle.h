@@ -17,6 +17,7 @@
 
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "absl/status/status.h"
 #include "math/open_ssl_uniform_random_generator.h"

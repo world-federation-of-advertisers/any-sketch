@@ -14,6 +14,8 @@
 
 #include "any_sketch/crypto/shuffle.h"
 
+#include <memory>
+
 #include "absl/status/status.h"
 #include "common_cpp/macros/macros.h"
 #include "math/open_ssl_uniform_random_generator.h"
