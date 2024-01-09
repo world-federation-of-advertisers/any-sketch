@@ -149,4 +149,14 @@ OpenSslUniformPseudorandomGenerator::GenerateUniformRandomRange(
   return ret;
 }
 
+absl::StatusOr<std::unique_ptr<UniformPseudorandomGenerator>>
+CreatePrngFromSeed(const PrngSeed &seed) {
+  std::vector<unsigned char> key(seed.key().begin(), seed.key().end());
+  std::vector<unsigned char> iv(seed.iv().begin(), seed.iv().end());
+
+  ASSIGN_OR_RETURN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                   OpenSslUniformPseudorandomGenerator::Create(key, iv));
+  return prng;
+}
+
 }  // namespace wfa::math

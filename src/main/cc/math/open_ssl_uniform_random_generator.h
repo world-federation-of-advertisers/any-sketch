@@ -28,8 +28,11 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/substitute.h"
 #include "math/uniform_pseudorandom_generator.h"
+#include "wfa/any_sketch/secret_share.pb.h"
 
 namespace wfa::math {
+
+using any_sketch::PrngSeed;
 
 // Key length for EVP_aes_256_ctr.
 // See https://www.openssl.org/docs/man1.1.1/man3/EVP_aes_256_ctr.html
@@ -97,6 +100,11 @@ class OpenSslUniformPseudorandomGenerator
       : ctx_(std::move(ctx)) {}
   EVP_CIPHER_CTX* ctx_;
 };
+
+// Create a pseudorandom generator with a PrngSeed which is used to initialize
+// the AES 256 counter mode.
+absl::StatusOr<std::unique_ptr<UniformPseudorandomGenerator>>
+CreatePrngFromSeed(const PrngSeed& seed);
 
 }  // namespace wfa::math
 
