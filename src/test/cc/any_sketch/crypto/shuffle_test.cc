@@ -90,5 +90,31 @@ TEST(ShuffleWithSeed, ShufflingSucceeds) {
   }
 }
 
+TEST(ShuffleWithSeed, ShufflingWithSameSeedSucceeds) {
+  PrngSeed seed;
+  *seed.mutable_key() = std::string(kBytesPerAes256Key, 'a');
+  *seed.mutable_iv() = std::string(kBytesPerAes256Iv, 'b');
+
+  int kInputSize = 100;
+  std::vector<uint32_t> data_1(kInputSize);
+
+  for (int i = 0; i < kInputSize; i++) {
+    data_1[i] = i;
+  }
+
+  std::vector<uint32_t> data_2 = data_1;
+
+  absl::Status ret1 = ShuffleWithSeed(data_1, seed);
+  absl::Status ret2 = ShuffleWithSeed(data_2, seed);
+
+  ASSERT_EQ(ret1, absl::OkStatus());
+  ASSERT_EQ(ret2, absl::OkStatus());
+  ASSERT_EQ(data_1.size(), kInputSize);
+  ASSERT_EQ(data_2.size(), kInputSize);
+
+  // Verifies that the two vectors are shuffled using the same permutation.
+  EXPECT_EQ(data_1, data_2);
+}
+
 }  // namespace
 }  // namespace wfa::any_sketch::crypto

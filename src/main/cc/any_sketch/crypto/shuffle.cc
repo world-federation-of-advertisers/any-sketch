@@ -55,9 +55,7 @@ absl::Status ShuffleWithSeed(std::vector<uint32_t>& data,
     // input vector of size less than 2^{43}.
     int index = rand[i] % (i + 1);
     // Swaps the element at current position with the one at position index.
-    uint64_t temp = data[i];
-    data[i] = data[index];
-    data[index] = temp;
+    std::swap(data[i], data[index]);
   }
 
   return absl::OkStatus();
