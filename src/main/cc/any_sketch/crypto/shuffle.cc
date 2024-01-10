@@ -39,13 +39,14 @@ absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
       prng->GeneratePseudorandomBytes(data.size() * sizeof(absl::uint128)));
 
   absl::uint128* rand = (absl::uint128*)arr.data();
-  for (int64_t i = data.size() - 1; i >= 1; i--) {
+  int64_t num_elements = data.size();
+  for (int64_t i = 0; i < num_elements - 1; i++) {
     // Ideally, to make sure that the sampled permutation is not biased, rand[i]
     // needs to be re-sampled if rand[i] >= 2^128 - (2^128 % (i+1)). However,
     // the probability that this happens with any i in [1; data.size() - 1] is
     // less than (data.size())^2/2^{128}, which is less than 2^{-40} for any
     // input vector of size less than 2^{43}.
-    uint64_t index = static_cast<uint64_t>(rand[i] % (i + 1));
+    uint64_t index = i + static_cast<uint64_t>(rand[i] % (num_elements - i));
     // Swaps the element at current position with the one at position index.
     std::swap(data[i], data[index]);
   }

@@ -26,8 +26,8 @@ namespace wfa::measurement::common::crypto {
 
 // Shuffles the vector data using Fisher-Yates approach. Let n be the size of
 // data, the Fisher-Yates shuffle is as below.
-// For i = (n-1) to 1:
-//   Draws a random value j in the range [0; i]
+// For i = 0 to (n-2):
+//   Draws a random value j in the range [i; n-1]
 //   Swaps data[i] and data[j]
 absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
                                    const any_sketch::PrngSeed& seed);
