@@ -25,35 +25,35 @@ namespace wfa::any_sketch::crypto {
 namespace {
 
 using any_sketch::PrngSeed;
-using measurement::common::crypto::ShuffleWithSeed;
+using measurement::common::crypto::SecureShuffleWithSeed;
 using ::wfa::StatusIs;
 using ::wfa::math::kBytesPerAes256Iv;
 using ::wfa::math::kBytesPerAes256Key;
 
-TEST(ShuffleWithSeed, EmptyInputSucceeds) {
+TEST(SecureShuffleWithSeed, EmptyInputSucceeds) {
   PrngSeed seed;
   std::vector<uint32_t> data;
-  absl::Status ret = ShuffleWithSeed(data, seed);
+  absl::Status ret = SecureShuffleWithSeed(data, seed);
   ASSERT_EQ(ret, absl::OkStatus());
   ASSERT_EQ(data.size(), 0);
 }
 
-TEST(ShuffleWithSeed, InputHasOneElementSucceeds) {
+TEST(SecureShuffleWithSeed, InputHasOneElementSucceeds) {
   PrngSeed seed;
   std::vector<uint32_t> data = {1};
-  absl::Status ret = ShuffleWithSeed(data, seed);
+  absl::Status ret = SecureShuffleWithSeed(data, seed);
   ASSERT_EQ(ret, absl::OkStatus());
   ASSERT_EQ(data.size(), 1);
   EXPECT_EQ(data[0], 1);
 }
 
-TEST(ShuffleWithSeed, InputSizeAtLeastTwoInvalidSeedFails) {
+TEST(SecureShuffleWithSeed, InputSizeAtLeastTwoInvalidSeedFails) {
   PrngSeed seed;
   *seed.mutable_key() = std::string(kBytesPerAes256Key - 1, 'a');
   *seed.mutable_iv() = std::string(kBytesPerAes256Iv, 'b');
 
   std::vector<uint32_t> data = {1, 2};
-  absl::Status ret = ShuffleWithSeed(data, seed);
+  absl::Status ret = SecureShuffleWithSeed(data, seed);
   EXPECT_THAT(ret, StatusIs(absl::StatusCode::kInvalidArgument,
                             absl::Substitute(
                                 "The uniform pseudorandom generator key has "
@@ -61,7 +61,7 @@ TEST(ShuffleWithSeed, InputSizeAtLeastTwoInvalidSeedFails) {
                                 seed.key().size(), kBytesPerAes256Key)));
 }
 
-TEST(ShuffleWithSeed, ShufflingSucceeds) {
+TEST(SecureShuffleWithSeed, ShufflingSucceeds) {
   PrngSeed seed;
   *seed.mutable_key() = std::string(kBytesPerAes256Key, 'a');
   *seed.mutable_iv() = std::string(kBytesPerAes256Iv, 'b');
@@ -73,7 +73,7 @@ TEST(ShuffleWithSeed, ShufflingSucceeds) {
     data[i] = i;
   }
   std::vector<uint32_t> input = data;
-  absl::Status ret = ShuffleWithSeed(data, seed);
+  absl::Status ret = SecureShuffleWithSeed(data, seed);
   ASSERT_EQ(ret, absl::OkStatus());
   ASSERT_EQ(data.size(), kInputSize);
 
@@ -90,7 +90,7 @@ TEST(ShuffleWithSeed, ShufflingSucceeds) {
   }
 }
 
-TEST(ShuffleWithSeed, ShufflingWithSameSeedSucceeds) {
+TEST(SecureShuffleWithSeed, ShufflingWithSameSeedSucceeds) {
   PrngSeed seed;
   *seed.mutable_key() = std::string(kBytesPerAes256Key, 'a');
   *seed.mutable_iv() = std::string(kBytesPerAes256Iv, 'b');
@@ -104,8 +104,8 @@ TEST(ShuffleWithSeed, ShufflingWithSameSeedSucceeds) {
 
   std::vector<uint32_t> data_2 = data_1;
 
-  absl::Status ret1 = ShuffleWithSeed(data_1, seed);
-  absl::Status ret2 = ShuffleWithSeed(data_2, seed);
+  absl::Status ret1 = SecureShuffleWithSeed(data_1, seed);
+  absl::Status ret2 = SecureShuffleWithSeed(data_2, seed);
 
   ASSERT_EQ(ret1, absl::OkStatus());
   ASSERT_EQ(ret2, absl::OkStatus());

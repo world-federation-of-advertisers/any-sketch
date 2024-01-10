@@ -22,13 +22,8 @@
 
 namespace wfa::measurement::common::crypto {
 
-// Shuffles the vector data using Fisher-Yates approach. Let n be the size of
-// data, the Fisher-Yates shuffle is as below.
-// For i = (n-1) to 1:
-//   Draws a random value j in the range [0; i]
-//   Swaps data[i] and data[j]
-absl::Status ShuffleWithSeed(std::vector<uint32_t>& data,
-                             const any_sketch::PrngSeed& seed) {
+absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
+                                   const any_sketch::PrngSeed& seed) {
   // Does nothing if the input is empty or has size 1.
   if (data.size() <= 1) {
     return absl::OkStatus();
@@ -44,7 +39,7 @@ absl::Status ShuffleWithSeed(std::vector<uint32_t>& data,
       prng->GeneratePseudorandomBytes(data.size() * sizeof(absl::uint128)));
 
   absl::uint128* rand = (absl::uint128*)arr.data();
-  for (uint64_t i = data.size() - 1; i >= 1; i--) {
+  for (int64_t i = data.size() - 1; i >= 1; i--) {
     // Ideally, to make sure that the sampled permutation is not biased, rand[i]
     // needs to be re-sampled if rand[i] >= 2^128 - (2^128 % (i+1)). However,
     // the probability that this happens with any i in [1; data.size() - 1] is
