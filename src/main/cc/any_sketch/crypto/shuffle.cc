@@ -33,7 +33,11 @@ absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
   ASSIGN_OR_RETURN(std::unique_ptr<math::UniformPseudorandomGenerator> prng,
                    math::CreatePrngFromSeed(seed));
 
-  // Samples random values.
+  // Samples all the random values that will be used to compute all the swapping
+  // indices. This gives a 2x speed up compared to shuffling the vector with
+  // std::shuffle(data.begin(), data.end(), *prng.get()). The gain is due to the
+  // fact that std::shuffle samples the random values one by one instead of
+  // doing so in batch.
   ASSIGN_OR_RETURN(
       std::vector<unsigned char> arr,
       prng->GeneratePseudorandomBytes(data.size() * sizeof(absl::uint128)));
