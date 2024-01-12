@@ -33,11 +33,14 @@ absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
   ASSIGN_OR_RETURN(std::unique_ptr<math::UniformPseudorandomGenerator> prng,
                    math::CreatePrngFromSeed(seed));
 
+  // The custom implementation of Fisher-Yates shuffle is as below. It is not
+  // recommended to use std::shuffle(data.begin(), data.end(), *prng.get()) to
+  // do the shuffle because the implementation of std::shuffle is not dictated
+  // by the standard, so even if an exactly same prng is used, different results
+  // with different standard library implementations can happen.
+
   // Samples all the random values that will be used to compute all the swapping
-  // indices. This gives a 2x speed up compared to shuffling the vector with
-  // std::shuffle(data.begin(), data.end(), *prng.get()). The gain is due to the
-  // fact that std::shuffle samples the random values one by one instead of
-  // doing so in batch.
+  // indices.
   ASSIGN_OR_RETURN(
       std::vector<unsigned char> arr,
       prng->GeneratePseudorandomBytes(data.size() * sizeof(absl::uint128)));
