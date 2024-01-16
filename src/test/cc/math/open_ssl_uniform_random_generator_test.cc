@@ -23,6 +23,8 @@
 namespace wfa::math {
 namespace {
 
+using testing::IsEmpty;
+
 TEST(OpenSslUniformPseudorandomGenerator,
      CreateTheGeneratorWithValidkeyAndIVSucceeds) {
   std::vector<unsigned char> key(kBytesPerAes256Key);
@@ -67,7 +69,7 @@ TEST(OpenSslUniformPseudorandomGenerator,
 }
 
 TEST(OpenSslUniformPseudorandomGenerator,
-     GeneratingNonPositiveNumberOfRandomBytesFails) {
+     GeneratingNegativeNumberOfRandomBytesFails) {
   std::vector<unsigned char> key(kBytesPerAes256Key);
   std::vector<unsigned char> iv(kBytesPerAes256Iv);
   RAND_bytes(key.data(), key.size());
@@ -75,11 +77,24 @@ TEST(OpenSslUniformPseudorandomGenerator,
 
   ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
                        OpenSslUniformPseudorandomGenerator::Create(key, iv));
-  auto seq = prng->GeneratePseudorandomBytes(0);
+  auto seq = prng->GeneratePseudorandomBytes(-1);
   EXPECT_THAT(
       seq.status(),
       StatusIs(absl::StatusCode::kInvalidArgument,
-               "Number of pseudorandom bytes must be a positive value."));
+               "Number of pseudorandom bytes must be a non-negative value."));
+}
+
+TEST(OpenSslUniformPseudorandomGenerator,
+     GeneratingZeroNumberOfRandomBytesSucceeds) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
+  RAND_bytes(iv.data(), iv.size());
+
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
+  ASSERT_OK_AND_ASSIGN(auto seq, prng->GeneratePseudorandomBytes(0));
+  EXPECT_THAT(seq, IsEmpty());
 }
 
 TEST(OpenSslUniformPseudorandomGenerator,
@@ -251,7 +266,26 @@ TEST(OpenSslUniformPseudorandomGenerator,
 }
 
 TEST(OpenSslUniformPseudorandomGenerator,
-     GeneratingNonPositiveNumberOfRandomElementsFails) {
+     GeneratingNegativeNumberOfRandomElementsFails) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
+  RAND_bytes(iv.data(), iv.size());
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
+
+  uint32_t kModulus = 128;
+  uint64_t kNumRandomElements = -1;
+  auto seq = prng->GenerateUniformRandomRange(kNumRandomElements, kModulus);
+  EXPECT_THAT(
+      seq.status(),
+      StatusIs(
+          absl::StatusCode::kInvalidArgument,
+          "Number of pseudorandom elements must be a non-negative value."));
+}
+
+TEST(OpenSslUniformPseudorandomGenerator,
+     GeneratingZeroNumberOfRandomElementsSucceeds) {
   std::vector<unsigned char> key(kBytesPerAes256Key);
   std::vector<unsigned char> iv(kBytesPerAes256Iv);
   RAND_bytes(key.data(), key.size());
@@ -261,11 +295,9 @@ TEST(OpenSslUniformPseudorandomGenerator,
 
   uint32_t kModulus = 128;
   uint64_t kNumRandomElements = 0;
-  auto seq = prng->GenerateUniformRandomRange(kNumRandomElements, kModulus);
-  EXPECT_THAT(
-      seq.status(),
-      StatusIs(absl::StatusCode::kInvalidArgument,
-               "Number of pseudorandom elements must be a positive value."));
+  ASSERT_OK_AND_ASSIGN(
+      auto seq, prng->GenerateUniformRandomRange(kNumRandomElements, kModulus));
+  EXPECT_THAT(seq, IsEmpty());
 }
 
 TEST(OpenSslUniformPseudorandomGenerator,
