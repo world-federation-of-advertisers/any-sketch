@@ -23,7 +23,7 @@
 namespace wfa::math {
 namespace {
 
-using testing::IsEmpty;
+using ::testing::IsEmpty;
 
 TEST(OpenSslUniformPseudorandomGenerator,
      CreateTheGeneratorWithValidkeyAndIVSucceeds) {
@@ -78,10 +78,8 @@ TEST(OpenSslUniformPseudorandomGenerator,
   ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
                        OpenSslUniformPseudorandomGenerator::Create(key, iv));
   auto seq = prng->GeneratePseudorandomBytes(-1);
-  EXPECT_THAT(
-      seq.status(),
-      StatusIs(absl::StatusCode::kInvalidArgument,
-               "Number of pseudorandom bytes must be a non-negative value."));
+  EXPECT_THAT(seq.status(),
+              StatusIs(absl::StatusCode::kInvalidArgument, "negative"));
 }
 
 TEST(OpenSslUniformPseudorandomGenerator,
@@ -277,11 +275,8 @@ TEST(OpenSslUniformPseudorandomGenerator,
   uint32_t kModulus = 128;
   uint64_t kNumRandomElements = -1;
   auto seq = prng->GenerateUniformRandomRange(kNumRandomElements, kModulus);
-  EXPECT_THAT(
-      seq.status(),
-      StatusIs(
-          absl::StatusCode::kInvalidArgument,
-          "Number of pseudorandom elements must be a non-negative value."));
+  EXPECT_THAT(seq.status(),
+              StatusIs(absl::StatusCode::kInvalidArgument, "negative"));
 }
 
 TEST(OpenSslUniformPseudorandomGenerator,
@@ -312,8 +307,8 @@ TEST(OpenSslUniformPseudorandomGenerator,
   uint32_t kModulus = 1;
   uint64_t kNumRandomElements = 1;
   auto seq = prng->GenerateUniformRandomRange(kNumRandomElements, kModulus);
-  EXPECT_THAT(seq.status(), StatusIs(absl::StatusCode::kInvalidArgument,
-                                     "The modulus must be greater than 1."));
+  EXPECT_THAT(seq.status(),
+              StatusIs(absl::StatusCode::kInvalidArgument, "modulus"));
 }
 
 TEST(OpenSslUniformPseudorandomGenerator,
