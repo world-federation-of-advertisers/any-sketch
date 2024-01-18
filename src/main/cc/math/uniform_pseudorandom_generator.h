@@ -41,11 +41,11 @@ class UniformPseudorandomGenerator {
 
   // Generates a vector of pseudorandom bytes with the given size.
   virtual absl::StatusOr<std::vector<unsigned char>> GeneratePseudorandomBytes(
-      uint64_t size) = 0;
+      int64_t size) = 0;
 
   // Generates a vector of pseudorandom values in the range [0, modulus).
   virtual absl::StatusOr<std::vector<uint32_t>> GenerateUniformRandomRange(
-      uint64_t size, uint32_t modulus) = 0;
+      int64_t size, uint32_t modulus) = 0;
 
  protected:
   UniformPseudorandomGenerator() = default;

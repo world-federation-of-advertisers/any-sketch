@@ -70,11 +70,16 @@ OpenSslUniformPseudorandomGenerator::Create(
 }
 
 absl::StatusOr<std::vector<unsigned char>>
-OpenSslUniformPseudorandomGenerator::GeneratePseudorandomBytes(uint64_t size) {
-  if (size == 0) {
+OpenSslUniformPseudorandomGenerator::GeneratePseudorandomBytes(int64_t size) {
+  if (size < 0) {
     return absl::InvalidArgumentError(
-        "Number of pseudorandom bytes must be a positive value.");
+        "Number of pseudorandom bytes must be a non-negative value.");
   }
+
+  if (size == 0) {
+    return std::vector<unsigned char>();
+  }
+
   std::vector<unsigned char> ret(size, 0);
   int length;
   if (EVP_EncryptUpdate(ctx_, ret.data(), &length, ret.data(), ret.size()) !=
@@ -92,14 +97,14 @@ OpenSslUniformPseudorandomGenerator::GeneratePseudorandomBytes(uint64_t size) {
 // sampling method.
 absl::StatusOr<std::vector<uint32_t>>
 OpenSslUniformPseudorandomGenerator::GenerateUniformRandomRange(
-    uint64_t size, uint32_t modulus) {
-  if (size == 0) {
-    return absl::InvalidArgumentError(
-        "Number of pseudorandom elements must be a positive value.");
-  }
-
+    int64_t size, uint32_t modulus) {
   if (modulus <= 1) {
     return absl::InvalidArgumentError("The modulus must be greater than 1.");
+  }
+
+  if (size < 0) {
+    return absl::InvalidArgumentError(
+        "Number of pseudorandom elements must be a non-negative value.");
   }
 
   // Compute the bit length of the modulus.
@@ -146,6 +151,7 @@ OpenSslUniformPseudorandomGenerator::GenerateUniformRandomRange(
       }
     }
   }
+
   return ret;
 }
 
