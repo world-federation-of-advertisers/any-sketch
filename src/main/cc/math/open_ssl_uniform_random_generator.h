@@ -89,11 +89,11 @@ class OpenSslUniformPseudorandomGenerator
 
   // Generates a vector of pseudorandom bytes with the given size.
   absl::StatusOr<std::vector<unsigned char>> GeneratePseudorandomBytes(
-      uint64_t size) override;
+      int64_t size) override;
 
   // Generates a vector of `size` pseudorandom values in the range [0, modulus).
   absl::StatusOr<std::vector<uint32_t>> GenerateUniformRandomRange(
-      uint64_t size, uint32_t modulus) override;
+      int64_t size, uint32_t modulus) override;
 
  private:
   explicit OpenSslUniformPseudorandomGenerator(EVP_CIPHER_CTX* ctx)
