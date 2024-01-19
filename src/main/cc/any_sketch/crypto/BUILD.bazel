@@ -54,3 +54,20 @@ cc_binary(
         "@com_google_absl//absl/strings",
     ],
 )
+
+cc_library(
+    name = "shuffle",
+    srcs = [
+        "shuffle.cc",
+    ],
+    hdrs = [
+        "shuffle.h",
+    ],
+    strip_include_prefix = _INCLUDE_PREFIX,
+    deps = [
+        "//src/main/cc/math:open_ssl_uniform_random_generator",
+        "//src/main/proto/wfa/any_sketch:secret_share_cc_proto",
+        "@com_google_absl//absl/status",
+        "@wfa_common_cpp//src/main/cc/common_cpp/macros",
+    ],
+)

@@ -35,6 +35,7 @@ cc_library(
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         ":uniform_pseudorandom_generator",
+        "//src/main/proto/wfa/any_sketch:secret_share_cc_proto",
         "@boringssl//:ssl",
         "@com_google_absl//absl/status",
         "@com_google_absl//absl/status:statusor",

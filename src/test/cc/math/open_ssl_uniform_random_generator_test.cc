@@ -26,7 +26,7 @@ namespace {
 using ::testing::IsEmpty;
 
 TEST(OpenSslUniformPseudorandomGenerator,
-     CreateTheGeneratorWithValidkeyAndIVSucceeds) {
+     CreateTheGeneratorWithValidKeyAndIVSucceeds) {
   std::vector<unsigned char> key(kBytesPerAes256Key);
   std::vector<unsigned char> iv(kBytesPerAes256Iv);
   RAND_bytes(key.data(), key.size());
@@ -37,7 +37,7 @@ TEST(OpenSslUniformPseudorandomGenerator,
 }
 
 TEST(OpenSslUniformPseudorandomGenerator,
-     CreateTheGeneratorWithInvalidkeySizeFails) {
+     CreateTheGeneratorWithInvalidKeySizeFails) {
   std::vector<unsigned char> key(kBytesPerAes256Key - 1);
   std::vector<unsigned char> iv(kBytesPerAes256Iv);
   RAND_bytes(key.data(), key.size());
@@ -60,6 +60,61 @@ TEST(OpenSslUniformPseudorandomGenerator,
   RAND_bytes(iv.data(), iv.size());
 
   auto prng = OpenSslUniformPseudorandomGenerator::Create(key, iv);
+  EXPECT_THAT(
+      prng.status(),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               absl::Substitute("The uniform pseudorandom generator IV has "
+                                "length of $0 bytes but $1 bytes are required.",
+                                iv.size(), kBytesPerAes256Iv)));
+}
+
+TEST(OpenSslUniformPseudorandomGenerator,
+     CreateTheGeneratorWithValidSeedSucceeds) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
+  RAND_bytes(iv.data(), iv.size());
+
+  PrngSeed seed;
+  *seed.mutable_key() = std::string(key.begin(), key.end());
+  *seed.mutable_iv() = std::string(iv.begin(), iv.end());
+
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                       CreatePrngFromSeed(seed));
+}
+
+TEST(OpenSslUniformPseudorandomGenerator,
+     CreateTheGeneratorFromSeedWithInvalidKeyFails) {
+  std::vector<unsigned char> key(kBytesPerAes256Key - 1);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
+  RAND_bytes(iv.data(), iv.size());
+
+  PrngSeed seed;
+  *seed.mutable_key() = std::string(key.begin(), key.end());
+  *seed.mutable_iv() = std::string(iv.begin(), iv.end());
+
+  auto prng = CreatePrngFromSeed(seed);
+  EXPECT_THAT(
+      prng.status(),
+      StatusIs(absl::StatusCode::kInvalidArgument,
+               absl::Substitute("The uniform pseudorandom generator key has "
+                                "length of $0 bytes but $1 bytes are required.",
+                                key.size(), kBytesPerAes256Key)));
+}
+
+TEST(OpenSslUniformPseudorandomGenerator,
+     CreateTheGeneratorFromSeedWithInvalidIVFails) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv - 1);
+  RAND_bytes(key.data(), key.size());
+  RAND_bytes(iv.data(), iv.size());
+
+  PrngSeed seed;
+  *seed.mutable_key() = std::string(key.begin(), key.end());
+  *seed.mutable_iv() = std::string(iv.begin(), iv.end());
+
+  auto prng = CreatePrngFromSeed(seed);
   EXPECT_THAT(
       prng.status(),
       StatusIs(absl::StatusCode::kInvalidArgument,
