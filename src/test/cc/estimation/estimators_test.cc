@@ -30,7 +30,7 @@
 
 namespace wfa::estimation {
 namespace {
-using ::wfa::any_sketch::Distribution;
+using ::wfa::any_sketch::BaseDistribution;
 
 MATCHER_P2(EqWithError, value, error, "") {
   // Since value and arg might be of different, possibly unsigned types,
@@ -60,7 +60,7 @@ uint64_t GenerateRandomSketchAndGetSize(double decay_rate,
   absl::flat_hash_set<int64_t> indexes;
 
   const Fingerprinter& fingerprinter = GetSha256Fingerprinter();
-  std::unique_ptr<Distribution> exponential_distribution =
+  std::unique_ptr<BaseDistribution> exponential_distribution =
       wfa::any_sketch::GetExponentialDistribution(&fingerprinter, decay_rate,
                                                   num_of_total_registers);
 

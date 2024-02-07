@@ -32,9 +32,9 @@
 
 namespace wfa::any_sketch {
 namespace {
-class BaseDistribution : public Distribution {
+class BaseDistributionImpl : public BaseDistribution {
  public:
-  BaseDistribution(int64_t min_value, int64_t max_value)
+  BaseDistributionImpl(int64_t min_value, int64_t max_value)
       : min_value_(min_value), max_value_(max_value) {}
 
   absl::StatusOr<int64_t> Apply(
@@ -53,7 +53,7 @@ class BaseDistribution : public Distribution {
       absl::string_view item, const ItemMetadata& item_metadata) const = 0;
 };
 
-absl::StatusOr<int64_t> BaseDistribution::Apply(
+absl::StatusOr<int64_t> BaseDistributionImpl::Apply(
     absl::string_view item, const ItemMetadata& item_metadata) const {
   ASSIGN_OR_RETURN(int64_t value, ApplyInternal(item, item_metadata));
 
@@ -69,11 +69,12 @@ absl::StatusOr<int64_t> BaseDistribution::Apply(
   return value;
 }
 
-class OracleDistribution : public BaseDistribution {
+class OracleDistribution : public BaseDistributionImpl {
  public:
   OracleDistribution(int64_t min_value, int64_t max_value,
                      absl::string_view feature_name)
-      : BaseDistribution(min_value, max_value), feature_name_(feature_name) {}
+      : BaseDistributionImpl(min_value, max_value),
+        feature_name_(feature_name) {}
 
  private:
   absl::StatusOr<int64_t> ApplyInternal(
@@ -90,11 +91,12 @@ class OracleDistribution : public BaseDistribution {
   std::string feature_name_;
 };
 
-class FingerprintingDistribution : public BaseDistribution {
+class FingerprintingDistribution : public BaseDistributionImpl {
  public:
   FingerprintingDistribution(int64_t min_value, int64_t max_value,
                              const Fingerprinter* fingerprinter)
-      : BaseDistribution(min_value, max_value), fingerprinter_(fingerprinter) {}
+      : BaseDistributionImpl(min_value, max_value),
+        fingerprinter_(fingerprinter) {}
 
  private:
   absl::StatusOr<int64_t> ApplyInternal(
@@ -173,23 +175,23 @@ class GeometricDistribution : public FingerprintingDistribution {
 };
 }  // namespace
 
-std::unique_ptr<Distribution> GetOracleDistribution(
+std::unique_ptr<BaseDistribution> GetOracleDistribution(
     absl::string_view feature_name, int64_t min_value, int64_t max_value) {
   return absl::make_unique<OracleDistribution>(min_value, max_value,
                                                feature_name);
 }
-std::unique_ptr<Distribution> GetUniformDistribution(
+std::unique_ptr<BaseDistribution> GetUniformDistribution(
     const Fingerprinter* fingerprinter, int64_t min_value, int64_t max_value) {
   return absl::make_unique<UniformDistribution>(min_value, max_value,
                                                 fingerprinter);
 }
-std::unique_ptr<Distribution> GetExponentialDistribution(
+std::unique_ptr<BaseDistribution> GetExponentialDistribution(
     const Fingerprinter* fingerprinter, double rate, int64_t size) {
   ABSL_ASSERT(rate > 0.0);
   ABSL_ASSERT(size > 0);
   return absl::make_unique<ExponentialDistribution>(rate, size, fingerprinter);
 }
-std::unique_ptr<Distribution> GetGeometricDistribution(
+std::unique_ptr<BaseDistribution> GetGeometricDistribution(
     const Fingerprinter* fingerprinter, int64_t min_value, int64_t max_value) {
   return absl::make_unique<GeometricDistribution>(min_value, max_value,
                                                   fingerprinter);

@@ -34,7 +34,7 @@ class FakeFingerprinter : public Fingerprinter {
 };
 
 TEST(DistributionsTest, OracleDistribution) {
-  std::unique_ptr<Distribution> distribution =
+  std::unique_ptr<BaseDistribution> distribution =
       GetOracleDistribution("foo", 3, 10);
 
   ASSERT_FALSE(distribution == nullptr);
@@ -53,7 +53,7 @@ TEST(DistributionsTest, OracleDistribution) {
 
 TEST(DistributionsTest, UniformDistribution) {
   FakeFingerprinter fingerprinter;
-  std::unique_ptr<Distribution> distribution =
+  std::unique_ptr<BaseDistribution> distribution =
       GetUniformDistribution(&fingerprinter, 3, 10);
 
   ASSERT_FALSE(distribution == nullptr);
@@ -76,7 +76,7 @@ TEST(DistributionsTest, UniformDistribution) {
 
 TEST(DistributionsTest, ExponentialDistribution) {
   FakeFingerprinter fingerprinter;
-  std::unique_ptr<Distribution> distribution =
+  std::unique_ptr<BaseDistribution> distribution =
       GetExponentialDistribution(&fingerprinter, 2, 10);
 
   ASSERT_FALSE(distribution == nullptr);
@@ -94,7 +94,7 @@ TEST(DistributionsTest, ExponentialDistribution) {
 
 TEST(DistributionsTest, GeometricDistribution) {
   FakeFingerprinter fingerprinter;
-  std::unique_ptr<Distribution> distribution =
+  std::unique_ptr<BaseDistribution> distribution =
       GetGeometricDistribution(&fingerprinter, 10, 74);
 
   ASSERT_FALSE(distribution == nullptr);
