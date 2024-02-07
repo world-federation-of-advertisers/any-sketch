@@ -97,8 +97,9 @@ std::vector<std::unique_ptr<BaseDistribution>> MakeFakeDistributionIndex() {
   return MakeSingleItemVector(MakeFakeDistribution());
 }
 
-ValueFunction MakeValueFunction(
-    AggregatorType aggregator, std::unique_ptr<BaseDistribution> distribution) {
+ValueFunction MakeValueFunction(AggregatorType aggregator,
+                                std::unique_ptr<BaseDistribution>
+                                distribution) {
   return {.name = "SomeValueFunction",
           .aggregator_type = aggregator,
           .distribution = std::move(distribution)};
