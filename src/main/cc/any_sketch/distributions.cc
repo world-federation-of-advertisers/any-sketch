@@ -73,8 +73,12 @@ class OracleDistribution : public BaseDistributionImpl {
  public:
   OracleDistribution(int64_t min_value, int64_t max_value,
                      absl::string_view feature_name)
+<<<<<<< HEAD
       : BaseDistributionImpl(min_value, max_value),
         feature_name_(feature_name) {}
+=======
+      : BaseDistributionImpl(min_value, max_value), feature_name_(feature_name) {}
+>>>>>>> 3f2463ce8ca3c0d13f313499787d095d31728d27
 
  private:
   absl::StatusOr<int64_t> ApplyInternal(
