@@ -32,7 +32,7 @@
 
 namespace wfa::math {
 
-using any_sketch::PrngSeed;
+using any_sketch::proto::PrngSeed;
 
 // Key length for EVP_aes_256_ctr.
 // See https://www.openssl.org/docs/man1.1.1/man3/EVP_aes_256_ctr.html

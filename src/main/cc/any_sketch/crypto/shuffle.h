@@ -30,7 +30,7 @@ namespace wfa::measurement::common::crypto {
 //   Draws a random value j in the range [i; n-1]
 //   Swaps data[i] and data[j]
 absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
-                                   const any_sketch::PrngSeed& seed);
+                                   const any_sketch::proto::PrngSeed& seed);
 
 }  // namespace wfa::measurement::common::crypto
 

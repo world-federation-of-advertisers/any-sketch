@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-package wfa.any_sketch.crypto;
+package wfa.any_sketch.crypto.proto;
 
 option java_package = "org.wfanet.anysketch.crypto";
 option java_multiple_files = true;

@@ -31,8 +31,8 @@ using ::private_join_and_compute::ECGroup;
 using ::private_join_and_compute::ECPoint;
 using ::private_join_and_compute::InternalError;
 using ::testing::SizeIs;
-using ::wfa::any_sketch::Sketch;
-using ::wfa::any_sketch::SketchConfig;
+using ::wfa::any_sketch::proto::Sketch;
+using ::wfa::any_sketch::proto::SketchConfig;
 
 constexpr int kTestCurveId = NID_X9_62_prime256v1;
 constexpr int kMaxCounterValue = 100;
@@ -81,7 +81,7 @@ TEST(SketchEncrypterJavaAdapterTest, basicBehavior) {
   const int register_size = 1000;
 
   // Build the request
-  wfa::any_sketch::crypto::EncryptSketchRequest request;
+  wfa::any_sketch::crypto::proto::EncryptSketchRequest request;
   request.mutable_el_gamal_keys()->set_generator(public_key_pair.first);
   request.mutable_el_gamal_keys()->set_element(public_key_pair.second);
   request.set_curve_id(kTestCurveId);
@@ -92,7 +92,7 @@ TEST(SketchEncrypterJavaAdapterTest, basicBehavior) {
 
   ASSERT_OK_AND_ASSIGN(std::string encrypted_sketch,
                        EncryptSketch(request.SerializeAsString()));
-  wfa::any_sketch::crypto::EncryptSketchResponse response;
+  wfa::any_sketch::crypto::proto::EncryptSketchResponse response;
   response.ParseFromString(encrypted_sketch);
 
   EXPECT_THAT(response.encrypted_sketch(),
@@ -113,7 +113,7 @@ TEST(SketchEncrypterJavaAdapterTest, noiseShouldBeAddedIfNoiseParameterIsSet) {
   const int bytes_per_register = (index_cnt + unique_cnt + sum_cnt) * 66;
 
   // Build the request
-  wfa::any_sketch::crypto::EncryptSketchRequest request;
+  wfa::any_sketch::crypto::proto::EncryptSketchRequest request;
   request.mutable_noise_parameter()->set_epsilon(1);
   request.mutable_noise_parameter()->set_delta(0.01);
   request.mutable_noise_parameter()->set_publisher_count(3);
@@ -127,7 +127,7 @@ TEST(SketchEncrypterJavaAdapterTest, noiseShouldBeAddedIfNoiseParameterIsSet) {
 
   ASSERT_OK_AND_ASSIGN(std::string encrypted_sketch,
                        EncryptSketch(request.SerializeAsString()));
-  wfa::any_sketch::crypto::EncryptSketchResponse response;
+  wfa::any_sketch::crypto::proto::EncryptSketchResponse response;
   response.ParseFromString(encrypted_sketch);
 
   EXPECT_GT(response.encrypted_sketch().size(),

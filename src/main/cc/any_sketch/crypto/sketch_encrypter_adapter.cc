@@ -28,7 +28,7 @@ namespace wfa::any_sketch::crypto {
 
 absl::StatusOr<std::string> EncryptSketch(
     const std::string& serialized_request) {
-  EncryptSketchRequest request_proto;
+  proto::EncryptSketchRequest request_proto;
   if (!request_proto.ParseFromString(serialized_request)) {
     return absl::InvalidArgumentError(
         "failed to parse the EncryptSketchRequest proto.");
@@ -39,7 +39,7 @@ absl::StatusOr<std::string> EncryptSketch(
                        {.u = request_proto.el_gamal_keys().generator(),
                         .e = request_proto.el_gamal_keys().element()}));
 
-  EncryptSketchResponse response;
+  proto::EncryptSketchResponse response;
   ASSIGN_OR_RETURN(
       *response.mutable_encrypted_sketch(),
       sketch_encrypter->Encrypt(request_proto.sketch(),
@@ -56,13 +56,13 @@ absl::StatusOr<std::string> EncryptSketch(
 
 absl::StatusOr<std::string> CombineElGamalPublicKeys(
     const std::string& serialized_request) {
-  CombineElGamalPublicKeysRequest request_proto;
+  proto::CombineElGamalPublicKeysRequest request_proto;
   if (!request_proto.ParseFromString(serialized_request)) {
     return absl::InvalidArgumentError(
         "failed to parse the CombineElGamalPublicKeysRequest proto.");
   }
-  CombineElGamalPublicKeysResponse response;
-  std::vector<ElGamalPublicKey> keys(request_proto.el_gamal_keys().begin(),
+  proto::CombineElGamalPublicKeysResponse response;
+  std::vector<proto::ElGamalPublicKey> keys(request_proto.el_gamal_keys().begin(),
                                      request_proto.el_gamal_keys().end());
   ASSIGN_OR_RETURN(*response.mutable_el_gamal_keys(),
                    CombineElGamalPublicKeys(request_proto.curve_id(), keys));

@@ -24,7 +24,7 @@
 namespace wfa::any_sketch::crypto {
 namespace {
 
-using any_sketch::PrngSeed;
+using any_sketch::proto::PrngSeed;
 using measurement::common::crypto::SecureShuffleWithSeed;
 using ::wfa::StatusIs;
 using ::wfa::math::kBytesPerAes256Iv;

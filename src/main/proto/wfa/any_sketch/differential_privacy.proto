@@ -16,7 +16,7 @@ syntax = "proto3";
 
 package wfa.any_sketch;
 
-option java_package = "org.wfanet.anysketch";
+option java_package = "org.wfanet.anysketch.proto";
 option java_multiple_files = true;
 
 // For detail of the parameters, refer to "Dwork, C. and Roth, A., 2014. The
