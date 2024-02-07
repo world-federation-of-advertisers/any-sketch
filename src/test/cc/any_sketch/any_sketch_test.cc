@@ -69,7 +69,7 @@ Matcher<AnySketch::Register> RegisterIs(uint64_t index,
       new RegisterIsMatcher(index, std::move(values)));
 }
 
-class FakeDistribution : public Distribution {
+class FakeDistribution : public BaseDistribution {
  public:
   absl::StatusOr<int64_t> Apply(
       absl::string_view item,
@@ -82,7 +82,7 @@ class FakeDistribution : public Distribution {
   int64_t max_value() const override { return 10; }
 };
 
-std::unique_ptr<Distribution> MakeFakeDistribution() {
+std::unique_ptr<BaseDistribution> MakeFakeDistribution() {
   return absl::make_unique<FakeDistribution>();
 }
 
@@ -93,12 +93,13 @@ std::vector<T> MakeSingleItemVector(T&& t) {
   return v;
 }
 
-std::vector<std::unique_ptr<Distribution>> MakeFakeDistributionIndex() {
+std::vector<std::unique_ptr<BaseDistribution>> MakeFakeDistributionIndex() {
   return MakeSingleItemVector(MakeFakeDistribution());
 }
 
 ValueFunction MakeValueFunction(AggregatorType aggregator,
-                                std::unique_ptr<Distribution> distribution) {
+                                std::unique_ptr<BaseDistribution>
+                                distribution) {
   return {.name = "SomeValueFunction",
           .aggregator_type = aggregator,
           .distribution = std::move(distribution)};

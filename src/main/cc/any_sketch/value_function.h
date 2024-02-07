@@ -27,7 +27,7 @@ namespace wfa::any_sketch {
 struct ValueFunction {
   std::string name;
   AggregatorType aggregator_type;
-  std::unique_ptr<Distribution> distribution;
+  std::unique_ptr<BaseDistribution> distribution;
 };
 
 }  // namespace wfa::any_sketch
