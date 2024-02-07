@@ -75,7 +75,7 @@ class AnySketch {
   // Creates a new, empty AnySketch.
   //
   // The inputs will be moved from.
-  AnySketch(std::vector<std::unique_ptr<Distribution>> indexes,
+  AnySketch(std::vector<std::unique_ptr<BaseDistribution>> indexes,
             std::vector<ValueFunction> values);
 
   AnySketch(const AnySketch &) = delete;
@@ -117,7 +117,7 @@ class AnySketch {
 
  private:
   absl::flat_hash_map<uint64_t, absl::FixedArray<ValueType>> registers_;
-  absl::FixedArray<std::unique_ptr<Distribution>> indexes_;
+  absl::FixedArray<std::unique_ptr<BaseDistribution>> indexes_;
   absl::FixedArray<ValueFunction> values_;
 
   size_t register_size() const;

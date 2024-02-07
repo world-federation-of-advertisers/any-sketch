@@ -28,14 +28,14 @@ namespace wfa::any_sketch {
 
 using ItemMetadata = absl::flat_hash_map<std::string, int64_t>;
 
-// Base for representing distributions -- a way of deterministically mapping an
-// item and associated metadata to a number.
-class Distribution {
+// Abstract Base for representing distributions -- a way of deterministically
+// mapping an item and associated metadata to a number.
+class BaseDistribution {
  public:
-  Distribution(const Distribution&) = delete;
-  Distribution& operator=(const Distribution&) = delete;
+  BaseDistribution(const BaseDistribution&) = delete;
+  BaseDistribution& operator=(const BaseDistribution&) = delete;
 
-  virtual ~Distribution() = default;
+  virtual ~BaseDistribution() = default;
 
   // The smallest value (inclusive) that the Distribution can return.
   virtual int64_t min_value() const = 0;
@@ -52,16 +52,16 @@ class Distribution {
       absl::string_view item, const ItemMetadata& item_metadata) const = 0;
 
  protected:
-  Distribution() = default;
+  BaseDistribution() = default;
 };
 
-std::unique_ptr<Distribution> GetOracleDistribution(
+std::unique_ptr<BaseDistribution> GetOracleDistribution(
     absl::string_view feature_name, int64_t min_value, int64_t max_value);
-std::unique_ptr<Distribution> GetUniformDistribution(
+std::unique_ptr<BaseDistribution> GetUniformDistribution(
     const Fingerprinter* fingerprinter, int64_t min_value, int64_t max_value);
-std::unique_ptr<Distribution> GetExponentialDistribution(
+std::unique_ptr<BaseDistribution> GetExponentialDistribution(
     const Fingerprinter* fingerprinter, double rate, int64_t size);
-std::unique_ptr<Distribution> GetGeometricDistribution(
+std::unique_ptr<BaseDistribution> GetGeometricDistribution(
     const Fingerprinter* fingerprinter, int64_t min_value, int64_t max_value);
 
 }  // namespace wfa::any_sketch
