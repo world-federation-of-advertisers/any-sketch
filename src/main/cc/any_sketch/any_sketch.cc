@@ -75,8 +75,7 @@ absl::StatusOr<int64_t> AnySketch::GetIndex(
     absl::string_view item, const ItemMetadata& item_metadata) const {
   uint64_t product = 1;
   uint64_t linearized_index = 0;
-  for (const std::unique_ptr<BaseDistribution>& distribution :
-       indexes_) {
+  for (const std::unique_ptr<BaseDistribution>& distribution : indexes_) {
     ASSIGN_OR_RETURN(int64_t distribution_value,
                      distribution->Apply(item, item_metadata));
     int64_t index_part = distribution_value - distribution->min_value();
