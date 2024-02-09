@@ -15,8 +15,8 @@
 #ifndef SRC_MAIN_CC_MATH_OPEN_SSL_UNIFORM_RANDOM_GENERATOR_H_
 #define SRC_MAIN_CC_MATH_OPEN_SSL_UNIFORM_RANDOM_GENERATOR_H_
 
-#include <openssl/evp.h>
-#include <openssl/rand.h>
+#include "openssl/evp.h"
+#include "openssl/rand.h"
 
 #include <cstdint>
 #include <cstring>

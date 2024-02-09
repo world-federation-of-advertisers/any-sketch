@@ -15,8 +15,8 @@
 #ifndef SRC_MAIN_CC_MATH_UNIFORM_PSEUDORANDOM_GENERATOR_H_
 #define SRC_MAIN_CC_MATH_UNIFORM_PSEUDORANDOM_GENERATOR_H_
 
-#include <openssl/evp.h>
-#include <openssl/rand.h>
+#include "openssl/evp.h"
+#include "openssl/rand.h"
 
 #include <cstdint>
 #include <cstring>
