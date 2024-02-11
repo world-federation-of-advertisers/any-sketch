@@ -18,6 +18,12 @@ cc_library(
         "@com_google_absl//absl/types:span",
         "@com_google_private_join_and_compute//private_join_and_compute/crypto:commutative_elgamal",
         "@wfa_common_cpp//src/main/cc/common_cpp/macros",
+
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "//src/main/proto/wfa/any_sketch:differential_privacy_cc_proto",
+
     ],
 )
 
