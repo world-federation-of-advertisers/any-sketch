@@ -25,6 +25,7 @@ cc_library(
         "@com_google_absl//absl/status",
         "@com_google_absl//absl/status:statusor",
         "//src/main/proto/wfa/any_sketch:differential_privacy_cc_proto",
+        "@com_google_private_join_and_compute//private_join_and_compute/crypto:ec_util",
 
     ],
 )
