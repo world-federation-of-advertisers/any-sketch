@@ -7,13 +7,12 @@ cc_test(
     deps = [
         "//src/main/cc/any_sketch:distributions",
         "//src/main/cc/estimation:estimators",
+        "//src/main/cc/math:expint",
+        "@com_google_absl//absl/container:fixed_array",
         "@com_google_absl//absl/container:flat_hash_set",
         "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/types:span",
         "@com_google_googletest//:gtest_main",
         "@wfa_common_cpp//src/main/cc/common_cpp/fingerprinters",
-
-        "@com_google_absl//absl/container:fixed_array",
-        "@com_google_absl//absl/types:span",
-        "//src/main/cc/math:expint",
     ],
 )

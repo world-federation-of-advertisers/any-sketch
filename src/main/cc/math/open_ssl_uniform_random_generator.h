@@ -15,9 +15,6 @@
 #ifndef SRC_MAIN_CC_MATH_OPEN_SSL_UNIFORM_RANDOM_GENERATOR_H_
 #define SRC_MAIN_CC_MATH_OPEN_SSL_UNIFORM_RANDOM_GENERATOR_H_
 
-#include "openssl/evp.h"
-#include "openssl/rand.h"
-
 #include <cstdint>
 #include <cstring>
 #include <memory>
@@ -28,6 +25,8 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/substitute.h"
 #include "math/uniform_pseudorandom_generator.h"
+#include "openssl/evp.h"
+#include "openssl/rand.h"
 #include "wfa/any_sketch/secret_share.pb.h"
 
 namespace wfa::math {
