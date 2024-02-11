@@ -32,7 +32,9 @@ cc_test(
 
         "@boringssl//:crypto",
         "@com_google_protobuf//:protobuf",
-        "//src/main/proto/wfa/any_sketch/crypto:el_gamal_key_cc_proto"
+        "//src/main/proto/wfa/any_sketch/crypto:el_gamal_key_cc_proto",
+        "//src/main/proto/wfa/any_sketch/crypto:sketch_encryption_methods_cc_proto",
+        "@com_google_private_join_and_compute//private_join_and_compute/crypto:commutative_elgamal",
     ],
 )
 
@@ -69,5 +71,6 @@ cc_test(
         "@com_google_absl//absl/status",
         "@com_google_absl//absl/status:statusor",
         "//src/main/cc/any_sketch/crypto:secret_share_generator",
+        "//src/main/cc/math:open_ssl_uniform_random_generator",
     ],
 )
