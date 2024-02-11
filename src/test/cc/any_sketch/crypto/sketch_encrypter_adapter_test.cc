@@ -23,6 +23,7 @@
 #include "wfa/any_sketch/sketch.pb.h"
 #include "wfa/any_sketch/crypto/sketch_encryption_methods.pb.h"
 #include "wfa/any_sketch/crypto/el_gamal_key.pb.h"
+
 namespace wfa::any_sketch::crypto {
 namespace {
 
