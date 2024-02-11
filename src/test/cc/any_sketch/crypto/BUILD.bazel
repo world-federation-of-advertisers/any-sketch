@@ -13,7 +13,7 @@ cc_test(
         "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",
 
         "@boringssl//:ssl",
-        @com_google_protobuf//util:differencer"
+        "@com_google_protobuf//:protobuf",
     ],
 )
 
@@ -30,9 +30,9 @@ cc_test(
         "@wfa_common_cpp//src/main/cc/common_cpp/testing:random",
         "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",
 
-        "@boringssl//:crypto_system",
-        @com_google_protobuf//util:differencer"
-        //src/main/proto/wfa/any_sketch/crypto:el_gamal_key_cc_proto
+        "@boringssl//:crypto",
+        "@com_google_protobuf//:protobuf",
+        "//src/main/proto/wfa/any_sketch/crypto:el_gamal_key_cc_proto"
     ],
 )
 
