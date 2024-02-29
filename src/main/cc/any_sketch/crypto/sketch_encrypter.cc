@@ -40,10 +40,10 @@ using ::private_join_and_compute::Context;
 using ::private_join_and_compute::ECGroup;
 using ::private_join_and_compute::ECPoint;
 using ::wfa::any_sketch::DifferentialPrivacyParams;
-using ::wfa::any_sketch::Sketch;
-using ::wfa::any_sketch::SketchConfig;
+using ::wfa::any_sketch::proto::Sketch;
+using ::wfa::any_sketch::proto::SketchConfig;
 using DestroyedRegisterStrategy =
-    ::wfa::any_sketch::crypto::EncryptSketchRequest::DestroyedRegisterStrategy;
+    ::wfa::any_sketch::crypto::proto::EncryptSketchRequest::DestroyedRegisterStrategy;
 using BlindersCiphertext = std::pair<std::string, std::string>;
 // Each Compression of ECPoint has size 33-bytes (32 bytes for x, 1 byte for the
 // sign of y). An ElGamal ciphertext contains two ECPoints, i.e., u and e.
@@ -103,7 +103,7 @@ class SketchEncrypterImpl : public SketchEncrypter {
       DestroyedRegisterStrategy destroyed_register_strategy) override;
 
   absl::Status AppendNoiseRegisters(
-      const EncryptSketchRequest::PublisherNoiseParameter&
+      const proto::EncryptSketchRequest::PublisherNoiseParameter&
           publisher_noise_parameter,
       int value_count, std::string& encrypted_sketch) override;
 
@@ -205,7 +205,7 @@ absl::StatusOr<std::string> SketchEncrypterImpl::Encrypt(
 }
 
 absl::Status SketchEncrypterImpl::AppendNoiseRegisters(
-    const EncryptSketchRequest::PublisherNoiseParameter&
+    const proto::EncryptSketchRequest::PublisherNoiseParameter&
         publisher_noise_parameter,
     int value_count, std::string& encrypted_sketch) {
   // Lock the mutex since most of the crypto computations here are NOT
@@ -292,7 +292,7 @@ absl::Status SketchEncrypterImpl::EncryptDestroyedRegister(
     std::string& encrypted_sketch) {
   ASSIGN_OR_RETURN(std::string index_ec, MapToCurve(reg.index()));
   switch (destroyed_register_strategy) {
-    case EncryptSketchRequest::CONFLICTING_KEYS: {
+    case proto::EncryptSketchRequest::CONFLICTING_KEYS: {
       // Add two registers with the same index for a destroyed register but
       // different values.
       RETURN_IF_ERROR(AppendEncryptedRegisterWithSameValue(
@@ -301,7 +301,7 @@ absl::Status SketchEncrypterImpl::EncryptDestroyedRegister(
           index_ec, reg.values_size(), 2, encrypted_sketch));
       break;
     }
-    case EncryptSketchRequest::FLAGGED_KEY: {
+    case proto::EncryptSketchRequest::FLAGGED_KEY: {
       // ADD one register with all values being the encryption of the
       // KDestroyedRegisterKey constant.
       RETURN_IF_ERROR(AppendFlaggedDestroyedRegister(
@@ -431,8 +431,8 @@ absl::StatusOr<std::unique_ptr<SketchEncrypter>> CreateWithPublicKey(
   return {std::move(result)};
 }
 
-absl::StatusOr<ElGamalPublicKey> CombineElGamalPublicKeys(
-    int curve_id, const std::vector<ElGamalPublicKey>& keys) {
+absl::StatusOr<proto::ElGamalPublicKey> CombineElGamalPublicKeys(
+    int curve_id, const std::vector<proto::ElGamalPublicKey>& keys) {
   if (keys.empty()) {
     return absl::InvalidArgumentError("Keys cannot be empty");
   }
@@ -440,7 +440,7 @@ absl::StatusOr<ElGamalPublicKey> CombineElGamalPublicKeys(
     return keys[0];
   }
 
-  ElGamalPublicKey result;
+  proto::ElGamalPublicKey result;
   result.set_generator(keys[0].generator());
 
   Context ctx;

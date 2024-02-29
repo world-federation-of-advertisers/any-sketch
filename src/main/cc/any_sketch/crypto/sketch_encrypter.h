@@ -46,12 +46,12 @@ class SketchEncrypter {
   // Return the word by word ElGamal encryption of the sketch. The result is
   // the concatenation of all ciphertext strings.
   virtual absl::StatusOr<std::string> Encrypt(
-      const wfa::any_sketch::Sketch& sketch,
-      EncryptSketchRequest::DestroyedRegisterStrategy
+      const wfa::any_sketch::proto::Sketch& sketch,
+      proto::EncryptSketchRequest::DestroyedRegisterStrategy
           destroyed_register_strategy) = 0;
 
   virtual absl::Status AppendNoiseRegisters(
-      const EncryptSketchRequest::PublisherNoiseParameter&
+      const proto::EncryptSketchRequest::PublisherNoiseParameter&
           publisher_noise_parameter,
       int value_count, std::string& encrypted_sketch) = 0;
 
@@ -73,8 +73,8 @@ absl::StatusOr<std::unique_ptr<SketchEncrypter>> CreateWithPublicKey(
     const CiphertextString& public_key_bytes);
 
 // Combine a vector of ElGamalPublicKeys whose contain the same generator.
-absl::StatusOr<ElGamalPublicKey> CombineElGamalPublicKeys(
-    int curve_id, const std::vector<ElGamalPublicKey>& keys);
+absl::StatusOr<proto::ElGamalPublicKey> CombineElGamalPublicKeys(
+    int curve_id, const std::vector<proto::ElGamalPublicKey>& keys);
 
 }  // namespace wfa::any_sketch::crypto
 

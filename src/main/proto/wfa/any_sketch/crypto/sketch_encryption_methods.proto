@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-package wfa.any_sketch.crypto;
+package wfa.any_sketch.crypto.proto;
 
 import "wfa/any_sketch/crypto/el_gamal_key.proto";
 import "wfa/any_sketch/sketch.proto";
@@ -25,7 +25,7 @@ option java_multiple_files = true;
 // The request to encrypt a sketch.
 message EncryptSketchRequest {
   // The input sketch
-  wfa.any_sketch.Sketch sketch = 1;
+  wfa.any_sketch.proto.Sketch sketch = 1;
   // Public keys of the ElGamal cipher used to encrypt the sketch
   ElGamalPublicKey el_gamal_keys = 2;
   // The elliptical curve to work on.

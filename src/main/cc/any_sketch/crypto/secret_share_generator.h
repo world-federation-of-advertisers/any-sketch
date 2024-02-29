@@ -20,8 +20,8 @@
 #include "absl/status/statusor.h"
 #include "wfa/any_sketch/secret_share.pb.h"
 
-using wfa::any_sketch::SecretShare;
-using wfa::any_sketch::SecretShareParameter;
+using wfa::any_sketch::proto::SecretShare;
+using wfa::any_sketch::proto::SecretShareParameter;
 
 namespace wfa::any_sketch::crypto {
 

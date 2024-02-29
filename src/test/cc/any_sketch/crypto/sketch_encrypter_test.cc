@@ -35,9 +35,9 @@ using ::private_join_and_compute::ECGroup;
 using ::private_join_and_compute::ECPoint;
 using ::testing::Not;
 using ::testing::SizeIs;
-using ::wfa::any_sketch::Sketch;
-using ::wfa::any_sketch::SketchConfig;
-using ::wfa::any_sketch::crypto::ElGamalPublicKey;
+using ::wfa::any_sketch::proto::Sketch;
+using ::wfa::any_sketch::proto::SketchConfig;
+using ::wfa::any_sketch::crypto::proto::ElGamalPublicKey;
 
 constexpr int kTestCurveId = NID_X9_62_prime256v1;
 constexpr int kMaxCounterValue = 100;
@@ -178,13 +178,13 @@ class SketchEncrypterTest : public ::testing::Test {
   }
 
   absl::StatusOr<std::string> EncryptWithConflictingKeys(const Sketch& sketch) {
-    return sketch_encrypter_->Encrypt(sketch,
-                                      EncryptSketchRequest::CONFLICTING_KEYS);
+    return sketch_encrypter_->Encrypt(
+        sketch, proto::EncryptSketchRequest::CONFLICTING_KEYS);
   }
 
   absl::StatusOr<std::string> EncryptWithFlaggedKey(const Sketch& sketch) {
-    return sketch_encrypter_->Encrypt(sketch,
-                                      EncryptSketchRequest::FLAGGED_KEY);
+    return sketch_encrypter_->Encrypt(
+        sketch, proto::EncryptSketchRequest::FLAGGED_KEY);
   }
 
   // The ElGamal Cipher whose public key is used to create the SketchEncrypter.
@@ -425,7 +425,7 @@ TEST_F(SketchEncrypterTest, NoisesShouldHaveTheSameIndex) {
   int values_per_register = 5;
   int ciphertexts_per_register = (values_per_register + 1) * 2;
 
-  EncryptSketchRequest::PublisherNoiseParameter noise_parameter;
+  proto::EncryptSketchRequest::PublisherNoiseParameter noise_parameter;
   noise_parameter.set_epsilon(1);
   noise_parameter.set_delta(0.1);
   noise_parameter.set_publisher_count(3);

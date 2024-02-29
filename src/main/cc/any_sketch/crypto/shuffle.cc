@@ -23,7 +23,7 @@
 namespace wfa::measurement::common::crypto {
 
 absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
-                                   const any_sketch::PrngSeed& seed) {
+                                   const any_sketch::proto::PrngSeed& seed) {
   // Does nothing if the input is empty or has size 1.
   if (data.size() <= 1) {
     return absl::OkStatus();
