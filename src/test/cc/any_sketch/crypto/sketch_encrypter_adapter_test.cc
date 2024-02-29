@@ -20,7 +20,9 @@
 #include "gtest/gtest.h"
 #include "openssl/obj_mac.h"
 #include "private_join_and_compute/crypto/commutative_elgamal.h"
+#include "wfa/any_sketch/crypto/el_gamal_key.pb.h"
 #include "wfa/any_sketch/crypto/sketch_encryption_methods.pb.h"
+#include "wfa/any_sketch/sketch.pb.h"
 
 namespace wfa::any_sketch::crypto {
 namespace {

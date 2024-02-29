@@ -15,9 +15,6 @@
 #ifndef SRC_MAIN_CC_MATH_UNIFORM_PSEUDORANDOM_GENERATOR_H_
 #define SRC_MAIN_CC_MATH_UNIFORM_PSEUDORANDOM_GENERATOR_H_
 
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-
 #include <cstdint>
 #include <cstring>
 #include <memory>
@@ -27,6 +24,8 @@
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
 #include "absl/strings/substitute.h"
+#include "openssl/evp.h"
+#include "openssl/rand.h"
 
 namespace wfa::math {
 

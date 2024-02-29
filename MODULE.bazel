@@ -33,6 +33,11 @@ bazel_dep(
     name = "boringssl",
     version = BORINGSSL_VERSION,
 )
+bazel_dep(
+    name = "protobuf",
+    version = "21.7",
+    repo_name = "com_google_protobuf",
+)
 
 # WFA registry modules.
 bazel_dep(
