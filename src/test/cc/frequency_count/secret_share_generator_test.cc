@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "any_sketch/crypto/secret_share_generator.h"
+#include "frequency_count/secret_share_generator.h"
 
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
@@ -21,7 +21,7 @@
 #include "gtest/gtest.h"
 #include "math/open_ssl_uniform_random_generator.h"
 
-namespace wfa::any_sketch::crypto {
+namespace wfa::frequency_count {
 namespace {
 
 using math::OpenSslUniformPseudorandomGenerator;
@@ -122,4 +122,4 @@ TEST(AdditiveSecretSharing, InputOutOfBoundFails) {
 }
 
 }  // namespace
-}  // namespace wfa::any_sketch::crypto
+}  // namespace wfa::frequency_count

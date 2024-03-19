@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "any_sketch/crypto/shuffle.h"
+#include "crypto/shuffle.h"
 
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
@@ -21,10 +21,10 @@
 #include "gtest/gtest.h"
 #include "math/open_ssl_uniform_random_generator.h"
 
-namespace wfa::any_sketch::crypto {
+namespace wfa::crypto {
 namespace {
 
-using any_sketch::PrngSeed;
+using frequency_count::PrngSeed;
 using measurement::common::crypto::SecureShuffleWithSeed;
 using ::wfa::StatusIs;
 using ::wfa::math::kBytesPerAes256Iv;
@@ -117,4 +117,4 @@ TEST(SecureShuffleWithSeed, ShufflingWithSameSeedSucceeds) {
 }
 
 }  // namespace
-}  // namespace wfa::any_sketch::crypto
+}  // namespace wfa::crypto

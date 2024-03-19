@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SECRET_SHARE_GENERATOR_H_
-#define SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SECRET_SHARE_GENERATOR_H_
+#ifndef SRC_MAIN_CC_FREQUENCY_COUNT_SECRET_SHARE_GENERATOR_H_
+#define SRC_MAIN_CC_FREQUENCY_COUNT_SECRET_SHARE_GENERATOR_H_
 
 #include <vector>
 
 #include "absl/status/statusor.h"
-#include "wfa/any_sketch/secret_share.pb.h"
+#include "wfa/frequency_count/secret_share.pb.h"
 
-using wfa::any_sketch::SecretShare;
-using wfa::any_sketch::SecretShareParameter;
+using wfa::frequency_count::SecretShare;
+using wfa::frequency_count::SecretShareParameter;
 
-namespace wfa::any_sketch::crypto {
+namespace wfa::frequency_count {
 
 absl::StatusOr<SecretShare> GenerateSecretShares(
     const SecretShareParameter& secret_share_parameter,
     const absl::Span<const uint32_t> input);
 
-}  // namespace wfa::any_sketch::crypto
+}  // namespace wfa::frequency_count
 
-#endif  // SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SECRET_SHARE_GENERATOR_H_
+#endif  // SRC_MAIN_CC_FREQUENCY_COUNT_SECRET_SHARE_GENERATOR_H_

@@ -26,25 +26,3 @@ cc_proto_library(
     name = "differential_privacy_cc_proto",
     deps = [":differential_privacy_proto"],
 )
-
-proto_library(
-    name = "secret_share_proto",
-    srcs = ["secret_share.proto"],
-    strip_import_prefix = IMPORT_PREFIX,
-)
-
-cc_proto_library(
-    name = "secret_share_cc_proto",
-    deps = [":secret_share_proto"],
-)
-
-proto_library(
-    name = "share_shuffle_sketch_proto",
-    srcs = ["share_shuffle_sketch.proto"],
-    strip_import_prefix = IMPORT_PREFIX,
-)
-
-cc_proto_library(
-    name = "share_shuffle_sketch_cc_proto",
-    deps = [":share_shuffle_sketch_proto"],
-)

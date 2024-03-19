@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SHUFFLE_H_
-#define SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SHUFFLE_H_
+#ifndef SRC_MAIN_CC_CRYPTO_SHUFFLE_H_
+#define SRC_MAIN_CC_CRYPTO_SHUFFLE_H_
 
 #include <string>
 #include <utility>
 #include <vector>
 
 #include "absl/status/status.h"
-#include "wfa/any_sketch/secret_share.pb.h"
+#include "wfa/frequency_count/secret_share.pb.h"
 
 namespace wfa::measurement::common::crypto {
 
@@ -30,8 +30,8 @@ namespace wfa::measurement::common::crypto {
 //   Draws a random value j in the range [i; n-1]
 //   Swaps data[i] and data[j]
 absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
-                                   const any_sketch::PrngSeed& seed);
+                                   const frequency_count::PrngSeed& seed);
 
 }  // namespace wfa::measurement::common::crypto
 
-#endif  // SRC_MAIN_CC_ANY_SKETCH_CRYPTO_SHUFFLE_H_
+#endif  // SRC_MAIN_CC_CRYPTO_SHUFFLE_H_
