@@ -33,7 +33,7 @@ constexpr int kRingModulus = 128;
 
 TEST(SecretShareJavaAdapterTest, EmptyFrequencyVectorFails) {
   // Build the request
-  ShareShuffleGeneratorRequest request;
+  SecretShareGeneratorRequest request;
   request.set_ring_modulus(kRingModulus);
   std::vector<uint32_t> frequency_vector(0);
 
@@ -43,7 +43,7 @@ TEST(SecretShareJavaAdapterTest, EmptyFrequencyVectorFails) {
 
 TEST(SecretShareJavaAdapterTest, InvalidRingModulusFails) {
   // Build the request
-  ShareShuffleGeneratorRequest request;
+  SecretShareGeneratorRequest request;
   request.set_ring_modulus(1);
   std::vector<uint32_t> frequency_vector = {1, 2, 3, 4, 5};
   request.mutable_data()->Add(frequency_vector.begin(), frequency_vector.end());
@@ -54,7 +54,7 @@ TEST(SecretShareJavaAdapterTest, InvalidRingModulusFails) {
 
 TEST(SecretShareJavaAdapterTest, SecretShareGenerationSucceeds) {
   // Build the request
-  ShareShuffleGeneratorRequest request;
+  SecretShareGeneratorRequest request;
   request.set_ring_modulus(kRingModulus);
   std::vector<uint32_t> frequency_vector = {1, 2, 3, 4, 5};
   request.mutable_data()->Add(frequency_vector.begin(), frequency_vector.end());

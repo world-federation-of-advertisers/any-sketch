@@ -29,10 +29,10 @@ namespace wfa::frequency_count {
 
 absl::StatusOr<std::string> SecretShareFrequencyVector(
     const std::string& serialized_request) {
-  ShareShuffleGeneratorRequest request_proto;
+  SecretShareGeneratorRequest request_proto;
   if (!request_proto.ParseFromString(serialized_request)) {
     return absl::InvalidArgumentError(
-        "failed to parse the ShareShuffleGeneratorRequest proto.");
+        "failed to parse the SecretShareGeneratorRequest proto.");
   }
   std::vector<uint32_t> frequency_vector = std::vector<uint32_t>(
       request_proto.data().begin(), request_proto.data().end());

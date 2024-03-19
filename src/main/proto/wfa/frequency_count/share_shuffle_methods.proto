@@ -22,7 +22,7 @@ option java_package = "org.wfanet.frequencycount";
 option java_multiple_files = true;
 
 // The request to encrypt a sketch.
-message ShareShuffleGeneratorRequest {
+message SecretShareGeneratorRequest {
   uint32 ring_modulus = 1;
   // The input frequency vector
   repeated uint32 data = 2;
