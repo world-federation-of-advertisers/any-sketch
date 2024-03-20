@@ -23,7 +23,7 @@
 #include "common_cpp/macros/macros.h"
 #include "frequency_count/secret_share_generator.h"
 #include "wfa/frequency_count/secret_share.pb.h"
-#include "wfa/frequency_count/share_shuffle_methods.pb.h"
+#include "wfa/frequency_count/secret_share_methods.pb.h"
 
 namespace wfa::frequency_count {
 

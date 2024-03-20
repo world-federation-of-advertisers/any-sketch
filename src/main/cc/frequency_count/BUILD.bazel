@@ -22,6 +22,6 @@ cc_library(
     deps = [
         ":secret_share_generator",
         "//src/main/proto/wfa/frequency_count:secret_share_cc_proto",
-        "//src/main/proto/wfa/frequency_count:share_shuffle_methods_cc_proto",
+        "//src/main/proto/wfa/frequency_count:secret_share_methods_cc_proto",
     ],
 )

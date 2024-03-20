@@ -25,8 +25,8 @@ namespace wfa::crypto {
 namespace {
 
 using frequency_count::PrngSeed;
-using measurement::common::crypto::SecureShuffleWithSeed;
 using ::wfa::StatusIs;
+using ::wfa::crypto::SecureShuffleWithSeed;
 using ::wfa::math::kBytesPerAes256Iv;
 using ::wfa::math::kBytesPerAes256Key;
 

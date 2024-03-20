@@ -20,7 +20,7 @@
 #include "common_cpp/macros/macros.h"
 #include "math/open_ssl_uniform_random_generator.h"
 
-namespace wfa::measurement::common::crypto {
+namespace wfa::crypto {
 
 absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
                                    const frequency_count::PrngSeed& seed) {
@@ -61,4 +61,4 @@ absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
   return absl::OkStatus();
 }
 
-}  // namespace wfa::measurement::common::crypto
+}  // namespace wfa::crypto

@@ -21,7 +21,7 @@
 #include "frequency_count/secret_share_generator.h"
 #include "gtest/gtest.h"
 #include "math/open_ssl_uniform_random_generator.h"
-#include "wfa/frequency_count/share_shuffle_methods.pb.h"
+#include "wfa/frequency_count/secret_share_methods.pb.h"
 
 namespace wfa::frequency_count {
 namespace {

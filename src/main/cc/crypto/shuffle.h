@@ -22,7 +22,7 @@
 #include "absl/status/status.h"
 #include "wfa/frequency_count/secret_share.pb.h"
 
-namespace wfa::measurement::common::crypto {
+namespace wfa::crypto {
 
 // Shuffles the vector data using Fisher-Yates approach. Let n be the size of
 // data, the Fisher-Yates shuffle is as below.
@@ -32,6 +32,6 @@ namespace wfa::measurement::common::crypto {
 absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
                                    const frequency_count::PrngSeed& seed);
 
-}  // namespace wfa::measurement::common::crypto
+}  // namespace wfa::crypto
 
 #endif  // SRC_MAIN_CC_CRYPTO_SHUFFLE_H_

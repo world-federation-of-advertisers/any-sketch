@@ -22,10 +22,9 @@ package wfa.frequency_count;
 
 option java_package = "org.wfanet.frequencycount";
 option java_multiple_files = true;
-option java_outer_classname = "ShareShuffleSketchProto";
+option java_outer_classname = "FrequencyVectorProto";
 
-// The data share of HonestMajorityShareShuffle protocol.
-message ShareShuffleSketch {
+message FrequencyVector {
   // A vector of count where each count corresponds to the frequency of a single
   // VID.
   repeated uint32 data = 1;
