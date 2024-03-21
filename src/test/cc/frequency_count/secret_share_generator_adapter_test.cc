@@ -18,7 +18,7 @@
 #include "absl/status/statusor.h"
 #include "common_cpp/testing/status_macros.h"
 #include "common_cpp/testing/status_matchers.h"
-#include "frequency_count/secret_share_generator.h"
+#include "frequency_count/generate_secret_shares.h"
 #include "gtest/gtest.h"
 #include "math/open_ssl_uniform_random_generator.h"
 #include "wfa/frequency_count/secret_share_methods.pb.h"
@@ -31,7 +31,7 @@ using math::UniformPseudorandomGenerator;
 
 constexpr int kRingModulus = 128;
 
-TEST(SecretShareJavaAdapterTest, EmptyFrequencyVectorFails) {
+TEST(SecretShareAdapterTest, EmptyFrequencyVectorFails) {
   // Build the request
   SecretShareGeneratorRequest request;
   request.set_ring_modulus(kRingModulus);
@@ -41,7 +41,7 @@ TEST(SecretShareJavaAdapterTest, EmptyFrequencyVectorFails) {
               StatusIs(absl::StatusCode::kInvalidArgument, "Input"));
 }
 
-TEST(SecretShareJavaAdapterTest, InvalidRingModulusFails) {
+TEST(SecretShareAdapterTest, InvalidRingModulusFails) {
   // Build the request
   SecretShareGeneratorRequest request;
   request.set_ring_modulus(1);
@@ -52,7 +52,7 @@ TEST(SecretShareJavaAdapterTest, InvalidRingModulusFails) {
               StatusIs(absl::StatusCode::kInvalidArgument, "modulus"));
 }
 
-TEST(SecretShareJavaAdapterTest, SecretShareGenerationSucceeds) {
+TEST(SecretShareAdapterTest, SecretShareGenerationSucceeds) {
   // Build the request
   SecretShareGeneratorRequest request;
   request.set_ring_modulus(kRingModulus);

@@ -3,9 +3,9 @@ package(default_visibility = ["//visibility:public"])
 _INCLUDE_PREFIX = "/src/main/cc/"
 
 cc_library(
-    name = "secret_share_generator",
-    srcs = [":secret_share_generator.cc"],
-    hdrs = [":secret_share_generator.h"],
+    name = "generate_secret_shares",
+    srcs = [":generate_secret_shares.cc"],
+    hdrs = [":generate_secret_shares.h"],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
         "//src/main/cc/math:open_ssl_uniform_random_generator",
@@ -20,7 +20,7 @@ cc_library(
     hdrs = [":secret_share_generator_adapter.h"],
     strip_include_prefix = _INCLUDE_PREFIX,
     deps = [
-        ":secret_share_generator",
+        ":generate_secret_shares",
         "//src/main/proto/wfa/frequency_count:secret_share_cc_proto",
         "//src/main/proto/wfa/frequency_count:secret_share_methods_cc_proto",
     ],

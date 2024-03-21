@@ -21,7 +21,7 @@
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
 #include "common_cpp/macros/macros.h"
-#include "frequency_count/secret_share_generator.h"
+#include "frequency_count/generate_secret_shares.h"
 #include "wfa/frequency_count/secret_share.pb.h"
 #include "wfa/frequency_count/secret_share_methods.pb.h"
 

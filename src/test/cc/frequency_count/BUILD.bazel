@@ -1,11 +1,11 @@
 cc_test(
-    name = "secret_share_generator_test",
+    name = "generate_secret_shares_test",
     size = "small",
     srcs = [
-        ":secret_share_generator_test.cc",
+        ":generate_secret_shares_test.cc",
     ],
     deps = [
-        "//src/main/cc/frequency_count:secret_share_generator",
+        "//src/main/cc/frequency_count:generate_secret_shares",
         "//src/main/cc/math:open_ssl_uniform_random_generator",
         "//src/main/proto/wfa/frequency_count:secret_share_cc_proto",
         "@com_google_googletest//:gtest",

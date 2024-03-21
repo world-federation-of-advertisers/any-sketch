@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SRC_MAIN_CC_FREQUENCY_COUNT_SECRET_SHARE_GENERATOR_H_
-#define SRC_MAIN_CC_FREQUENCY_COUNT_SECRET_SHARE_GENERATOR_H_
+#ifndef SRC_MAIN_CC_FREQUENCY_COUNT_GENERATE_SECRET_SHARES_H_
+#define SRC_MAIN_CC_FREQUENCY_COUNT_GENERATE_SECRET_SHARES_H_
 
 #include <vector>
 
@@ -31,4 +31,4 @@ absl::StatusOr<SecretShare> GenerateSecretShares(
 
 }  // namespace wfa::frequency_count
 
-#endif  // SRC_MAIN_CC_FREQUENCY_COUNT_SECRET_SHARE_GENERATOR_H_
+#endif  // SRC_MAIN_CC_FREQUENCY_COUNT_GENERATE_SECRET_SHARES_H_

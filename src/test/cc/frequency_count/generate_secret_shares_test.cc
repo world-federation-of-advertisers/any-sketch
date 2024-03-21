@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "frequency_count/secret_share_generator.h"
+#include "frequency_count/generate_secret_shares.h"
 
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
