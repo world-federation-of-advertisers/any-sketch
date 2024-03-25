@@ -28,11 +28,11 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/substitute.h"
 #include "math/uniform_pseudorandom_generator.h"
-#include "wfa/any_sketch/secret_share.pb.h"
+#include "wfa/frequency_count/secret_share.pb.h"
 
 namespace wfa::math {
 
-using any_sketch::PrngSeed;
+using frequency_count::PrngSeed;
 
 // Key length for EVP_aes_256_ctr.
 // See https://www.openssl.org/docs/man1.1.1/man3/EVP_aes_256_ctr.html

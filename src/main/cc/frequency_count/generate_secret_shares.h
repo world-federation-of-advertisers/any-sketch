@@ -12,29 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Protobuffer for the generalized enriched cardinality sketch.
-// SketchConfig is configuration of the sketch.
-// Sketch is the sketch itself.
+#ifndef SRC_MAIN_CC_FREQUENCY_COUNT_GENERATE_SECRET_SHARES_H_
+#define SRC_MAIN_CC_FREQUENCY_COUNT_GENERATE_SECRET_SHARES_H_
 
-syntax = "proto3";
+#include <vector>
 
-package wfa.any_sketch;
+#include "absl/status/statusor.h"
+#include "wfa/frequency_count/secret_share.pb.h"
 
-option java_package = "org.wfanet.anysketch";
-option java_multiple_files = true;
-option java_outer_classname = "SecretShareProto";
+using wfa::frequency_count::SecretShare;
+using wfa::frequency_count::SecretShareParameter;
 
-message SecretShareParameter {
-  uint32 modulus = 1;
-}
+namespace wfa::frequency_count {
 
-// Seed to initialize the AES 256 counter mode.
-message PrngSeed {
-  bytes key = 1;
-  bytes iv = 2;
-}
+absl::StatusOr<SecretShare> GenerateSecretShares(
+    const SecretShareParameter& secret_share_parameter,
+    const absl::Span<const uint32_t> input);
 
-message SecretShare {
-  PrngSeed share_seed = 1;
-  repeated uint32 share_vector = 2;
-}
+}  // namespace wfa::frequency_count
+
+#endif  // SRC_MAIN_CC_FREQUENCY_COUNT_GENERATE_SECRET_SHARES_H_

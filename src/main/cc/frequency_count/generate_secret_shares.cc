@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "any_sketch/crypto/secret_share_generator.h"
+#include "frequency_count/generate_secret_shares.h"
 
 #include <memory>
 #include <string>
@@ -22,7 +22,7 @@
 #include "common_cpp/macros/macros.h"
 #include "math/open_ssl_uniform_random_generator.h"
 
-namespace wfa::any_sketch::crypto {
+namespace wfa::frequency_count {
 
 using wfa::math::kBytesPerAes256Iv;
 using wfa::math::kBytesPerAes256Key;
@@ -101,4 +101,4 @@ absl::StatusOr<SecretShare> GenerateSecretShares(
   return secret_share;
 }
 
-}  // namespace wfa::any_sketch::crypto
+}  // namespace wfa::frequency_count

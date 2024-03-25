@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "any_sketch/crypto/shuffle.h"
+#include "crypto/shuffle.h"
 
 #include <memory>
 
@@ -20,10 +20,10 @@
 #include "common_cpp/macros/macros.h"
 #include "math/open_ssl_uniform_random_generator.h"
 
-namespace wfa::measurement::common::crypto {
+namespace wfa::crypto {
 
 absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
-                                   const any_sketch::PrngSeed& seed) {
+                                   const frequency_count::PrngSeed& seed) {
   // Does nothing if the input is empty or has size 1.
   if (data.size() <= 1) {
     return absl::OkStatus();
@@ -61,4 +61,4 @@ absl::Status SecureShuffleWithSeed(std::vector<uint32_t>& data,
   return absl::OkStatus();
 }
 
-}  // namespace wfa::measurement::common::crypto
+}  // namespace wfa::crypto

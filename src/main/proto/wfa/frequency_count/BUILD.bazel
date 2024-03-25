@@ -1,0 +1,42 @@
+load("@rules_cc//cc:defs.bzl", "cc_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+package(default_visibility = ["//visibility:public"])
+
+IMPORT_PREFIX = "/src/main/proto"
+
+proto_library(
+    name = "secret_share_proto",
+    srcs = ["secret_share.proto"],
+    strip_import_prefix = IMPORT_PREFIX,
+)
+
+cc_proto_library(
+    name = "secret_share_cc_proto",
+    deps = [":secret_share_proto"],
+)
+
+proto_library(
+    name = "frequency_vector_proto",
+    srcs = ["frequency_vector.proto"],
+    strip_import_prefix = IMPORT_PREFIX,
+)
+
+cc_proto_library(
+    name = "frequency_vector_cc_proto",
+    deps = [":frequency_vector_proto"],
+)
+
+proto_library(
+    name = "secret_share_methods_proto",
+    srcs = ["secret_share_methods.proto"],
+    strip_import_prefix = IMPORT_PREFIX,
+    deps = [
+        ":secret_share_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "secret_share_methods_cc_proto",
+    deps = [":secret_share_methods_proto"],
+)

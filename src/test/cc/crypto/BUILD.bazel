@@ -1,0 +1,13 @@
+cc_test(
+    name = "shuffle_test",
+    size = "small",
+    srcs = [
+        "shuffle_test.cc",
+    ],
+    deps = [
+        "//src/main/cc/crypto:shuffle",
+        "@com_google_googletest//:gtest",
+        "@com_google_googletest//:gtest_main",
+        "@wfa_common_cpp//src/main/cc/common_cpp/testing:status",
+    ],
+)
