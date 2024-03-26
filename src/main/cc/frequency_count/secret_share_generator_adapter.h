@@ -27,7 +27,7 @@
 // GenerateSecretShares directly.
 namespace wfa::frequency_count {
 
-absl::StatusOr<std::string> SecretShareFrequencyVector(
+absl::StatusOr<std::string> GenerateSecretShares(
     const std::string& serialized_request);
 
 }  // namespace wfa::frequency_count
