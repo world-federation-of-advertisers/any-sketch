@@ -37,7 +37,7 @@ TEST(SecretShareAdapterTest, EmptyFrequencyVectorFails) {
   request.set_ring_modulus(kRingModulus);
   std::vector<uint32_t> frequency_vector(0);
 
-  EXPECT_THAT(SecretShareFrequencyVector(request.SerializeAsString()).status(),
+  EXPECT_THAT(GenerateSecretShares(request.SerializeAsString()).status(),
               StatusIs(absl::StatusCode::kInvalidArgument, "Input"));
 }
 
@@ -48,7 +48,7 @@ TEST(SecretShareAdapterTest, InvalidRingModulusFails) {
   std::vector<uint32_t> frequency_vector = {1, 2, 3, 4, 5};
   request.mutable_data()->Add(frequency_vector.begin(), frequency_vector.end());
 
-  EXPECT_THAT(SecretShareFrequencyVector(request.SerializeAsString()).status(),
+  EXPECT_THAT(GenerateSecretShares(request.SerializeAsString()).status(),
               StatusIs(absl::StatusCode::kInvalidArgument, "modulus"));
 }
 
@@ -60,7 +60,7 @@ TEST(SecretShareAdapterTest, SecretShareGenerationSucceeds) {
   request.mutable_data()->Add(frequency_vector.begin(), frequency_vector.end());
 
   ASSERT_OK_AND_ASSIGN(std::string response,
-                       SecretShareFrequencyVector(request.SerializeAsString()));
+                       GenerateSecretShares(request.SerializeAsString()));
 
   SecretShare secret_share;
   secret_share.ParseFromString(response);
