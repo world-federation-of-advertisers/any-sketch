@@ -95,7 +95,7 @@ class OpenSslUniformPseudorandomGenerator
   absl::StatusOr<std::vector<uint32_t>> GenerateUniformRandomRange(
       int64_t size, uint32_t modulus) override;
 
-  // Generates uniformly random values in the range [1, modulus).
+  // Generates a vector of `size` pseudorandom values in the range [1, modulus).
   absl::StatusOr<std::vector<uint32_t>> GenerateNonZeroUniformRandomRange(
       int64_t size, uint32_t modulus) override;
 
