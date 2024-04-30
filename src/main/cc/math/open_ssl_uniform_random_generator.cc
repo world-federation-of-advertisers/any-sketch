@@ -155,6 +155,46 @@ OpenSslUniformPseudorandomGenerator::GenerateUniformRandomRange(
   return ret;
 }
 
+// Generates uniformly random values in the range [1, modulus).
+absl::StatusOr<std::vector<uint32_t>>
+OpenSslUniformPseudorandomGenerator::GenerateNonZeroUniformRandomRange(
+    int64_t size, uint32_t modulus) {
+  if (modulus <= 1) {
+    return absl::InvalidArgumentError("The modulus must be greater than 1.");
+  }
+
+  if (size < 0) {
+    return absl::InvalidArgumentError(
+        "Number of pseudorandom elements must be a non-negative value.");
+  }
+
+  std::vector<uint32_t> ret;
+  ret.reserve(size);
+  // Compute the failure chance, which happens when the sampled value is 0.
+  double failure_rate = 1.0 / static_cast<double>(modulus);
+  while (ret.size() < size) {
+    int64_t current_size = size - ret.size();
+    // To get current_size `good` elements, it is expected to sample
+    // 1 + current_size*(1 + failure_rate/(1-failure_rate)) elements.
+    int64_t sample_size = static_cast<int64_t>(
+        current_size + 1.0 + failure_rate * current_size / (1 - failure_rate));
+    ASSIGN_OR_RETURN(std::vector<uint32_t> arr,
+                     GenerateUniformRandomRange(current_size, modulus));
+    // Rejection sampling step.
+    for (int64_t i = 0; i < sample_size; i++) {
+      if (ret.size() >= size) {
+        break;
+      }
+
+      // Accept the value if the element is not zero.
+      if (arr[i] > 0) {
+        ret.push_back(arr[i]);
+      }
+    }
+  }
+  return ret;
+}
+
 absl::StatusOr<std::unique_ptr<UniformPseudorandomGenerator>>
 CreatePrngFromSeed(const PrngSeed &seed) {
   // TODO(@ple13): use absl::Cord instead of making vector copies once we can

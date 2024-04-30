@@ -47,6 +47,10 @@ class UniformPseudorandomGenerator {
   virtual absl::StatusOr<std::vector<uint32_t>> GenerateUniformRandomRange(
       int64_t size, uint32_t modulus) = 0;
 
+  // Generates uniformly random values in the range [1, modulus).
+  virtual absl::StatusOr<std::vector<uint32_t>>
+  GenerateNonZeroUniformRandomRange(int64_t size, uint32_t modulus) = 0;
+
  protected:
   UniformPseudorandomGenerator() = default;
 };

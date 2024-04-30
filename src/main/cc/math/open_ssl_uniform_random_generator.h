@@ -95,6 +95,10 @@ class OpenSslUniformPseudorandomGenerator
   absl::StatusOr<std::vector<uint32_t>> GenerateUniformRandomRange(
       int64_t size, uint32_t modulus) override;
 
+  // Generates uniformly random values in the range [1, modulus).
+  absl::StatusOr<std::vector<uint32_t>> GenerateNonZeroUniformRandomRange(
+      int64_t size, uint32_t modulus) override;
+
  private:
   explicit OpenSslUniformPseudorandomGenerator(EVP_CIPHER_CTX* ctx)
       : ctx_(std::move(ctx)) {}

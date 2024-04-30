@@ -406,5 +406,97 @@ TEST(OpenSslUniformPseudorandomGenerator,
   }
 }
 
+TEST(OpenSslUniformPseudorandomGenerator,
+     GeneratingNegativeNumberOfNonZeroRandomElementsFails) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
+  RAND_bytes(iv.data(), iv.size());
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
+
+  uint32_t kModulus = 128;
+  uint64_t kNumRandomElements = -1;
+  auto seq =
+      prng->GenerateNonZeroUniformRandomRange(kNumRandomElements, kModulus);
+  EXPECT_THAT(seq.status(),
+              StatusIs(absl::StatusCode::kInvalidArgument, "negative"));
+}
+
+TEST(OpenSslUniformPseudorandomGenerator,
+     GeneratingZeroNumberOfNonZeroRandomElementsSucceeds) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
+  RAND_bytes(iv.data(), iv.size());
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
+
+  uint32_t kModulus = 128;
+  uint64_t kNumRandomElements = 0;
+  ASSERT_OK_AND_ASSIGN(auto seq, prng->GenerateNonZeroUniformRandomRange(
+                                     kNumRandomElements, kModulus));
+  EXPECT_THAT(seq, IsEmpty());
+}
+
+TEST(OpenSslUniformPseudorandomGenerator,
+     GeneratingNonZeroUniformlyRandomWithInvalidModulusFails) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
+  RAND_bytes(iv.data(), iv.size());
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
+
+  uint32_t kModulus = 1;
+  uint64_t kNumRandomElements = 1;
+  auto seq =
+      prng->GenerateNonZeroUniformRandomRange(kNumRandomElements, kModulus);
+  EXPECT_THAT(seq.status(),
+              StatusIs(absl::StatusCode::kInvalidArgument, "modulus"));
+}
+
+TEST(OpenSslUniformPseudorandomGenerator,
+     SampleNonZeroUniformlyRandomOverRingZ2kElementsSucceeds) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
+  RAND_bytes(iv.data(), iv.size());
+
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
+  uint32_t kModulus = 128;
+  uint64_t kNumRandomElements = 111;
+  ASSERT_OK_AND_ASSIGN(
+      std::vector<uint32_t> seq,
+      prng->GenerateNonZeroUniformRandomRange(kNumRandomElements, kModulus));
+  ASSERT_EQ(seq.size(), kNumRandomElements);
+  for (int i = 0; i < kNumRandomElements; i++) {
+    ASSERT_GT(seq[i], 0);
+    ASSERT_LT(seq[i], kModulus);
+  }
+}
+
+TEST(OpenSslUniformPseudorandomGenerator,
+     SampleNonZeroUniformlyRandomOverPrimeFieldElementsSucceeds) {
+  std::vector<unsigned char> key(kBytesPerAes256Key);
+  std::vector<unsigned char> iv(kBytesPerAes256Iv);
+  RAND_bytes(key.data(), key.size());
+  RAND_bytes(iv.data(), iv.size());
+
+  ASSERT_OK_AND_ASSIGN(std::unique_ptr<UniformPseudorandomGenerator> prng,
+                       OpenSslUniformPseudorandomGenerator::Create(key, iv));
+  uint32_t kModulus = 127;
+  uint64_t kNumRandomElements = 111;
+  ASSERT_OK_AND_ASSIGN(
+      std::vector<uint32_t> seq,
+      prng->GenerateNonZeroUniformRandomRange(kNumRandomElements, kModulus));
+  ASSERT_EQ(seq.size(), kNumRandomElements);
+  for (int i = 0; i < kNumRandomElements; i++) {
+    ASSERT_GT(seq[i], 0);
+    ASSERT_LT(seq[i], kModulus);
+  }
+}
+
 }  // namespace
 }  // namespace wfa::math
