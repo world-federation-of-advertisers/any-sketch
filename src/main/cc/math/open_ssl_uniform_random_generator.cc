@@ -135,7 +135,7 @@ OpenSslUniformPseudorandomGenerator::GenerateUniformRandomRange(
                      GeneratePseudorandomBytes(sample_size * bytes_per_value));
 
     // Rejection sampling step.
-    for (uint64_t i = 0; i < sample_size; i++) {
+    for (uint64_t i = 0; i < arr.size(); i++) {
       if (ret.size() >= size) {
         break;
       }
