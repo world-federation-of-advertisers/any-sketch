@@ -135,7 +135,7 @@ OpenSslUniformPseudorandomGenerator::GenerateUniformRandomRange(
                      GeneratePseudorandomBytes(sample_size * bytes_per_value));
 
     // Rejection sampling step.
-    for (uint64_t i = 0; i < sample_size; i++) {
+    for (uint64_t i = 0; i < arr.size(); i++) {
       if (ret.size() >= size) {
         break;
       }
@@ -179,9 +179,9 @@ OpenSslUniformPseudorandomGenerator::GenerateNonZeroUniformRandomRange(
     int64_t sample_size = static_cast<int64_t>(
         current_size + 1.0 + failure_rate * current_size / (1 - failure_rate));
     ASSIGN_OR_RETURN(std::vector<uint32_t> arr,
-                     GenerateUniformRandomRange(current_size, modulus));
+                     GenerateUniformRandomRange(sample_size, modulus));
     // Rejection sampling step.
-    for (int64_t i = 0; i < sample_size; i++) {
+    for (int64_t i = 0; i < arr.size(); i++) {
       if (ret.size() >= size) {
         break;
       }
