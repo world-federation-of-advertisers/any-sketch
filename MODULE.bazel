@@ -35,11 +35,25 @@ bazel_dep(
     version = BORINGSSL_VERSION,
 )
 
+# DO_NOT_SUBMIT (testing)
+# Not used directly, but private-join-and-compute@0.0.0-20230417-e028e59 brings rules_go@0.39.1 which is
+# incompatible with bazel 9.
+bazel_dep(
+    name = "rules_go",
+    version = "0.60.0",
+)
+
 # WFA registry modules.
 bazel_dep(
     name = "common-cpp",
     version = "0.11.0",
     repo_name = "wfa_common_cpp",
+)
+# DO_NOT_SUBMIT: use new release version
+git_override(
+    module_name = "common-cpp",
+    commit = "510cc23c01791cfe4f64e543ad145e1ae41534de",
+    remote = "https://github.com/world-federation-of-advertisers/common-cpp.git",
 )
 bazel_dep(
     name = "private-join-and-compute",

@@ -1,3 +1,5 @@
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+
 cc_test(
     name = "generate_secret_shares_test",
     size = "small",
